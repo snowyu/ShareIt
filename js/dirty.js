@@ -122,13 +122,9 @@ socket.on('begintransfer', function(file, chunk)
 	start = chunk * chunksize;
 
 	if((parseInt(fileholder[1]) - 1) <= start + chunksize - 1)
-	{
 		stop = parseInt(fileholder[1]) - 1;
-	}
 	else
-	{
 		stop = start + chunksize - 1;
-	}
 
 	// If we use onloadend, we need to check the readyState.
 	reader.onloadend = function(evt)
@@ -141,16 +137,12 @@ socket.on('begintransfer', function(file, chunk)
 		}
 	};
 
-	if (fileo.webkitSlice)
+	if(fileo.webkitSlice)
 		var blob = fileo.webkitSlice(start, stop + 1);
 	else if(fileo.mozSlice)
-	{
 		var blob = fileo.mozSlice(start, stop + 1);
-	}
 	else
-	{
 		alert("It won't work in your browser. Please use Chrome or Firefox.");
-	}
 
 	reader.readAsBinaryString(blob);
 });
@@ -202,13 +194,9 @@ function handleFileSelect(evt)
 	files = {};
 
 	// Loop through the FileList and append files to list.
-	for (var i = 0, f; f = viles[i]; i++)
-	{
-		if (!files.hasOwnProperty(f))
-		{
+	for(var i = 0, f; f = viles[i]; i++)
+		if(!files.hasOwnProperty(f))
 			files[f.name] = [f.name, f.size, f.type, f];
-		};
-	}
 
 	socket.emit('listfiles', JSON.stringify(files));
 
@@ -222,12 +210,8 @@ function handleFileSelect(evt)
 	});
 
 	for(var file in files)
-	{
 		if(files.hasOwnProperty(file))
-		{
 			$('#filestable').append('<tr><th scope="row" class="spec">' + files[file][0] + '</th><td>' + files[file][1] + '</td><td class="end"><b>Sharing!</b></td></tr>');
-		};
-	}
 };
 
 document.getElementById('files').addEventListener('change', handleFileSelect, false);
