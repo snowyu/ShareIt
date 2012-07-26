@@ -1,9 +1,9 @@
 // Requirements
 
-var app = require('express').createServer()
-  , express = require('express')
-  , io = require('socket.io').listen(app)
-  , jqtpl = require("jqtpl");
+var express = require('express')
+  , app     = express.createServer()
+  , io      = require('socket.io').listen(app)
+  , jqtpl   = require("jqtpl");
 
 
 // Load the config file
@@ -24,7 +24,7 @@ app.get('/', function (req, res)
 
 app.get('/:hash', function (req, res)
 {
-  res.render (__dirname + '/index', {domain: config.siteDomain});
+  res.render(__dirname + '/index', {domain: config.siteDomain});
 });
 
 // P2P Stuff
