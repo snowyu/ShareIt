@@ -8,7 +8,6 @@ require("./connect_websockets.js");
 
 
 // App Stuff
-app.use('/js', express.static(__dirname + '/js'));
 app.use('/public', express.static(__dirname + '/public'));
 app.listen(8000);
 app.set("view engine", "html");
@@ -22,7 +21,7 @@ app.get('/', function(req, res)
 
 app.get('/:hash', function(req, res)
 {
-  res.render(__dirname + '/index', {domain: 'localhost:8888'});
+  res.render(__dirname + '/public/index', {domain: 'localhost:8888'});
 });
 
 // Utilities
