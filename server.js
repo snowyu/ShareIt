@@ -5,6 +5,7 @@ var express = require('express')
 
 
 // App Stuff
+app.use('/js', express.static(__dirname + '/js'));
 app.use('/public', express.static(__dirname + '/public'));
 app.listen(8000);
 app.set("view engine", "html");

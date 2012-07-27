@@ -8,14 +8,15 @@ $(document).ready(function()
 	$('#subheader').html('<i>' + filth[Math.floor(Math.random()*filth.length)] + '</i>');
 });
 
-$(document).ready(function() {
-    $('#shareurl').html('<b>http://${domain}/' + $.url().segment(1) + '</b>');
+$(document).ready(function()
+{
+    $('#shareurl').html('<b>http://localhost:8000/' + $.url().segment(1) + '</b>');
 });
 
 var fid = 0;
 var files = {};
 var downfiles = {};
-var socket = io.connect('http://${domain}');
+var socket = io.connect('http://localhost:8000');
 
 //read the requested bytes
 var reader;
@@ -214,7 +215,10 @@ function handleFileSelect(evt)
 			$('#filestable').append('<tr><th scope="row" class="spec">' + files[file][0] + '</th><td>' + files[file][1] + '</td><td class="end"><b>Sharing!</b></td></tr>');
 };
 
-document.getElementById('files').addEventListener('change', handleFileSelect, false);
+$(document).ready(function()
+{
+	document.getElementById('files').addEventListener('change', handleFileSelect, false);
+});
 
 var keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "abcdefghijklmnopqrstuvwxyz" + "0123456789+/" + "=";
 
