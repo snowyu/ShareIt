@@ -1,18 +1,12 @@
 // Requirements
-
 var express = require('express')
   , app     = express.createServer()
-  , io      = require('socket.io').listen(app)
   , jqtpl   = require("jqtpl");
 
 
-// Load the config file
-var config = require('config').Server;
-io.set('log level', 1);
-
- // App Stuff
+// App Stuff
 app.use('/public', express.static(__dirname + '/public'));
-app.listen(config.port);
+app.listen(8000);
 app.set("view engine", "html");
 app.set("view options", {layout: false});
 app.register(".html", require("jqtpl").express);
@@ -24,10 +18,13 @@ app.get('/', function (req, res)
 
 app.get('/:hash', function (req, res)
 {
-  res.render(__dirname + '/index', {domain: config.siteDomain});
+  res.render(__dirname + '/index', {domain: 'localhost:8888'});
 });
 
 // P2P Stuff
+var io = require('socket.io').listen(app)
+
+io.set('log level', 1);
 io.sockets.on('connection', function (socket)
 {
 	socket.on('joiner', function (data)
