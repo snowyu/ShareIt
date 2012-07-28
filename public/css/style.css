@@ -175,11 +175,6 @@ a{
     cursor: pointer;
 }
 
-#fileslist{
-	height: 200px;
-	overflow: auto;
-}
-
 #filestable {
 	width: 700px;
 	padding: 0;

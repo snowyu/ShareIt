@@ -7,7 +7,6 @@ function imhost()
 {
 	$('#host').html("You're hosting this party!");
 	$('#clicky').html("<br /><br /><br /><br />Click here to choose files");
-	$('#fileslist').hide();
 }
 
 function impeer()
@@ -21,7 +20,6 @@ function impeer()
 
 	$('#files').remove();
 	$('#drop_zone').css("cursor", "default");
-	$('#fileslist').hide();
 	$('#clicky').html('Awaiting file list..');
 }
 
@@ -65,14 +63,11 @@ function _downloadbutton_peer(fileholder)
 function _ui_updatefiles(downloadbutton)
 {
 	$('#clicky').html('');
-	$('#clicky').hide();
-
-	$('#fileslist').html('');
-	$('#fileslist').html(function(i,v)
+	$('#clicky').html(function(i,v)
 	{
    		return '<table id="filestable" cellspacing="0" summary=""><tr><th scope="col" abbr="Filename" class="nobg" width="60%">Filename</th><th scope="col" abbr="Status" width="20%" >Size</th><th scope="col" abbr="Size"width="20%" >Action</th></tr>' + v;
 	});
-	$('#fileslist').show();
+	$('#clicky').show();
 
 	for(var file in files)
 		if(files.hasOwnProperty(file))
