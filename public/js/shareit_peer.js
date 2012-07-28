@@ -43,6 +43,5 @@ function beginTransfer(file, fid, size)
 
 	downfiles[file] = {data:'', chunk:0, chunks:chunks, fid:fid};
 
-	alert('beginTransfer')
 	socket.emit('begintransfer', file, 0);
 }
