@@ -11,19 +11,23 @@ io.sockets.on('connection', function (socket)
 		if(len == undefined || len == 0)
 		{
 			socket.emit('host');
-			socket.join(data);
 			socket.isHost = true;
 			socket.isPeer = false;
+
+			socket.join(data);
 			socket.room = data;
 		}
 		else if(len == 1)
 		{
 			socket.emit('peer');
-			socket.join(data);
 			socket.isHost = false;
 			socket.isPeer = true;
+
+			socket.join(data);
 			socket.room = data;
+
 			socket.hoster = io.sockets.clients(data)[0];
+
 			io.sockets.clients(data)[0].peer = socket;
 
 			if(socket.hoster.fileslist != undefined)
