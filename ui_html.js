@@ -1,11 +1,7 @@
 // App Stuff
-var express = require('express')
-  , jqtpl   = require("jqtpl");
+var express = require('express');
 
 app.use('/public', express.static(__dirname + '/public'));
-app.set("view engine", "html");
-app.set("view options", {layout: false});
-app.register(".html", jqtpl.express);
 
 app.get('/', function(req, res)
 {
@@ -14,7 +10,7 @@ app.get('/', function(req, res)
 
 app.get('/:hash', function(req, res)
 {
-  res.render(__dirname + '/public/index', {domain: 'localhost:8888'});
+  res.sendfile(__dirname + '/public/index.html');
 });
 
 // Utilities
