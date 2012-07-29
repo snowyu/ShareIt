@@ -3,16 +3,14 @@ function oldBrowser()
 	$('#clicky').html('Your browser is not modern enough to serve as a host. :(<br /><br />(Try Chrome or Firefox!)');
 }
 
-function imhost()
+function onopen()
 {
-	$('#host').html("You're hosting this party!");
 	$('#clicky').html("<br /><br /><br /><br />Click here to choose files");
 }
 
 function impeer()
 {
 	$('#peer').html("You're connected as a peer!");
-	$('#host').html("Host connected.");
 	$('#drop_zone').attr("onclick", function()
 	{ 
 	    return;
@@ -122,6 +120,5 @@ function ui_peerstate(msg)
 
 function ui_hostdisconnected()
 {
-	$('#host').html("Host disconnected.");
 	$('#peer').html("You're disconnected!");
 }

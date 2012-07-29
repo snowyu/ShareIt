@@ -140,15 +140,6 @@ a{
     height: 200px;
 }
 
-#host{
-    text-align: center;
-    width: 380px;
-    font-size: 1.2em;
-	text-align: center;
-	font-family: Helvetica;
-    display: inline-block;
-}
-
 #peer{
     text-align: center;
     width: 380px;

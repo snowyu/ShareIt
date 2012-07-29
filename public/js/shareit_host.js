@@ -7,11 +7,6 @@ else
 {
 	var reader = new FileReader();
 
-	socket.on('host', function(data)
-	{
-		imhost();
-	});
-
 	socket.on('begintransfer', function(file, chunk)
 	{
 		if(chunk == 0)

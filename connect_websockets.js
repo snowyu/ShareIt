@@ -10,7 +10,6 @@ io.sockets.on('connection', function (socket)
 
 		if(len == undefined || len == 0)
 		{
-			socket.emit('host');
 			socket.isHost = true;
 			socket.isPeer = false;
 

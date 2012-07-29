@@ -6,6 +6,8 @@ var chunksize = 65536;
 
 socket.on('connect', function(data)
 {
+	onopen();
+
 	socket.emit('joiner', $.url().segment(1));	
 });
 
