@@ -11,7 +11,6 @@ io.sockets.on('connection', function (socket)
 		if(len == undefined || len == 0)
 		{
 			socket.isHost = true;
-			socket.isPeer = false;
 
 			socket.join(data);
 			socket.room = data;
@@ -19,7 +18,6 @@ io.sockets.on('connection', function (socket)
 		else if(len == 1)
 		{
 			socket.isHost = false;
-			socket.isPeer = true;
 
 			socket.join(data);
 			socket.room = data;
@@ -46,9 +44,9 @@ io.sockets.on('connection', function (socket)
 	socket.on('disconnect', function()
 	{
 		var peer;
-        if(socket.isPeer)
+        if(!socket.isHost)
             peer = socket.hoster;
-	    else if(socket.isHost && socket.peer != undefined)
+	    else if(socket.peer != undefined)
 	   	    peer = socket.peer;
 
 		if(peer != undefined)
@@ -67,7 +65,7 @@ io.sockets.on('connection', function (socket)
 
 	socket.on('begintransfer', function (file, chunk)
 	{
-		if(socket.isPeer && socket.hoster != undefined)
+		if(!socket.isHost && socket.hoster != undefined)
 			socket.hoster.emit('begintransfer', file, chunk);
 	});
 
