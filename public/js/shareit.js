@@ -21,6 +21,16 @@ socket.on('info', function(data)
 	info(data);
 });
 
+socket.on('peerconnected', function(data)
+{
+	ui_peerstate("Peer connected!");
+})
+
+socket.on('peerdisconnected', function(data)
+{
+	ui_peerstate("Peer disconnected.");
+})
+
 function encode64(input)
 {
 	var keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "abcdefghijklmnopqrstuvwxyz" + "0123456789+/" + "=";

@@ -1,21 +1,11 @@
 var files = {};
 var downfiles = {};
 
-socket.on('peer', function(data)
-{
-	impeer();
-});
-
 socket.on('fileslist', function(data)
 {
 	files = JSON.parse(data)
 
 	ui_updatefiles_peer(files)
-});
-
-socket.on('hostdisconnected', function(data)
-{
-	ui_hostdisconnected()
 });
 
 socket.on('datatransfer', function(data, file, chunk)

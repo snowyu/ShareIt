@@ -6,18 +6,6 @@ function oldBrowser()
 function onopen()
 {
 	$('#clicky').html("<br /><br /><br /><br />Click here to choose files");
-}
-
-function impeer()
-{
-	$('#peer').html("You're connected as a peer!");
-	$('#drop_zone').attr("onclick", function()
-	{ 
-	    return;
-	});
-
-	$('#files').remove();
-	$('#drop_zone').css("cursor", "default");
 	$('#fileslist').html('Awaiting file list..');
 }
 
@@ -116,9 +104,4 @@ function ui_filedownloaded(f)
 function ui_peerstate(msg)
 {
 	$('#peer').html(msg);
-}
-
-function ui_hostdisconnected()
-{
-	$('#peer').html("You're disconnected!");
 }

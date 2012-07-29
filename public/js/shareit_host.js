@@ -43,16 +43,6 @@ else
 		if(slice != undefined)
 			reader.readAsBinaryString(slice);
 	})
-
-	socket.on('peerconnected', function(data)
-	{
-		ui_peerstate("Peer connected!");
-	});
-	
-	socket.on('peerdisconnected', function(data)
-	{
-		ui_peerstate("Peer disconnected.");
-	});
 }
 
 function files_change(filelist)

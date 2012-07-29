@@ -18,7 +18,6 @@ io.sockets.on('connection', function (socket)
 		}
 		else if(len == 1)
 		{
-			socket.emit('peer');
 			socket.isHost = false;
 			socket.isPeer = true;
 
@@ -29,6 +28,7 @@ io.sockets.on('connection', function (socket)
 
 			if(socket.hoster != undefined)
 			{
+				socket.emit('peerconnected');
 				socket.hoster.emit('peerconnected');
 
 				if(socket.hoster.fileslist != undefined)
@@ -45,10 +45,14 @@ io.sockets.on('connection', function (socket)
 
 	socket.on('disconnect', function()
 	{
+		var peer;
         if(socket.isPeer)
-            socket.hoster.emit('peerdisconnected');
+            peer = socket.hoster;
 	    else if(socket.isHost && socket.peer != undefined)
-	   	    socket.peer.emit('hostdisconnected');
+	   	    peer = socket.peer;
+
+		if(peer != undefined)
+		   	peer.emit('peerdisconnected');
 	});
 
 	socket.on('listfiles', function (data)
