@@ -21,12 +21,12 @@ socket.on('info', function(data)
 	info(data);
 });
 
-socket.on('peerconnected', function(data)
+socket.on('peer.connected', function(data)
 {
 	ui_peerstate("Peer connected!");
 })
 
-socket.on('peerdisconnected', function(data)
+socket.on('peer.disconnected', function(data)
 {
 	ui_peerstate("Peer disconnected.");
 })

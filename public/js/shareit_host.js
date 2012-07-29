@@ -7,10 +7,10 @@ else
 {
 	var reader = new FileReader();
 
-	socket.on('begintransfer', function(file, chunk)
+	socket.on('transfer.begin', function(file, chunk)
 	{
 		if(chunk == 0)
-			info_begintransfer();
+			info_transfer_begin();
 	
 		var fileholder= files[file];
 		var fileo= fileholder[3]; //ugly
@@ -28,7 +28,7 @@ else
 			{
 				// DONE == 2
 				var data = evt.target.result;
-				socket.emit('datatransfer', data, file, chunk);
+				socket.emit('transfer.data', data, file, chunk);
 			}
 		};
 	

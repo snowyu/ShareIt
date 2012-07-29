@@ -8,7 +8,7 @@ socket.on('fileslist', function(data)
 	ui_updatefiles_peer(files)
 });
 
-socket.on('datatransfer', function(data, file, chunk)
+socket.on('transfer.data', function(data, file, chunk)
 {
 	f = downfiles[file];
 	f.data = f.data + data;
@@ -19,13 +19,13 @@ socket.on('datatransfer', function(data, file, chunk)
 	{
 		ui_filedownloading(f, chunk);
 
-		socket.emit('begintransfer', file, parseInt(chunk)+1);
+		socket.emit('transfer.begin', file, parseInt(chunk)+1);
 	}
 });
 
-function beginTransfer(file, fid, size)
+function transfer_begin(file, fid, size)
 {
-	ui_begintransfer(fid)
+	ui_transfer_begin(fid)
 
 	var chunks = size/chunksize;
 	if(chunks % 1 != 0)
@@ -33,5 +33,5 @@ function beginTransfer(file, fid, size)
 
 	downfiles[file] = {data:'', chunk:0, chunks:chunks, fid:fid};
 
-	socket.emit('begintransfer', file, 0);
+	socket.emit('transfer.begin', file, 0);
 }

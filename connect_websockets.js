@@ -22,8 +22,8 @@ io.sockets.on('connection', function(socket)
 				if(socket.peer != undefined)
 				{
 					// Notify to both peers that we are connected
-					socket.emit('peerconnected');
-					socket.peer.emit('peerconnected');
+					socket.emit('peer.connected');
+					socket.peer.emit('peer.connected');
 
 					// Interchange files lists
 					if(socket.peer.fileslist != undefined)
@@ -42,7 +42,7 @@ io.sockets.on('connection', function(socket)
 	socket.on('disconnect', function()
 	{
         if(socket.peer != undefined)
-	   	    socket.peer.emit('peerdisconnected');
+	   	    socket.peer.emit('peer.disconnected');
 	});
 
 	socket.on('listfiles', function(data)
@@ -53,15 +53,15 @@ io.sockets.on('connection', function(socket)
 			socket.peer.emit('fileslist', data);
 	});
 
-	socket.on('begintransfer', function(file, chunk)
+	socket.on('transfer.begin', function(file, chunk)
 	{
 		if(socket.peer != undefined)
-			socket.peer.emit('begintransfer', file, chunk);
+			socket.peer.emit('transfer.begin', file, chunk);
 	});
 
-	socket.on('datatransfer', function (data, file, chunk)
+	socket.on('transfer.data', function (data, file, chunk)
 	{
 		if(socket.peer != undefined)
-			socket.peer.emit('datatransfer', data, file, chunk);
+			socket.peer.emit('transfer.data', data, file, chunk);
 	});
 });

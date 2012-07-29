@@ -9,7 +9,7 @@ function onopen()
 	$('#fileslist').html('Awaiting file list..');
 }
 
-function info_begintransfer()
+function info_transfer_begin()
 {
 	$('#info').append("Begining Transfer...");
 }
@@ -39,7 +39,7 @@ function _downloadbutton_host()
 
 function _downloadbutton_peer(fileholder)
 {
-    var result = '<div id="fidspan' + fid + '"></div><a href="" onclick="beginTransfer(\'' + fileholder[0] + '\', ' + fid + ', ' + fileholder[1] + '); return false;" id="fid' + fid + '">Transfer</a><a href="data:' + fileholder[2] + ';base64," target="_blank" id="fidsave' + fid + '" style="display:none">Save to disk!</a>'
+    var result = '<div id="fidspan' + fid + '"></div><a href="" onclick="transfer_begin(\'' + fileholder[0] + '\', ' + fid + ', ' + fileholder[1] + '); return false;" id="fid' + fid + '">Transfer</a><a href="data:' + fileholder[2] + ';base64," target="_blank" id="fidsave' + fid + '" style="display:none">Save to disk!</a>'
 
 	fid++
 
@@ -74,7 +74,7 @@ function ui_updatefiles_peer(files)
     _ui_updatefiles($('#fileslist'), _downloadbutton_peer)
 }
 
-function ui_begintransfer(fid)
+function ui_transfer_begin(fid)
 {
 	var f = "#fidspan" + fid;
 	$(f).html('0%');
