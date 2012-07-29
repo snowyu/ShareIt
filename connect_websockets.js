@@ -42,7 +42,11 @@ io.sockets.on('connection', function(socket)
 	socket.on('disconnect', function()
 	{
         if(socket.peer != undefined)
+        {
 	   	    socket.peer.emit('peer.disconnected');
+
+			socket.peer.peer = undefined;
+		}
 	});
 
 	socket.on('listfiles', function(data)
