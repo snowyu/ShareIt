@@ -20,7 +20,7 @@ function impeer()
 
 	$('#files').remove();
 	$('#drop_zone').css("cursor", "default");
-	$('#clicky').html('Awaiting file list..');
+	$('#fileslist').html('Awaiting file list..');
 }
 
 function info_begintransfer()
@@ -60,14 +60,13 @@ function _downloadbutton_peer(fileholder)
     return result
 }
 
-function _ui_updatefiles(downloadbutton)
+function _ui_updatefiles(area, downloadbutton)
 {
-	$('#clicky').html('');
-	$('#clicky').html(function(i,v)
+	area.html('');
+	area.html(function(i,v)
 	{
    		return '<table id="filestable" cellspacing="0" summary=""><tr><th scope="col" abbr="Filename" class="nobg" width="60%">Filename</th><th scope="col" abbr="Status" width="20%" >Size</th><th scope="col" abbr="Size"width="20%" >Action</th></tr>' + v;
 	});
-	$('#clicky').show();
 
 	for(var file in files)
 		if(files.hasOwnProperty(file))
@@ -81,12 +80,12 @@ function _ui_updatefiles(downloadbutton)
 
 function ui_updatefiles_host(files)
 {
-    _ui_updatefiles(_downloadbutton_host)
+    _ui_updatefiles($('#clicky'), _downloadbutton_host)
 }
 
 function ui_updatefiles_peer(files)
 {
-    _ui_updatefiles(_downloadbutton_peer)
+    _ui_updatefiles($('#fileslist'), _downloadbutton_peer)
 }
 
 function ui_begintransfer(fid)

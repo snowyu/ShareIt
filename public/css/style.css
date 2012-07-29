@@ -175,6 +175,22 @@ a{
     cursor: pointer;
 }
 
+#fileslist {
+    border: 2px dashed #BBBBBB;
+    border-radius: 5px 5px 5px 5px;
+    color: #BBBBBB;
+    padding: 25px;
+    padding-top: 25px;
+    padding-bottom: 25px;
+    text-align: center;
+    width: 800px;
+    font-size: 1.3em;
+	text-align: center;
+	font-family: Helvetica;
+    margin: 0 auto;
+    cursor: pointer;
+}
+
 #filestable {
 	width: 700px;
 	padding: 0;

@@ -4,7 +4,7 @@ var io = require('socket.io').listen(app)
 io.set('log level', 1);
 io.sockets.on('connection', function (socket)
 {
-	socket.on('joiner', function (data)
+	socket.on('joiner', function(data)
 	{
 		len = io.sockets.clients(data).length;
 
@@ -28,13 +28,15 @@ io.sockets.on('connection', function (socket)
 
 			socket.hoster = io.sockets.clients(data)[0];
 
-			io.sockets.clients(data)[0].peer = socket;
-
-			if(socket.hoster.fileslist != undefined)
-				socket.emit('fileslist', socket.hoster.fileslist);
-
 			if(socket.hoster != undefined)
+			{
 				socket.hoster.emit('peerconnected');
+
+				if(socket.hoster.fileslist != undefined)
+					socket.emit('fileslist', socket.hoster.fileslist);
+			}
+
+			io.sockets.clients(data)[0].peer = socket;
 		}
 		else
 			socket.emit('warn', "This connection is full. Please try later.");
