@@ -5,7 +5,7 @@ socket.on('files.list', function(data)
 	ui_updatefiles_peer(JSON.parse(data))
 });
 
-socket.on('transfer.data', function(data, file, chunk)
+socket.on('transfer.send_chunk', function(file, chunk, data)
 {
 	f = downfiles[file];
 	f.data = f.data + data;

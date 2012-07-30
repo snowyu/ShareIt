@@ -59,9 +59,9 @@ io.sockets.on('connection', function(socket)
 			socket.peer.emit('transfer.query_chunk', file, chunk);
 	});
 
-	socket.on('transfer.data', function(data, file, chunk)
+	socket.on('transfer.send_chunk', function(file, chunk, data)
 	{
 		if(socket.peer != undefined)
-			socket.peer.emit('transfer.data', data, file, chunk);
+			socket.peer.emit('transfer.send_chunk', file, chunk, data);
 	});
 });

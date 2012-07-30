@@ -25,7 +25,7 @@ else
 			{
 				// DONE == 2
 				var data = evt.target.result;
-				socket.emit('transfer.data', data, file, chunk);
+				socket.emit('transfer.send_chunk', file, chunk, data);
 			}
 		};
 	
