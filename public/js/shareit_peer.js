@@ -13,10 +13,10 @@ socket.on('transfer.send_chunk', function(filename, chunk, data)
 	file.data += data;
 
 	if(file.chunks == chunk)
-		ui_filedownloaded(filename);
+		ui_filedownloaded(filename, file.data);
 	else
 	{
-		ui_filedownloading(filename, Math.floor(chunk/f.chunks * 100));
+		ui_filedownloading(filename, Math.floor(chunk/file.chunks * 100));
 
 		// Demand more data
 		socket.emit('transfer.query_chunk', filename, parseInt(chunk)+1);
@@ -25,9 +25,7 @@ socket.on('transfer.send_chunk', function(filename, chunk, data)
 
 function transfer_begin(file)
 {
-	alert("transfer_begin: '"+file.name +"' " + file.size)
-
-	ui_transfer_begin(file.name)
+	ui_filedownloading(file.name, 0)
 
 	var chunks = file.size/chunksize;
 	if(chunks % 1 != 0)
