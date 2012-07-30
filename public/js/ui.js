@@ -9,14 +9,28 @@ function onopen()
 	$('#fileslist').html('Awaiting file list..');
 }
 
-function info(data)
+function log(level, msg)
 {
-	$('#info').append(data);
+	switch(level)
+	{
+		case 'warning':
+			msg = '<span style="color: red;">' + msg + '</span>'
+			break
+	}
+
+	msg += '<br/>'
+
+	$('#log').append(msg);
 }
 
-function warn(data)
+function info(msg)
 {
-	$('#warnings').html(data);
+	log('info', msg);
+}
+
+function warning(msg)
+{
+	log('warning', msg);
 }
 
 $(document).ready(function()

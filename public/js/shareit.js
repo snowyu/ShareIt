@@ -11,9 +11,9 @@ socket.on('connect', function(data)
 	socket.emit('joiner', $.url().segment(1));	
 });
 
-socket.on('warn', function(data)
+socket.on('warning', function(data)
 {
-	warn(data);
+	warning(data);
 });
 
 socket.on('info', function(data)

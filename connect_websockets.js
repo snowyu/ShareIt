@@ -9,7 +9,7 @@ io.sockets.on('connection', function(socket)
 		var len = io.sockets.clients(data).length;
 
 		if(len >= 2)
-			socket.emit('warn', "This connection is full. Please try later.");
+			socket.emit('warning', "This connection is full. Please try later.");
 		else
 		{
 			socket.join(data);
