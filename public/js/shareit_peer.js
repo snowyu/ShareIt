@@ -1,11 +1,8 @@
-var files = {};
 var downfiles = {};
 
-socket.on('fileslist', function(data)
+socket.on('files.list', function(data)
 {
-	files = JSON.parse(data)
-
-	ui_updatefiles_peer(files)
+	ui_updatefiles_peer(JSON.parse(data))
 });
 
 socket.on('transfer.data', function(data, file, chunk)
@@ -19,6 +16,7 @@ socket.on('transfer.data', function(data, file, chunk)
 	{
 		ui_filedownloading(f, chunk);
 
+		// Demand more data
 		socket.emit('transfer.begin', file, parseInt(chunk)+1);
 	}
 });
@@ -33,5 +31,6 @@ function transfer_begin(file, fid, size)
 
 	downfiles[file] = {data:'', chunk:0, chunks:chunks, fid:fid};
 
+	// Demand data from the begining of the file
 	socket.emit('transfer.begin', file, 0);
 }

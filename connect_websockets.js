@@ -8,7 +8,7 @@ io.sockets.on('connection', function(socket)
 	{
 		var len = io.sockets.clients(data).length;
 
-		if(len > 1)
+		if(len >= 2)
 			socket.emit('warn', "This connection is full. Please try later.");
 		else
 		{
@@ -21,16 +21,12 @@ io.sockets.on('connection', function(socket)
 	
 				if(socket.peer != undefined)
 				{
-					// Notify to both peers that we are connected
-					socket.emit('peer.connected');
-					socket.peer.emit('peer.connected');
-
-					// Interchange files lists
-					if(socket.peer.fileslist != undefined)
-						socket.emit('fileslist', socket.peer.fileslist);
-
 					// Set this socket as the other socket peer
 					socket.peer.peer = socket;
+
+					// Notify to both peers that we are now connected
+					socket.emit('peer.connected');
+					socket.peer.emit('peer.connected');
 				}
 			}
 		}
@@ -49,12 +45,12 @@ io.sockets.on('connection', function(socket)
 		}
 	});
 
-	socket.on('listfiles', function(data)
-	{
-		socket.fileslist = data;
+	// Proxied events
 
+	socket.on('files.list', function(data)
+	{
 		if(socket.peer != undefined)
-			socket.peer.emit('fileslist', data);
+			socket.peer.emit('files.list', data);
 	});
 
 	socket.on('transfer.begin', function(file, chunk)
@@ -63,7 +59,7 @@ io.sockets.on('connection', function(socket)
 			socket.peer.emit('transfer.begin', file, chunk);
 	});
 
-	socket.on('transfer.data', function (data, file, chunk)
+	socket.on('transfer.data', function(data, file, chunk)
 	{
 		if(socket.peer != undefined)
 			socket.peer.emit('transfer.data', data, file, chunk);

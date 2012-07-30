@@ -45,6 +45,19 @@ else
 	})
 }
 
+socket.on('peer.connected', function(data)
+{
+	ui_peerstate("Peer connected!");
+
+	socket.emit('files.list', JSON.stringify(files));
+})
+
+socket.on('peer.disconnected', function(data)
+{
+	ui_peerstate("Peer disconnected.");
+})
+
+
 function files_change(filelist)
 {
 	files = {};
@@ -54,7 +67,7 @@ function files_change(filelist)
 		if(!files.hasOwnProperty(f))
 			files[f.name] = [f.name, f.size, f.type, f];
 
-	socket.emit('listfiles', JSON.stringify(files));
+	socket.emit('files.list', JSON.stringify(files));
 
 	ui_updatefiles_host(files)
 }
