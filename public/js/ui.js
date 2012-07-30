@@ -67,17 +67,12 @@ function _downloadbutton_peer(fileholder)
     	transfer.id = "fid" + fid
 		transfer.appendChild(document.createTextNode("Transfer"));
 	div.appendChild(transfer);
-    
+
     var save = document.createElement("A");
     	save.href = "data:" + fileholder[2] + ";base64"
     	save.target = "_blank"
-    	save.onclick = function()
-    	{
-	    	transfer_begin(fileholder[0], fid, fileholder[1]);
-	    	return false;
-    	}
     	save.id = "fidsave" + fid
-    	save.style = "display:none"
+    	save.style.display = "none"
 		save.appendChild(document.createTextNode("Save to disk!"));
 	div.appendChild(save);
 
@@ -145,7 +140,7 @@ function _ui_updatefiles(area, downloadbutton, files)
 
 			var td = document.createElement('TD');
 				td.class = "end"
-				td.appendChild(document.createTextNode(downloadbutton(fileholder)));
+				td.appendChild(downloadbutton(fileholder));
 			tr.appendChild(td)
 		}
 }
