@@ -47,31 +47,9 @@
 	   	</div>
 
 		<div id="footer">
-	    	<div id="what">
-	 			<i>
-	 				<a onClick="$('#about').slideDown('slow');">What is this?</a>
-	 			<i>
-	    	</div>
-	
-	    	<div id="about" style="display: none;">
-	 			<b>Dirty</b>Share is a proof of concept "Peer to Peer" filesharing system written in <b>pure Javascript</b> with Socket.io and Node.js. It's called <b>Dirty</b>Share because it's dirty as hell across the whole stack, from the concept to the code to the use case. <br/><br/>
-	
-	 			File transfers in <b>Dirty</b>Share happen from a host client to a peer client, in chunks which go through the webserver over WebSockets provided by Socket.IO. The web server only holds onto the data while it is being received and transmitted through it, so there is <i>no data ever permanently stored on the web server</i>. This makes it perfect for sending dirty pictures!<br/><br/>
-	
-				Ideally, the WebSockets will only be used to establish the P2P connections which will go over the HTML5 PeerConnection object, however, <i>no modern browsers support this feature yet</i>. Hopefully, it will become available within the next 6 months or so, and <b>we will be ready</b> for it !<br /><br />
-	
-				Let's make a purely browser based, ad-free, Free and Open Source private filesharing system!
-	    	</div>
-	
-	    	<div id="credits">
-	    		<b>Dirty</b>Share is written by <b>Rich Jones</b> of <b><a href="http://gun.io" target="_blank">Gun.io</a></b>. <br/><br/>
-	    		<a href="https://github.com/Miserlou/DirtyShare" target="_blank">Source code</a> is here.<br/> Patches graciously accepted! <br/><br/>
-	    		Interested in dicussing/hacking on web peer to peer software? Shoot an email to <b>webp2p@librelist.com</b> and you'll be part of the mailing list!
-	    	</div>
-	
 	        <div id="lower">
 		        <div id="info"></div>
-		        <div id="warnings">
+		        <div id="warnings"></div>
 		    </div>
         </div>
     </body>
