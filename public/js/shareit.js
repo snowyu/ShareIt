@@ -6,24 +6,24 @@ var chunksize = 65536;
 
 socket.on('connect', function(data)
 {
+	socket.on('warning', function(data)
+	{
+		warning(data);
+	});
+
+	socket.on('info', function(data)
+	{
+		info(data);
+	});
+
 	onopen();
 
 	socket.emit('joiner', $.url().segment(1));	
 });
 
-socket.on('warning', function(data)
-{
-	warning(data);
-});
-
-socket.on('info', function(data)
-{
-	info(data);
-});
-
 function encode64(input)
 {
-	var keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "abcdefghijklmnopqrstuvwxyz" + "0123456789+/" + "=";
+	var keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "abcdefghijklmnopqrstuvwxyz" + "0123456789" + "+/=";
 
 	var output = "";
     var chr1, chr2, chr3 = "";
