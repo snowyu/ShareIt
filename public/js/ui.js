@@ -57,11 +57,7 @@ function _downloadbutton_peer(fileholder)
 
 function _ui_updatefiles(area, downloadbutton)
 {
-	area.html('');
-	area.html(function(i,v)
-	{
-   		return '<table id="filestable" cellspacing="0" summary=""><tr><th scope="col" abbr="Filename" class="nobg" width="60%">Filename</th><th scope="col" abbr="Status" width="20%" >Size</th><th scope="col" abbr="Size"width="20%" >Action</th></tr>' + v;
-	});
+	area.html('<table id="filestable" cellspacing="0" summary=""><tr><th scope="col" abbr="Filename" class="nobg" width="60%">Filename</th><th scope="col" abbr="Status" width="20%" >Size</th><th scope="col" abbr="Size"width="20%" >Action</th></tr></table>')
 
 	for(var file in files)
 		if(files.hasOwnProperty(file))
