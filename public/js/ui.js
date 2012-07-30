@@ -120,7 +120,10 @@ function _ui_updatefiles(area, downloadbutton, files)
 		th.appendChild(document.createTextNode("Action"));
 	tr.appendChild(th);
 
-	area.appendChild(filestable)
+	// Remove old table and add new empty one
+	while(area.firstChild)
+		area.removeChild(area.firstChild);
+  	area.appendChild(filestable)
 
 	for(var file in files)
 		if(files.hasOwnProperty(file))
