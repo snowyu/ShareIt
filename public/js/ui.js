@@ -86,7 +86,7 @@ function _downloadbutton_peer(fileholder)
     return div
 }
 
-function _ui_updatefiles(area, downloadbutton)
+function _ui_updatefiles(area, downloadbutton, files)
 {
 	var filestable = document.createElement('TABLE');
 		filestable.id = "filestable"
@@ -149,12 +149,12 @@ function _ui_updatefiles(area, downloadbutton)
 
 function ui_updatefiles_host(files)
 {
-    _ui_updatefiles(document.getElementById('clicky'), _downloadbutton_host)
+    _ui_updatefiles(document.getElementById('clicky'), _downloadbutton_host, files)
 }
 
 function ui_updatefiles_peer(files)
 {
-    _ui_updatefiles(document.getElementById('fileslist'), _downloadbutton_peer)
+    _ui_updatefiles(document.getElementById('fileslist'), _downloadbutton_peer, files)
 }
 
 function ui_transfer_begin(fid)
