@@ -41,7 +41,7 @@ $(document).ready(function()
     }, false);
 })
 
-function _downloadbutton_host()
+function _button_host()
 {
 	var bold = document.createElement("B");
 		bold.appendChild(document.createTextNode("Sharing!"));
@@ -49,39 +49,54 @@ function _downloadbutton_host()
 	return bold
 }
 
-function _downloadbutton_peer(fileholder)
+function _button_peer(file)
 {
     var div = document.createElement("DIV");
+    	div.id = file.name
 
-    var span = document.createElement("DIV");
-    	span.id = "fidspan" + fid
-	div.appendChild(span);
+	div.transfer = function()
+	{
+	    var transfer = document.createElement("A");
+	    	transfer.href = ""
+	    	transfer.onclick = function()
+	    	{
+		    	transfer_begin(file);
+		    	return false;
+	    	}
+			transfer.appendChild(document.createTextNode("Transfer"));
 
-    var transfer = document.createElement("A");
-    	transfer.href = ""
-    	transfer.onclick = function()
-    	{
-	    	transfer_begin(fileholder[0], fid, fileholder[1]);
-	    	return false;
-    	}
-    	transfer.id = "fid" + fid
-		transfer.appendChild(document.createTextNode("Transfer"));
-	div.appendChild(transfer);
+		while(div.firstChild)
+			div.removeChild(div.firstChild);
+		div.appendChild(transfer);
+	}
+	
+	div.progressbar = function()
+	{
+		var progress = document.createTextNode("0%")
 
-    var save = document.createElement("A");
-    	save.href = "data:" + fileholder[2] + ";base64"
-    	save.target = "_blank"
-    	save.id = "fidsave" + fid
-    	save.style.display = "none"
-		save.appendChild(document.createTextNode("Save to disk!"));
-	div.appendChild(save);
+		while(div.firstChild)
+			div.removeChild(div.firstChild);
+		div.appendChild(progress);
+	}
+	
+	div.savetodisk = function(data)
+	{
+	    var save = document.createElement("A");
+	    	save.href = "data:" + encode64(data) + ";base64"
+	    	save.target = "_blank"
+			save.appendChild(document.createTextNode("Save to disk!"));
 
-	fid++
+		while(div.firstChild)
+			div.removeChild(div.firstChild);
+		div.appendChild(save);
+	}
+
+	div.transfer()
 
     return div
 }
 
-function _ui_updatefiles(area, downloadbutton, files)
+function _ui_updatefiles(area, button, files)
 {
 	var filestable = document.createElement('TABLE');
 		filestable.id = "filestable"
@@ -120,10 +135,10 @@ function _ui_updatefiles(area, downloadbutton, files)
 		area.removeChild(area.firstChild);
   	area.appendChild(filestable)
 
-	for(var file in files)
-		if(files.hasOwnProperty(file))
+	for(var filename in files)
+		if(files.hasOwnProperty(filename))
 		{
-            var fileholder= files[file]
+            var file = files[filename]
 
 			var tr = document.createElement('TR');
 			filestable.appendChild(tr)
@@ -131,53 +146,38 @@ function _ui_updatefiles(area, downloadbutton, files)
 			var th = document.createElement('TH');
 				th.scope = "row"
 				th.class = "spec"
-				th.appendChild(document.createTextNode(fileholder[0]));
+				th.appendChild(document.createTextNode(file.name));
 			tr.appendChild(th)
 
 			var td = document.createElement('TD');
-				td.appendChild(document.createTextNode(fileholder[1]));
+				td.appendChild(document.createTextNode(file.size));
 			tr.appendChild(td)
 
 			var td = document.createElement('TD');
 				td.class = "end"
-				td.appendChild(downloadbutton(fileholder));
+				td.appendChild(button(file));
 			tr.appendChild(td)
 		}
 }
 
 function ui_updatefiles_host(files)
 {
-    _ui_updatefiles(document.getElementById('clicky'), _downloadbutton_host, files)
+    _ui_updatefiles(document.getElementById('clicky'), _button_host, files)
 }
 
 function ui_updatefiles_peer(files)
 {
-    _ui_updatefiles(document.getElementById('fileslist'), _downloadbutton_peer, files)
+    _ui_updatefiles(document.getElementById('fileslist'), _button_peer, files)
 }
 
-function ui_transfer_begin(fid)
+function ui_filedownloading(filename, percent)
 {
-	var f = "#fidspan" + fid;
-	$(f).html('0%');
-	f = "#fid" + fid;
-	$(f).hide();
+	$("#" + filename).html(percent + '%');
 }
 
-function ui_filedownloading(f, chunk)
+function ui_filedownloaded(filename, data)
 {
-	var fspan = "#fidspan" + f.fid;
-	$(fspan).html(Math.floor(chunk/f.chunks * 100) + '%');
-}
-
-function ui_filedownloaded(f)
-{
-	var fspan = "#fidspan" + f.fid;
-	$(fspan).hide();
-	$(fspan).html('');
-
-	var fsave = "#fidsave" + f.fid;
-	$(fsave).attr('href', $(fsave).attr('href') + encode64(f.data));
-	$(fsave).show();
+	document.getElementById(filename).savetodisk(data);
 
 	info("Transfer finished!");
 }

@@ -1,5 +1,3 @@
-var fid = 0;
-
 var socket = io.connect('http://localhost:8000');
 
 var chunksize = 65536;
