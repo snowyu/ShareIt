@@ -7,14 +7,13 @@ else
 {
 	var reader = new FileReader();
 
-	socket.on('transfer.query_chunk', function(file, chunk)
+	socket.on('transfer.query_chunk', function(filename, chunk)
 	{
-		var fileholder= files[file];
-		var fileo= fileholder[3]; //ugly
+		var file = files[filename];
 	
 		start = chunk * chunksize;
 	
-		stop = parseInt(fileholder[1]) - 1;
+		stop = parseInt(file.size) - 1;
 		if(stop > start + chunksize - 1)
 			stop = start + chunksize - 1;
 	
@@ -25,15 +24,15 @@ else
 			{
 				// DONE == 2
 				var data = evt.target.result;
-				socket.emit('transfer.send_chunk', file, chunk, data);
+				socket.emit('transfer.send_chunk', filename, chunk, data);
 			}
 		};
 	
 		var slice;
-		if(fileo.webkitSlice)
-			slice = fileo.webkitSlice(start, stop + 1);
-		else if(fileo.mozSlice)
-			slice = fileo.mozSlice(start, stop + 1);
+		if(file.webkitSlice)
+			slice = file.webkitSlice(start, stop + 1);
+		else if(file.mozSlice)
+			slice = file.mozSlice(start, stop + 1);
 		else
 			alert("It won't work in your browser. Please use Chrome or Firefox.");
 
@@ -59,9 +58,10 @@ function files_change(filelist)
 	files = {};
 
 	// Loop through the FileList and append files to list.
-	for(var i = 0, f; f = filelist[i]; i++)
-		if(!files.hasOwnProperty(f))
-			files[f.name] = [f.name, f.size, f.type, f];
+	for(var i = 0, file; file = filelist[i]; i++)
+		if(!files.hasOwnProperty(file))
+			files[file.name] = file;
+//			files[file.name] = [file.name, file.size, file.type, file];
 
 	send_files_list()
 

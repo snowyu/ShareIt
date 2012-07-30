@@ -53,15 +53,15 @@ io.sockets.on('connection', function(socket)
 			socket.peer.emit('files.list', data);
 	});
 
-	socket.on('transfer.query_chunk', function(file, chunk)
+	socket.on('transfer.query_chunk', function(filename, chunk)
 	{
 		if(socket.peer != undefined)
-			socket.peer.emit('transfer.query_chunk', file, chunk);
+			socket.peer.emit('transfer.query_chunk', filename, chunk);
 	});
 
-	socket.on('transfer.send_chunk', function(file, chunk, data)
+	socket.on('transfer.send_chunk', function(filename, chunk, data)
 	{
 		if(socket.peer != undefined)
-			socket.peer.emit('transfer.send_chunk', file, chunk, data);
+			socket.peer.emit('transfer.send_chunk', filename, chunk, data);
 	});
 });
