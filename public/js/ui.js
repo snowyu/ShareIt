@@ -9,11 +9,6 @@ function onopen()
 	$('#fileslist').html('Awaiting file list..');
 }
 
-function info_transfer_begin()
-{
-	$('#info').append("Begining Transfer...");
-}
-
 function info(data)
 {
 	$('#info').append(data);

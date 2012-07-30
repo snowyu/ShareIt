@@ -53,10 +53,10 @@ io.sockets.on('connection', function(socket)
 			socket.peer.emit('files.list', data);
 	});
 
-	socket.on('transfer.begin', function(file, chunk)
+	socket.on('transfer.query_chunk', function(file, chunk)
 	{
 		if(socket.peer != undefined)
-			socket.peer.emit('transfer.begin', file, chunk);
+			socket.peer.emit('transfer.query_chunk', file, chunk);
 	});
 
 	socket.on('transfer.data', function(data, file, chunk)

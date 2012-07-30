@@ -7,11 +7,8 @@ else
 {
 	var reader = new FileReader();
 
-	socket.on('transfer.begin', function(file, chunk)
+	socket.on('transfer.query_chunk', function(file, chunk)
 	{
-		if(chunk == 0)
-			info_transfer_begin();
-	
 		var fileholder= files[file];
 		var fileo= fileholder[3]; //ugly
 	
@@ -49,14 +46,13 @@ socket.on('peer.connected', function(data)
 {
 	ui_peerstate("Peer connected!");
 
-	socket.emit('files.list', JSON.stringify(files));
+	send_files_list()
 })
 
 socket.on('peer.disconnected', function(data)
 {
 	ui_peerstate("Peer disconnected.");
 })
-
 
 function files_change(filelist)
 {
@@ -67,7 +63,12 @@ function files_change(filelist)
 		if(!files.hasOwnProperty(f))
 			files[f.name] = [f.name, f.size, f.type, f];
 
-	socket.emit('files.list', JSON.stringify(files));
+	send_files_list()
 
 	ui_updatefiles_host(files)
+}
+
+function send_files_list()
+{
+	socket.emit('files.list', JSON.stringify(files));
 }
