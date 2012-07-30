@@ -43,40 +43,118 @@ $(document).ready(function()
 
 function _downloadbutton_host()
 {
-    return '<b>Sharing!</b>'
+	var bold = document.createElement("B");
+		bold.appendChild(document.createTextNode("Sharing!"));
+
+	return bold
 }
 
 function _downloadbutton_peer(fileholder)
 {
-    var result = '<div id="fidspan' + fid + '"></div><a href="" onclick="transfer_begin(\'' + fileholder[0] + '\', ' + fid + ', ' + fileholder[1] + '); return false;" id="fid' + fid + '">Transfer</a><a href="data:' + fileholder[2] + ';base64," target="_blank" id="fidsave' + fid + '" style="display:none">Save to disk!</a>'
+    var div = document.createElement("DIV");
+
+    var span = document.createElement("DIV");
+    	span.id = "fidspan" + fid
+	div.appendChild(span);
+
+    var transfer = document.createElement("A");
+    	transfer.href = ""
+    	transfer.onclick = function()
+    	{
+	    	transfer_begin(fileholder[0], fid, fileholder[1]);
+	    	return false;
+    	}
+    	transfer.id = "fid" + fid
+		transfer.appendChild(document.createTextNode("Transfer"));
+	div.appendChild(transfer);
+    
+    var save = document.createElement("A");
+    	save.href = "data:" + fileholder[2] + ";base64"
+    	save.target = "_blank"
+    	save.onclick = function()
+    	{
+	    	transfer_begin(fileholder[0], fid, fileholder[1]);
+	    	return false;
+    	}
+    	save.id = "fidsave" + fid
+    	save.style = "display:none"
+		save.appendChild(document.createTextNode("Save to disk!"));
+	div.appendChild(save);
 
 	fid++
 
-    return result
+    return div
 }
 
 function _ui_updatefiles(area, downloadbutton)
 {
-	area.html('<table id="filestable" cellspacing="0" summary=""><tr><th scope="col" abbr="Filename" class="nobg" width="60%">Filename</th><th scope="col" abbr="Status" width="20%" >Size</th><th scope="col" abbr="Size"width="20%" >Action</th></tr></table>')
+	var filestable = document.createElement('TABLE');
+		filestable.id = "filestable"
+		filestable.cellspacing = 0
+		filestable.summary = ""
+
+	var tr = document.createElement('TR');
+	filestable.appendChild(tr);
+
+	var th = document.createElement('TH');
+		th.scope = "col"
+		th.abbr = "Filename"
+		th.class = "nobg"
+		th.width = "60%"
+		th.appendChild(document.createTextNode("Filename"));
+	tr.appendChild(th);
+
+	var th = document.createElement('TH');
+		th.scope = "col"
+		th.abbr = "Size"
+		th.class = "nobg"
+		th.width = "20%"
+		th.appendChild(document.createTextNode("Size"));
+	tr.appendChild(th);
+
+	var th = document.createElement('TH');
+		th.scope = "col"
+		th.abbr = "Status"
+		th.class = "nobg"
+		th.width = "20%"
+		th.appendChild(document.createTextNode("Action"));
+	tr.appendChild(th);
+
+	area.appendChild(filestable)
 
 	for(var file in files)
 		if(files.hasOwnProperty(file))
 		{
             var fileholder= files[file]
 
-			$('#filestable').append(
-			'<tr><th scope="row" class="spec">' + fileholder[0] + '</th><td>' + fileholder[1] + '</td><td class="end">' + downloadbutton(fileholder) + '</td></tr>');
+			var tr = document.createElement('TR');
+			filestable.appendChild(tr)
+
+			var th = document.createElement('TH');
+				th.scope = "row"
+				th.class = "spec"
+				th.appendChild(document.createTextNode(fileholder[0]));
+			tr.appendChild(th)
+
+			var td = document.createElement('TD');
+				td.appendChild(document.createTextNode(fileholder[1]));
+			tr.appendChild(td)
+
+			var td = document.createElement('TD');
+				td.class = "end"
+				td.appendChild(document.createTextNode(downloadbutton(fileholder)));
+			tr.appendChild(td)
 		}
 }
 
 function ui_updatefiles_host(files)
 {
-    _ui_updatefiles($('#clicky'), _downloadbutton_host)
+    _ui_updatefiles(document.getElementById('clicky'), _downloadbutton_host)
 }
 
 function ui_updatefiles_peer(files)
 {
-    _ui_updatefiles($('#fileslist'), _downloadbutton_peer)
+    _ui_updatefiles(document.getElementById('fileslist'), _downloadbutton_peer)
 }
 
 function ui_transfer_begin(fid)

@@ -3,6 +3,8 @@ var downfiles = {};
 socket.on('files.list', function(data)
 {
 	ui_updatefiles_peer(JSON.parse(data))
+
+	info('files.list: '+Object.keys(JSON.parse(data)));
 });
 
 socket.on('transfer.send_chunk', function(file, chunk, data)
