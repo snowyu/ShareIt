@@ -82,7 +82,7 @@ function _button_peer(file)
 	div.savetodisk = function(data)
 	{
 	    var save = document.createElement("A");
-	    	save.href = "data:" + encode64(data) + ";base64"
+	    	save.href = "data:" + file.type + ";base64," + encode64(data)
 	    	save.target = "_blank"
 			save.appendChild(document.createTextNode("Save to disk!"));
 
