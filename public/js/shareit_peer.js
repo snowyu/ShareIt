@@ -3,6 +3,8 @@ var downfiles = {}
 CACHE = 0
 SAVED = 1
 
+Blob = Blob || BlobBuilder
+
 var filer = new Filer()
 	filer.init({persistent: true, size: 1 * 1024 * 1024 * 1024});
 
@@ -15,10 +17,12 @@ socket.on('files.list', function(data)
 
 socket.on('transfer.send_chunk', function(filename, chunk, data)
 {
-	var bb = new BlobBuilder();
-		bb.append(data);
+	var byteArray = new Uint8Array(data.length);
+    for(var i = 0; i < data.length; i++)
+	    byteArray[i] = data.charCodeAt(i) & 0xff;
 
-	filer.write(filename, {data:bb.getBlob(), append:true}, function(fileEntry, fileWriter)
+	filer.write(filename, {data:new Blob([byteArray.buffer]), append:true},
+	function(fileEntry, fileWriter)
 	{
 		var file = downfiles[filename];
 		if(file.chunks == chunk)
