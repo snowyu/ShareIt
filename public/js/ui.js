@@ -81,9 +81,6 @@ function _button_peer(file)
 	
 	div.savetodisk = function()
 	{
-		// Auto-save downloaded file
-		savetodisk(file)
-
 		// Show file as downloaded
 		while(div.firstChild)
 			div.removeChild(div.firstChild);

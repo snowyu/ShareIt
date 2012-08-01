@@ -17,7 +17,12 @@ socket.on('transfer.send_chunk', function(filename, chunk, data)
 	cache[filename] += data;
 
 	if(file.chunks == chunk)
+	{
+		// Auto-save downloaded file
+		savetodisk(file)
+
 		ui_filedownloaded(filename);
+	}
 	else
 	{
 		ui_filedownloading(filename, Math.floor(chunk/file.chunks * 100));
