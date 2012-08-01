@@ -1,5 +1,8 @@
 var downfiles = {};
 
+CACHE = 0
+SAVED = 1
+
 socket.on('files.list', function(data)
 {
 	ui_updatefiles_peer(JSON.parse(data))
@@ -13,7 +16,7 @@ socket.on('transfer.send_chunk', function(filename, chunk, data)
 	file.data += data;
 
 	if(file.chunks == chunk)
-		ui_filedownloaded(filename, file.data);
+		ui_filedownloaded(filename);
 	else
 	{
 		ui_filedownloading(filename, Math.floor(chunk/file.chunks * 100));
@@ -31,8 +34,13 @@ function transfer_begin(file)
 	if(chunks % 1 != 0)
 		chunks = Math.floor(chunks) + 1;
 
-	downfiles[file.name] = {data:'', chunk:0, chunks:chunks};
+	downfiles[file.name] = {data:'', chunk:0, chunks:chunks, ubication:CACHE};
 
 	// Demand data from the begining of the file
 	socket.emit('transfer.query_chunk', file.name, 0);
+}
+
+function get_data(file)
+{
+	return downfiles[file.name].data
 }

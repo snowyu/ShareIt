@@ -79,10 +79,10 @@ function _button_peer(file)
 		div.appendChild(progress);
 	}
 	
-	div.savetodisk = function(data)
+	div.savetodisk = function()
 	{
 	    var save = document.createElement("A");
-	    	save.href = "data:" + file.type + ";base64," + encode64(data)
+	    	save.href = "data:" + file.type + ";base64," + encode64(get_data(file))
 	    	save.target = "_blank"
 			save.appendChild(document.createTextNode("Save to disk!"));
 			save.download = file.name
@@ -217,9 +217,9 @@ function ui_filedownloading(filename, percent)
 	$("#" + filename).html(percent + '%');
 }
 
-function ui_filedownloaded(filename, data)
+function ui_filedownloaded(filename)
 {
-	document.getElementById(filename).savetodisk(data);
+	document.getElementById(filename).savetodisk();
 
 	info("Transfer finished!");
 }
