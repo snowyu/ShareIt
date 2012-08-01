@@ -1,4 +1,5 @@
-var downfiles = {};
+var downfiles = {}
+var cache = {}
 
 CACHE = 0
 SAVED = 1
@@ -13,7 +14,7 @@ socket.on('files.list', function(data)
 socket.on('transfer.send_chunk', function(filename, chunk, data)
 {
 	var file = downfiles[filename];
-	file.data += data;
+	cache[filename] += data;
 
 	if(file.chunks == chunk)
 		ui_filedownloaded(filename);
@@ -24,7 +25,7 @@ socket.on('transfer.send_chunk', function(filename, chunk, data)
 		// Demand more data
 		socket.emit('transfer.query_chunk', filename, parseInt(chunk)+1);
 	}
-});
+})
 
 function transfer_begin(file)
 {
@@ -34,7 +35,8 @@ function transfer_begin(file)
 	if(chunks % 1 != 0)
 		chunks = Math.floor(chunks) + 1;
 
-	downfiles[file.name] = {data:'', chunk:0, chunks:chunks, ubication:CACHE};
+	downfiles[file.name] = {chunk:0, chunks:chunks, ubication:CACHE}
+	cache[file.name] = ''
 
 	// Demand data from the begining of the file
 	socket.emit('transfer.query_chunk', file.name, 0);
@@ -42,5 +44,5 @@ function transfer_begin(file)
 
 function get_data(file)
 {
-	return downfiles[file.name].data
+	return cache[file.name]
 }
