@@ -1,6 +1,6 @@
 var files = {};
 
-//read the requested bytes
+// Filereader support (be able to host files from the filesystem)
 if(typeof FileReader == "undefined")
 	oldBrowser();
 else
@@ -61,7 +61,6 @@ function files_change(filelist)
 	for(var i = 0, file; file = filelist[i]; i++)
 		if(!files.hasOwnProperty(file))
 			files[file.name] = file;
-//			files[file.name] = [file.name, file.size, file.type, file];
 
 	send_files_list()
 
