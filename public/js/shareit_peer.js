@@ -42,7 +42,18 @@ function transfer_begin(file)
 	socket.emit('transfer.query_chunk', file.name, 0);
 }
 
-function get_data(file)
+function savetodisk(file)
 {
-	return cache[file.name]
+	// Auto-save downloaded file
+    var save = document.createElement("A");
+    	save.href = "data:" + file.type + ";base64," + encode64(cache[file.name])
+		save.download = file.name	// This force to download with a filename instead of navigate
+
+	var evt = document.createEvent('MouseEvents');
+		evt.initMouseEvent('click', true, true, window, 1, 0, 0, 0, 0, false, false, false, false, 0, null);
+
+	save.dispatchEvent(evt);
+
+	// Delete cache
+	delete cache[file.name]
 }

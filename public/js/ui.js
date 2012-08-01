@@ -81,14 +81,8 @@ function _button_peer(file)
 	
 	div.savetodisk = function()
 	{
-	    var save = document.createElement("A");
-	    	save.href = "data:" + file.type + ";base64," + encode64(get_data(file))
-			save.download = file.name
-
 		// Auto-save downloaded file
-		var evt = document.createEvent('MouseEvents');
-		evt.initMouseEvent('click', true, true, window, 1, 0, 0, 0, 0, false, false, false, false, 0, null);
-		save.dispatchEvent(evt);
+		savetodisk(file)
 
 		// Show file as downloaded
 		while(div.firstChild)
