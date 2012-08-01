@@ -18,7 +18,7 @@ socket.on('transfer.send_chunk', function(filename, chunk, data)
 	if(file.chunks == chunk)
 	{
 		// Auto-save downloaded file
-		savetodisk(file)
+		savetodisk(filename)
 
 		ui_filedownloaded(filename);
 	}
@@ -46,12 +46,12 @@ function transfer_begin(file)
 	socket.emit('transfer.query_chunk', file.name, 0);
 }
 
-function savetodisk(file)
+function savetodisk(filename)
 {
 	// Auto-save downloaded file
     var save = document.createElement("A");
-    	save.href = file_url(file.name)
-		save.download = file.name	// This force to download with a filename instead of navigate
+    	save.href = file_url(filename)
+		save.download = filename	// This force to download with a filename instead of navigate
 
 	var evt = document.createEvent('MouseEvents');
 		evt.initMouseEvent('click', true, true, window, 1, 0, 0, 0, 0, false, false, false, false, 0, null);
@@ -59,7 +59,8 @@ function savetodisk(file)
 	save.dispatchEvent(evt);
 
 	// Delete cache file
-	file_delete(file.name)
+	file_delete(filename)
 
-	downfiles[file.name].ubication = SAVED
+	alert("file.name " + filename)
+	downfiles[filename].ubication = SAVED
 }
