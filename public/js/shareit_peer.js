@@ -15,23 +15,27 @@ socket.on('files.list', function(data)
 
 socket.on('transfer.send_chunk', function(filename, chunk, data)
 {
-	var file = downfiles[filename];
-	filer.write(filename, {data:data, append:true})
+	var bb = new BlobBuilder();
+		bb.append(data);
 
-	if(file.chunks == chunk)
+	filer.write(filename, {data:bb.getBlob(), append:true}, function(fileEntry, fileWriter)
 	{
-		// Auto-save downloaded file
-		savetodisk(filename)
-
-		ui_filedownloaded(filename);
-	}
-	else
-	{
-		ui_filedownloading(filename, Math.floor(chunk/file.chunks * 100));
-
-		// Demand more data
-		socket.emit('transfer.query_chunk', filename, parseInt(chunk)+1);
-	}
+		var file = downfiles[filename];
+		if(file.chunks == chunk)
+		{
+			// Auto-save downloaded file
+			savetodisk(filename)
+	
+			ui_filedownloaded(filename);
+		}
+		else
+		{
+			ui_filedownloading(filename, Math.floor(chunk/file.chunks * 100));
+	
+			// Demand more data
+			socket.emit('transfer.query_chunk', filename, parseInt(chunk)+1);
+		}
+	})
 })
 
 function transfer_begin(file)
@@ -43,10 +47,18 @@ function transfer_begin(file)
 		chunks = Math.floor(chunks) + 1;
 
 	downfiles[file.name] = {chunk:0, chunks:chunks, ubication:CACHE}
-	filer.create(file.name, true)
-
-	// Demand data from the begining of the file
-	socket.emit('transfer.query_chunk', file.name, 0);
+	filer.create(file.name, true,
+	function(fileEntry)
+	{
+		// Demand data from the begining of the file
+		socket.emit('transfer.query_chunk', file.name, 0);
+	},
+	function(e)
+	{
+		console.log('Error' + e.name);
+		console.log("File '" + file.name + "' exists.");
+	
+	})
 }
 
 function savetodisk(filename)
@@ -61,9 +73,12 @@ function savetodisk(filename)
 
 	save.dispatchEvent(evt);
 
-	// Delete cache file
-	filer.rm(filename)
-
-	alert("'" + filename + "' = '" + save.href + "'")
+	alert(save.href)
 	downfiles[filename].ubication = SAVED
+//	// Delete cache file
+//	filer.rm(filename, function()
+//	{
+//		alert(save.href)
+//		downfiles[filename].ubication = SAVED
+//	})
 }
