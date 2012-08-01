@@ -61,4 +61,6 @@ function savetodisk(file)
 
 	// Delete cache
 	delete cache[file.name]
+
+	downfiles[file.name].ubication = SAVED
 }
