@@ -3,6 +3,9 @@ var downfiles = {}
 CACHE = 0
 SAVED = 1
 
+var filer = new Filer()
+	filer.init({persistent: true, size: 1 * 1024 * 1024 * 1024});
+
 socket.on('files.list', function(data)
 {
 	ui_updatefiles_peer(JSON.parse(data))
@@ -13,7 +16,7 @@ socket.on('files.list', function(data)
 socket.on('transfer.send_chunk', function(filename, chunk, data)
 {
 	var file = downfiles[filename];
-	file_append(filename, data)
+	filer.write(filename, {data:data, append:true})
 
 	if(file.chunks == chunk)
 	{
@@ -40,7 +43,7 @@ function transfer_begin(file)
 		chunks = Math.floor(chunks) + 1;
 
 	downfiles[file.name] = {chunk:0, chunks:chunks, ubication:CACHE}
-	file_create(file.name)
+	filer.create(file.name, true)
 
 	// Demand data from the begining of the file
 	socket.emit('transfer.query_chunk', file.name, 0);
@@ -50,7 +53,7 @@ function savetodisk(filename)
 {
 	// Auto-save downloaded file
     var save = document.createElement("A");
-    	save.href = file_url(filename)
+    	save.href = filer.pathToFilesystemURL(filename)
 		save.download = filename	// This force to download with a filename instead of navigate
 
 	var evt = document.createEvent('MouseEvents');
@@ -59,8 +62,8 @@ function savetodisk(filename)
 	save.dispatchEvent(evt);
 
 	// Delete cache file
-	file_delete(filename)
+	filer.rm(filename)
 
-	alert("file.name " + filename)
+	alert("'" + filename + "' = '" + save.href + "'")
 	downfiles[filename].ubication = SAVED
 }
