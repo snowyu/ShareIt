@@ -1,5 +1,4 @@
 var downfiles = {}
-var cache = {}
 
 CACHE = 0
 SAVED = 1
@@ -14,7 +13,7 @@ socket.on('files.list', function(data)
 socket.on('transfer.send_chunk', function(filename, chunk, data)
 {
 	var file = downfiles[filename];
-	cache[filename] += data;
+	file_append(filename, data)
 
 	if(file.chunks == chunk)
 	{
@@ -41,7 +40,7 @@ function transfer_begin(file)
 		chunks = Math.floor(chunks) + 1;
 
 	downfiles[file.name] = {chunk:0, chunks:chunks, ubication:CACHE}
-	cache[file.name] = ''
+	file_create(file.name)
 
 	// Demand data from the begining of the file
 	socket.emit('transfer.query_chunk', file.name, 0);
@@ -51,7 +50,7 @@ function savetodisk(file)
 {
 	// Auto-save downloaded file
     var save = document.createElement("A");
-    	save.href = "data:" + file.type + ";base64," + encode64(cache[file.name])
+    	save.href = file_url(file.name)
 		save.download = file.name	// This force to download with a filename instead of navigate
 
 	var evt = document.createEvent('MouseEvents');
@@ -59,8 +58,8 @@ function savetodisk(file)
 
 	save.dispatchEvent(evt);
 
-	// Delete cache
-	delete cache[file.name]
+	// Delete cache file
+	file_delete(file.name)
 
 	downfiles[file.name].ubication = SAVED
 }

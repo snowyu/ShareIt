@@ -57,7 +57,6 @@ function _button_peer(file)
 	div.transfer = function()
 	{
 	    var transfer = document.createElement("A");
-	    	transfer.href = ""
 	    	transfer.onclick = function()
 	    	{
 		    	transfer_begin(file);
