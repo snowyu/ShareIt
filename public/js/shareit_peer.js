@@ -61,7 +61,6 @@ function transfer_begin(file)
 	{
 		console.log('Error' + e.name);
 		console.log("File '" + file.name + "' exists.");
-	
 	})
 }
 
@@ -77,12 +76,17 @@ function savetodisk(filename)
 
 	save.dispatchEvent(evt);
 
-	alert(save.href)
-	downfiles[filename].ubication = SAVED
-//	// Delete cache file
-//	filer.rm(filename, function()
-//	{
-//		alert(save.href)
-//		downfiles[filename].ubication = SAVED
-//	})
+	// Delete cache file
+	filer.open(filename,
+	function(file)
+	{
+		downfiles[filename].ubication = SAVED
+
+		files_add(file, filename)
+	},
+	function(e)
+	{
+		console.log('Error' + e.name);
+		console.log("File '" + filename + "' exists.");
+	})
 }
