@@ -55,12 +55,12 @@ socket.on('peer.disconnected', function(data)
 
 function files_change(filelist)
 {
-	files = {};
-
 	// Loop through the FileList and append files to list.
 	for(var i = 0, file; file = filelist[i]; i++)
 		if(!files.hasOwnProperty(file))
+		{
 			files[file.name] = file;
+		}
 
 	send_files_list()
 
