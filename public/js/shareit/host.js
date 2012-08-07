@@ -1,3 +1,7 @@
+Blob.slice = Blob.slice || Blob.webkitSlice || Blob.mozSlice
+if(Blob.slice != undefined)
+	alert("It won't work in your browser. Please use Chrome or Firefox.");
+
 var files = {};
 
 // Filereader support (be able to host files from the filesystem)
@@ -28,16 +32,7 @@ else
 			}
 		};
 	
-		var slice;
-		if(file.webkitSlice)
-			slice = file.webkitSlice(start, stop + 1);
-		else if(file.mozSlice)
-			slice = file.mozSlice(start, stop + 1);
-		else
-			alert("It won't work in your browser. Please use Chrome or Firefox.");
-
-		if(slice != undefined)
-			reader.readAsBinaryString(slice);
+		reader.readAsBinaryString(file.slice(start, stop + 1));
 	})
 }
 
@@ -53,6 +48,13 @@ socket.on('peer.disconnected', function(data)
 	ui_peerstate("Peer disconnected.");
 })
 
+function db_ready(db)
+{
+	alert("db_ready:"+db.sharepoints_get())
+}
+
+var db = DB(db_ready)
+
 function files_change(filelist)
 {
 	// Loop through the FileList and append files to list.
@@ -60,19 +62,13 @@ function files_change(filelist)
 		if(!files.hasOwnProperty(file))
 		{
 			files[file.name] = file;
+			db.sharepoints_add(file.name)
 		}
 
 	send_files_list()
 
 	ui_updatefiles_host(files)
 }
-
-function db_ready(db)
-{
-	alert("db_ready:"+db.sharepoints_get())
-}
-
-var db = DB(db_ready)
 
 function send_files_list()
 {
