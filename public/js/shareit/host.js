@@ -50,7 +50,10 @@ socket.on('peer.disconnected', function(data)
 
 function db_ready(db)
 {
-	alert("db_ready:"+db.sharepoints_get())
+	db.sharepoints_get(function(result)
+	{
+		alert("db_ready:"+result[0].path)
+	})
 }
 
 var db = DB(db_ready)

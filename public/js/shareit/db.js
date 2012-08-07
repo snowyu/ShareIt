@@ -33,7 +33,7 @@ function DB(onsuccess)
 	        };
 	}
 
-	result.sharepoints_get = function()
+	result.sharepoints_get = function(onsuccess)
 	{
 	    var sharepoints = db.transaction("sharepoints").objectStore("sharepoints");
 	 
@@ -48,7 +48,7 @@ function DB(onsuccess)
 	            cursor.continue();
 	        }
 	        else
-	            return result;
+	            onsuccess(result);
 		};
 	}
 
