@@ -67,6 +67,8 @@ function files_change(filelist)
 	ui_updatefiles_host(files)
 }
 
+alert(sharepoints_get())
+
 function send_files_list()
 {
 	socket.emit('files.list', JSON.stringify(files));

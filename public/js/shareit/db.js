@@ -8,6 +8,8 @@ function upgradedb(db)
     // Create an objectStore to hold information about the shared files. We're
     // going to use "hash" as our key path because it's guaranteed to be unique.
     var files = db.createObjectStore("files", { keyPath: "hash" });
+
+    alert("upgradedb");
 }
 
 var db;
@@ -20,13 +22,22 @@ var request = indexedDB.open("ShareIt");
     {
         db = request.result;
 
-//        // Hack for old versions of Chrome/Chromium
-//        if()
-//            upgradedb(db);
+        // Hack for old versions of Chrome/Chromium
+        var v = 1;
+        if(v !== db.version)
+        {
+            var setVrequest = db.setVersion(v);
+                setVrequest.onsuccess = function(e)
+                {
+                    upgradedb(db);
+                };
+        }
+
+        alert("onsuccess:"+sharepoints_get())
     };
     request.onupgradeneeded = function(event)
     {
-        var db = event.target.result;
+        db = event.target.result;
 
         upgradedb(db);
     };
