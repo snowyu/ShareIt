@@ -53,14 +53,12 @@ function db_ready(db)
 {
 	db.sharepoints_get(function(filelist)
 	{
-		alert("db_ready:"+filelist[0].path+" "+filelist[0].file.name)
-
 		// Loop through the FileList and append files to list.
 		for(var i = 0, file; file = filelist[i]; i++)
 			if(!files.hasOwnProperty(file))
 			{
-				alert("db_ready: "+file.file.name)
-				files[file.file.name] = file.file;
+				alert("db_ready: "+file.name)
+				files[file.name] = file;
 			}
 
 		send_files_list()
@@ -88,5 +86,17 @@ function files_change(filelist)
 
 function send_files_list()
 {
-	socket.emit('files.list', JSON.stringify(files));
+	var files_send = []
+
+	for(var filename in files)
+		if(files.hasOwnProperty(filename))
+		{
+            var file = files[filename]
+
+			files_send.push({"lastModifiedDate": file.lastModifiedDate, "name": file.name,
+							 "size": file.size, "type": file.type});
+		}
+
+	alert('send_files_list: '+JSON.stringify(files_send))
+	socket.emit('files.list', JSON.stringify(files_send));
 }
