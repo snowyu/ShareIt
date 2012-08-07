@@ -1,5 +1,4 @@
 window.indexedDB = window.indexedDB || window.webkitIndexedDB || window.mozIndexedDB || window.msIndexedDB;
-window.IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction || window.mozIDBTransaction || window.msIDBTransaction;
 
 function DB(onsuccess)
 {
@@ -23,7 +22,7 @@ function DB(onsuccess)
 
 	result.sharepoints_add = function(file)
 	{
-	    var transaction = db.transaction("sharepoints", IDBTransaction.READ_WRITE);
+	    var transaction = db.transaction("sharepoints", "readwrite");
 	    var sharepoints = transaction.objectStore("sharepoints");
 	
 	    // [To-Do] Check current sharepoints and update files on duplicates
