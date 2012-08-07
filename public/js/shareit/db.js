@@ -21,7 +21,7 @@ function DB(onsuccess)
 
 	var db;
 
-	result.sharepoints_add = function(path, file)
+	result.sharepoints_add = function(file)
 	{
 	    var transaction = db.transaction("sharepoints", IDBTransaction.READ_WRITE);
 	    var sharepoints = transaction.objectStore("sharepoints");

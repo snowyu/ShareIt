@@ -65,7 +65,7 @@ function files_change(filelist)
 {
 	// Loop through the FileList and append files to list.
 	for(var i = 0, file; file = filelist[i]; i++)
-		db.sharepoints_add(file.name, file)
+		db.sharepoints_add(file)
 
 	send_files_list(filelist)
 
