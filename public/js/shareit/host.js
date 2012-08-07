@@ -67,7 +67,12 @@ function files_change(filelist)
 	ui_updatefiles_host(files)
 }
 
-alert(sharepoints_get())
+function db_ready(db)
+{
+	alert("db_ready:"+db.sharepoints_get())
+}
+
+var db = DB(db_ready)
 
 function send_files_list()
 {

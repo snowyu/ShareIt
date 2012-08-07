@@ -12,35 +12,63 @@ function upgradedb(db)
     alert("upgradedb");
 }
 
-var db;
-var request = indexedDB.open("ShareIt");
-    request.onerror = function(event)
-    {
-        alert("Why didn't you allow my web app to use IndexedDB?!");
-    };
-    request.onsuccess = function(event)
-    {
-        db = request.result;
+function DB(onsuccess)
+{
+	var result = {}
 
-        // Hack for old versions of Chrome/Chromium
-        var v = 1;
-        if(v !== db.version)
-        {
-            var setVrequest = db.setVersion(v);
-                setVrequest.onsuccess = function(e)
-                {
-                    upgradedb(db);
-                };
-        }
+	var db;
 
-        alert("onsuccess:"+sharepoints_get())
-    };
-    request.onupgradeneeded = function(event)
-    {
-        db = event.target.result;
+	result.sharepoints_get = function()
+	{
+	    var sharepoints = db.transaction("sharepoints").objectStore("sharepoints");
+	 
+	    var result = [];
+	
+	    sharepoints.openCursor().onsuccess = function(event)
+	    {
+	        var cursor = event.target.result;
+	        if(cursor)
+	        {
+	            result.push(cursor.value);
+	            cursor.continue();
+	        }
+	        else
+	            return result;
+		};
+	}
 
-        upgradedb(db);
-    };
+	var request = indexedDB.open("ShareIt");
+	    request.onerror = function(event)
+	    {
+	        alert("Why didn't you allow my web app to use IndexedDB?!");
+	    };
+	    request.onsuccess = function(event)
+	    {
+	        db = request.result;
+	
+	        // Hack for old versions of Chrome/Chromium
+	        var v = 1;
+	        if(v !== db.version)
+	        {
+	            var setVrequest = db.setVersion(v);
+	                setVrequest.onsuccess = function(e)
+	                {
+	                    upgradedb(db);
+	                };
+	        }
+	
+			if(onsuccess)
+				onsuccess(result);
+	    };
+	    request.onupgradeneeded = function(event)
+	    {
+	        db = event.target.result;
+	
+	        upgradedb(db);
+	    };
+
+	return result
+}
 
 function sharepoints_add(path)
 {
@@ -54,23 +82,4 @@ function sharepoints_add(path)
         {
             // event.target.result == customerData[i].ssn
         };
-}
-
-function sharepoints_get()
-{
-    var sharepoints = db.transaction("sharepoints").objectStore("sharepoints");
- 
-    var result = [];
-
-    sharepoints.openCursor().onsuccess = function(event)
-    {
-        var cursor = event.target.result;
-        if(cursor)
-        {
-            result.push(cursor.value);
-            cursor.continue();
-        }
-        else
-            return result;
-};
 }
