@@ -35,7 +35,21 @@ function DB(onsuccess)
 	        };
 	}
 
-	result.sharepoints_get = function(onsuccess)
+	result.sharepoints_get = function(key, onsuccess)
+	{
+		var sharepoints = db.transaction("sharepoints").objectStore("sharepoints");
+		var request = sharepoints.get(key);
+			request.onerror = function(event)
+			{
+				// Handle errors!
+			};
+			request.onsuccess = function(event)
+			{
+				onsuccess(request.result);
+			};
+	}
+
+	result.sharepoints_getAll = function(onsuccess)
 	{
 	    var result = [];
 
