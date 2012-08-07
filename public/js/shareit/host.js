@@ -14,7 +14,7 @@ else
 	socket.on('transfer.query_chunk', function(filename, chunk)
 	{
 		var file = files[filename];
-		alert('transfer.query_chunk: '+filename+" "+file)
+//		alert('transfer.query_chunk: '+filename+" "+file)
 	
 		start = chunk * chunksize;
 	
@@ -57,7 +57,7 @@ function db_ready(db)
 		for(var i = 0, file; file = filelist[i]; i++)
 			if(!files.hasOwnProperty(file))
 			{
-				alert("db_ready: "+file.name)
+//				alert("db_ready: "+file.name)
 				files[file.name] = file;
 			}
 
@@ -97,6 +97,6 @@ function send_files_list()
 							 "size": file.size, "type": file.type});
 		}
 
-	alert('send_files_list: '+JSON.stringify(files_send))
+//	alert('send_files_list: '+JSON.stringify(files_send))
 	socket.emit('files.list', JSON.stringify(files_send));
 }

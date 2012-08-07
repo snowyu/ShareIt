@@ -6,7 +6,7 @@ SAVED = 1
 
 socket.on('files.list', function(data)
 {
-	alert('files.list: '+data)
+//	alert('files.list: '+data)
 	ui_updatefiles_peer(JSON.parse(data))
 
 	info('files.list: '+Object.keys(JSON.parse(data)));
@@ -15,7 +15,7 @@ socket.on('files.list', function(data)
 socket.on('transfer.send_chunk', function(filename, chunk, data)
 {
 	var file = downfiles[filename];
-	alert('transfer.send_chunk: '+filename+" "+file)
+//	alert('transfer.send_chunk: '+filename+" "+file)
 
 	cache[filename] += data;
 
@@ -47,7 +47,7 @@ function transfer_begin(file)
 	cache[file.name] = ''
 
 	// Demand data from the begining of the file
-	alert('transfer_begin: '+file+" "+file.name)
+//	alert('transfer_begin: '+file+" "+file.name)
 	socket.emit('transfer.query_chunk', file.name, 0);
 }
 

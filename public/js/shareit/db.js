@@ -14,7 +14,7 @@ function DB(onsuccess)
 	    // going to use "hash" as our key path because it's guaranteed to be unique.
 	    var files = db.createObjectStore("files", { keyPath: "hash" });
 	
-	    alert("upgradedb");
+//	    alert("upgradedb");
 	}
 
 	var result = {}
