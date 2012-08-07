@@ -14,6 +14,8 @@ socket.on('files.list', function(data)
 socket.on('transfer.send_chunk', function(filename, chunk, data)
 {
 	var file = downfiles[filename];
+	alert('transfer.send_chunk: '+filename+" "+file)
+
 	cache[filename] += data;
 
 	if(file.chunks == chunk)

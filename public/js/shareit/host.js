@@ -14,6 +14,7 @@ else
 	socket.on('transfer.query_chunk', function(filename, chunk)
 	{
 		var file = files[filename];
+		alert('transfer.query_chunk: '+filename+" "+file)
 	
 		start = chunk * chunksize;
 	
@@ -50,9 +51,21 @@ socket.on('peer.disconnected', function(data)
 
 function db_ready(db)
 {
-	db.sharepoints_get(function(result)
+	db.sharepoints_get(function(filelist)
 	{
-		alert("db_ready:"+result[0].path)
+		alert("db_ready:"+filelist[0].path+" "+filelist[0].file.name)
+
+		// Loop through the FileList and append files to list.
+		for(var i = 0, file; file = filelist[i]; i++)
+			if(!files.hasOwnProperty(file))
+			{
+				alert("db_ready: "+file.file.name)
+				files[file.file.name] = file.file;
+			}
+
+		send_files_list()
+	
+		ui_updatefiles_host(files)
 	})
 }
 
@@ -65,7 +78,7 @@ function files_change(filelist)
 		if(!files.hasOwnProperty(file))
 		{
 			files[file.name] = file;
-			db.sharepoints_add(file.name)
+			db.sharepoints_add(file.name, file)
 		}
 
 	send_files_list()

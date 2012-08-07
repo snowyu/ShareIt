@@ -19,14 +19,14 @@ function DB(onsuccess)
 
 	var db;
 
-	result.sharepoints_add = function(path)
+	result.sharepoints_add = function(path, file)
 	{
 	    var transaction = db.transaction("sharepoints", IDBTransaction.READ_WRITE);
 	    var sharepoints = transaction.objectStore("sharepoints");
 	
 	    // [To-Do] Check current sharepoints and update files on duplicates
 	
-	    var request = sharepoints.add({"path": path});
+	    var request = sharepoints.add({"path": path, "file": file});
 	        request.onsuccess = function(event)
 	        {
 	            // event.target.result == customerData[i].ssn
