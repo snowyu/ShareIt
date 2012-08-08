@@ -1,54 +1,86 @@
-var downfiles = {}
 var cache = {}
 
 CACHE = 0
 SAVED = 1
 
+function Bitmap(size)
+{
+	var result = {}
+	for(var i=0; i<size; i++)
+		result[i] = true;
+	return result
+}
+
 socket.on('files.list', function(data)
 {
-//	alert('files.list: '+data)
-	ui_updatefiles_peer(JSON.parse(data))
+	var files = JSON.parse(data)
 
-	info('files.list: '+Object.keys(JSON.parse(data)));
+	// Check if we have already any of the files
+	// It's stupid to try to download it... and also give errors
+	db.sharepoints_getAll(null, function(filelist)
+	{
+		for(var i=0, file; file = files[i]; i++)
+			for(var j=0, file_hosted; file_hosted = filelist[j]; j++)
+				if(file.name == file_hosted.name)
+				{
+					file.downloaded = true;
+					break;
+				}
+
+		ui_updatefiles_peer(files)
+	})
 });
 
 socket.on('transfer.send_chunk', function(filename, chunk, data)
 {
-	var file = downfiles[filename];
-//	alert('transfer.send_chunk: '+filename+" "+file)
+	chunk = parseInt(chunk)
 
-	cache[filename] += data;
-
-	if(file.chunks == chunk)
+	db.sharepoints_get(filename, function(file)
 	{
-		// Auto-save downloaded file
-		savetodisk(file, filename)
-
-		ui_filedownloaded(filename);
-	}
-	else
-	{
-		ui_filedownloading(filename, Math.floor(chunk/file.chunks * 100));
-
-		// Demand more data
-		socket.emit('transfer.query_chunk', filename, parseInt(chunk)+1);
-	}
+		cache[filename] += data;
+		alert("transfer.send_chunk '"+filename+"' = "+JSON.stringify(file))
+		delete file.bitmap[chunk]
+	
+		if(file.bitmap.keys())
+		{
+			ui_filedownloading(filename, chunk);
+	
+			// Demand more data
+			socket.emit('transfer.query_chunk', filename, chunk+1);
+		}
+		else
+		{
+			// Auto-save downloaded file
+			savetodisk(file, filename)
+	
+			ui_filedownloaded(filename);
+		}
+	})
 })
 
 function transfer_begin(file)
 {
-	ui_filedownloading(file.name, 0)
-
 	var chunks = file.size/chunksize;
 	if(chunks % 1 != 0)
 		chunks = Math.floor(chunks) + 1;
 
-	downfiles[file.name] = {chunk:0, chunks:chunks, ubication:CACHE}
-	cache[file.name] = ''
+	ui_filedownloading(file.name, 0, chunks)
 
-	// Demand data from the begining of the file
-//	alert('transfer_begin: '+file+" "+file.name)
-	socket.emit('transfer.query_chunk', file.name, 0);
+	file.bitmap = Bitmap(chunks)
+	alert("transfer_begin '"+file.name+"' = "+JSON.stringify(file))
+	db.sharepoints_add(file,
+	function()
+	{
+		cache[file.name] = ''
+	
+		// Demand data from the begining of the file
+	//	alert('transfer_begin: '+file+" "+file.name)
+		socket.emit('transfer.query_chunk', file.name, 0);
+	},
+	function(errorCode)
+	{
+		alert("transfer_begin errorCode: "+errorCode)
+	})
 }
 
 function savetodisk(file, filename)
@@ -64,7 +96,6 @@ function savetodisk(file, filename)
 	save.dispatchEvent(evt);
 
 	// Delete cache
+	delete file.bitmap
 	delete cache[filename]
-
-	downfiles[filename].ubication = SAVED
 }
