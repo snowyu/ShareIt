@@ -79,7 +79,7 @@ function _button_peer(file)
 		div.appendChild(progress);
 	}
 	
-	div.savetodisk = function()
+	div.downloaded = function()
 	{
 		// Show file as downloaded
 		while(div.firstChild)
@@ -87,7 +87,11 @@ function _button_peer(file)
 		div.appendChild(document.createTextNode("Downloaded!"));
 	}
 
-	div.transfer()
+    // Show if file have been downloaded previously or if we can transfer it
+    if(file.downloaded)
+        div.downloaded()
+    else
+    	div.transfer()
 
     return div
 }
@@ -215,7 +219,7 @@ function ui_filedownloading(filename, value, total)
 
 function ui_filedownloaded(filename)
 {
-	document.getElementById(filename).savetodisk();
+	document.getElementById(filename).downloaded();
 
 	info("Transfer finished!");
 }
