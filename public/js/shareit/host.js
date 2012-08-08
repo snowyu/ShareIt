@@ -67,9 +67,13 @@ function files_change(filelist)
 	for(var i = 0, file; file = filelist[i]; i++)
 		db.sharepoints_add(file)
 
-	send_files_list(filelist)
+//	send_files_list(filelist)	// Send just new files
 
-	ui_updatefiles_host(filelist)
+	db.sharepoints_getAll(null, function(filelist)
+	{
+		send_files_list(filelist)
+		ui_updatefiles_host(filelist)
+	})
 }
 
 function send_files_list(filelist)
