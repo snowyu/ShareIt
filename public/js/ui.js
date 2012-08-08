@@ -203,9 +203,14 @@ function ui_updatefiles_peer(files)
     _ui_updatefiles(document.getElementById('fileslist'), _button_peer, files)
 }
 
-function ui_filedownloading(filename, percent)
+function ui_filedownloading(filename, value, total)
 {
-	$("#" + filename).html(percent + '%');
+    var div = $("#" + filename)
+
+    if(total != undefined)
+        div.total = total;
+
+	div.html(Math.floor(value/div.total * 100) + '%');
 }
 
 function ui_filedownloaded(filename)

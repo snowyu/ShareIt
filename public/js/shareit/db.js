@@ -20,7 +20,7 @@ function DB(onsuccess)
 
 	var db;
 
-	result.sharepoints_add = function(file)
+	result.sharepoints_add = function(file, onsuccess, onerror)
 	{
 	    var transaction = db.transaction("sharepoints", "readwrite");
 	    var sharepoints = transaction.objectStore("sharepoints");
@@ -28,10 +28,17 @@ function DB(onsuccess)
 	    // [To-Do] Check current sharepoints and update files on duplicates
 	
 	    var request = sharepoints.add(file);
+	    if(onsuccess != undefined)
 	        request.onsuccess = function(event)
 	        {
-	            // event.target.result == customerData[i].ssn
+	            onsuccess()
 	        };
+	    if(onerror != undefined)
+	        request.onerror = function(event)
+	        {
+    	        alert("Database error: " + event.target.result);
+	            onerror(event.target.errorCode)
+	        }
 	}
 
 	result.sharepoints_get = function(key, onsuccess)
