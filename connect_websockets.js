@@ -2,73 +2,66 @@
 var io = require('socket.io').listen(app)
 
 io.set('log level', 1);
-io.sockets.on('connection', function (socket)
+io.sockets.on('connection', function(socket)
 {
-	socket.on('joiner', function (data)
+	socket.on('joiner', function(data)
 	{
-		len = io.sockets.clients(data).length;
+		var len = io.sockets.clients(data).length;
 
-		if(len == undefined || len == 0)
-		{
-			socket.emit('host');
-			socket.isHost = true;
-			socket.isPeer = false;
-
-			socket.join(data);
-			socket.room = data;
-		}
-		else if(len == 1)
-		{
-			socket.emit('peer');
-			socket.isHost = false;
-			socket.isPeer = true;
-
-			socket.join(data);
-			socket.room = data;
-
-			socket.hoster = io.sockets.clients(data)[0];
-
-			io.sockets.clients(data)[0].peer = socket;
-
-			if(socket.hoster.fileslist != undefined)
-				socket.emit('fileslist', socket.hoster.fileslist);
-
-			if(socket.hoster != undefined)
-				socket.hoster.emit('peerconnected');
-		}
+		if(len >= 2)
+			socket.emit('warning', "This connection is full. Please try later.");
 		else
-			socket.emit('warn', "This connection is full. Please try later.");
+		{
+			socket.join(data);
+			socket.room = data;
 
+			if(len == 1)
+			{
+				socket.peer = io.sockets.clients(data)[0];
+	
+				if(socket.peer != undefined)
+				{
+					// Set this socket as the other socket peer
+					socket.peer.peer = socket;
+
+					// Notify to both peers that we are now connected
+					socket.emit('peer.connected');
+					socket.peer.emit('peer.connected');
+				}
+			}
+		}
+
+		// Tell all clients on the room that a new peer has joined
 		io.sockets.in(data).emit('info', socket.id + " joined!");
 	});
 
 	socket.on('disconnect', function()
 	{
-        if(socket.isPeer)
-            socket.hoster.emit('peerdisconnected');
-	    else if(socket.isHost && socket.peer != undefined)
-	   	    socket.peer.emit('hostdisconnected');
+        if(socket.peer != undefined)
+        {
+	   	    socket.peer.emit('peer.disconnected');
+
+			socket.peer.peer = undefined;
+		}
 	});
 
-	socket.on('listfiles', function (data)
+	// Proxied events
+
+	socket.on('files.list', function(data)
 	{
-		if(socket.isHost)
-		{
-			socket.fileslist = data;
-			if(socket.peer)
-				socket.peer.emit('fileslist', data);
-		};
+		if(socket.peer != undefined)
+			socket.peer.emit('files.list', data);
 	});
 
-	socket.on('begintransfer', function (file, chunk)
+	socket.on('transfer.query_chunk', function(filename, chunk)
 	{
-		if(socket.isPeer && socket.hoster != undefined)
-			socket.hoster.emit('begintransfer', file, chunk);
+		if(socket.peer != undefined)
+			socket.peer.emit('transfer.query_chunk', filename, chunk);
 	});
 
-	socket.on('datatransfer', function (data, file, chunk)
+	socket.on('transfer.send_chunk', function(filename, chunk, data)
 	{
-		if(socket.isHost && socket.peer != undefined)
-			socket.peer.emit('datatransfer', data, file, chunk);
+		if(socket.peer != undefined)
+			socket.peer.emit('transfer.send_chunk', filename, chunk, data);
 	});
 });

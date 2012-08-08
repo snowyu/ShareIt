@@ -3,39 +3,34 @@ function oldBrowser()
 	$('#clicky').html('Your browser is not modern enough to serve as a host. :(<br /><br />(Try Chrome or Firefox!)');
 }
 
-function imhost()
+function onopen()
 {
-	$('#host').html("You're hosting this party!");
 	$('#clicky').html("<br /><br /><br /><br />Click here to choose files");
+	$('#fileslist').html('Awaiting file list..');
 }
 
-function impeer()
+function log(level, msg)
 {
-	$('#peer').html("You're connected as a peer!");
-	$('#host').html("Host connected.");
-	$('#drop_zone').attr("onclick", function()
-	{ 
-	    return;
-	});
+	switch(level)
+	{
+		case 'warning':
+			msg = '<span style="color: red;">' + msg + '</span>'
+			break
+	}
 
-	$('#files').remove();
-	$('#drop_zone').css("cursor", "default");
-	$('#clicky').html('Awaiting file list..');
+	msg += '<br/>'
+
+	$('#log').append(msg);
 }
 
-function info_begintransfer()
+function info(msg)
 {
-	$('#info').append("Begining Transfer...");
+	log('info', msg);
 }
 
-function info(data)
+function warning(msg)
 {
-	$('#info').append(data);
-}
-
-function warn(data)
-{
-	$('#warnings').html(data);
+	log('warning', msg);
 }
 
 $(document).ready(function()
@@ -46,72 +41,176 @@ $(document).ready(function()
     }, false);
 })
 
-function _downloadbutton_host()
+function _button_host()
 {
-    return '<b>Sharing!</b>'
+	var bold = document.createElement("B");
+		bold.appendChild(document.createTextNode("Sharing!"));
+
+	return bold
 }
 
-function _downloadbutton_peer(fileholder)
+function _button_peer(file)
 {
-    var result = '<div id="fidspan' + fid + '"></div><a href="" onclick="beginTransfer(\'' + fileholder[0] + '\', ' + fid + ', ' + fileholder[1] + '); return false;" id="fid' + fid + '">Transfer</a><a href="data:' + fileholder[2] + ';base64," target="_blank" id="fidsave' + fid + '" style="display:none">Save to disk!</a>'
+    var div = document.createElement("DIV");
+    	div.id = file.name
 
-	fid++
-
-    return result
-}
-
-function _ui_updatefiles(downloadbutton)
-{
-	$('#clicky').html('');
-	$('#clicky').html(function(i,v)
+	div.transfer = function()
 	{
-   		return '<table id="filestable" cellspacing="0" summary=""><tr><th scope="col" abbr="Filename" class="nobg" width="60%">Filename</th><th scope="col" abbr="Status" width="20%" >Size</th><th scope="col" abbr="Size"width="20%" >Action</th></tr>' + v;
-	});
-	$('#clicky').show();
+	    var transfer = document.createElement("A");
+	    	transfer.href = ""
+	    	transfer.onclick = function()
+	    	{
+		    	transfer_begin(file);
+		    	return false;
+	    	}
+			transfer.appendChild(document.createTextNode("Transfer"));
 
-	for(var file in files)
-		if(files.hasOwnProperty(file))
+		while(div.firstChild)
+			div.removeChild(div.firstChild);
+		div.appendChild(transfer);
+	}
+	
+	div.progressbar = function()
+	{
+		var progress = document.createTextNode("0%")
+
+		while(div.firstChild)
+			div.removeChild(div.firstChild);
+		div.appendChild(progress);
+	}
+	
+	div.savetodisk = function()
+	{
+		// Show file as downloaded
+		while(div.firstChild)
+			div.removeChild(div.firstChild);
+		div.appendChild(document.createTextNode("Downloaded!"));
+	}
+
+	div.transfer()
+
+    return div
+}
+
+function encode64(input)
+{
+	var keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "abcdefghijklmnopqrstuvwxyz" + "0123456789" + "+/=";
+
+	var output = "";
+    var chr1, chr2, chr3 = "";
+    var enc1, enc2, enc3, enc4 = "";
+    var i = 0;
+
+    do
+    {
+    	chr1 = input.charCodeAt(i++);
+        chr2 = input.charCodeAt(i++);
+        chr3 = input.charCodeAt(i++);
+
+        enc1 = chr1 >> 2;
+        enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
+        enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+        enc4 = chr3 & 63;
+
+        if(isNaN(chr2))
+            enc3 = enc4 = 64;
+        else if(isNaN(chr3))
+            enc4 = 64;
+
+        output = output +
+            keyStr.charAt(enc1) +
+            keyStr.charAt(enc2) +
+            keyStr.charAt(enc3) +
+            keyStr.charAt(enc4);
+        chr1 = chr2 = chr3 = "";
+    	enc1 = enc2 = enc3 = enc4 = "";
+	} while(i < input.length);
+
+	return output;
+}
+
+function _ui_updatefiles(area, button, files)
+{
+	var filestable = document.createElement('TABLE');
+		filestable.id = "filestable"
+		filestable.cellspacing = 0
+		filestable.summary = ""
+
+	var tr = document.createElement('TR');
+	filestable.appendChild(tr);
+
+	var th = document.createElement('TH');
+		th.scope = "col"
+		th.abbr = "Filename"
+		th.class = "nobg"
+		th.width = "60%"
+		th.appendChild(document.createTextNode("Filename"));
+	tr.appendChild(th);
+
+	var th = document.createElement('TH');
+		th.scope = "col"
+		th.abbr = "Size"
+		th.class = "nobg"
+		th.width = "20%"
+		th.appendChild(document.createTextNode("Size"));
+	tr.appendChild(th);
+
+	var th = document.createElement('TH');
+		th.scope = "col"
+		th.abbr = "Status"
+		th.class = "nobg"
+		th.width = "20%"
+		th.appendChild(document.createTextNode("Action"));
+	tr.appendChild(th);
+
+	// Remove old table and add new empty one
+	while(area.firstChild)
+		area.removeChild(area.firstChild);
+  	area.appendChild(filestable)
+
+	for(var filename in files)
+		if(files.hasOwnProperty(filename))
 		{
-            var fileholder= files[file]
+            var file = files[filename]
 
-			$('#filestable').append(
-			'<tr><th scope="row" class="spec">' + fileholder[0] + '</th><td>' + fileholder[1] + '</td><td class="end">' + downloadbutton(fileholder) + '</td></tr>');
+			var tr = document.createElement('TR');
+			filestable.appendChild(tr)
+
+			var th = document.createElement('TH');
+				th.scope = "row"
+				th.class = "spec"
+				th.appendChild(document.createTextNode(file.name));
+			tr.appendChild(th)
+
+			var td = document.createElement('TD');
+				td.appendChild(document.createTextNode(file.size));
+			tr.appendChild(td)
+
+			var td = document.createElement('TD');
+				td.class = "end"
+				td.appendChild(button(file));
+			tr.appendChild(td)
 		}
 }
 
 function ui_updatefiles_host(files)
 {
-    _ui_updatefiles(_downloadbutton_host)
+    _ui_updatefiles(document.getElementById('clicky'), _button_host, files)
 }
 
 function ui_updatefiles_peer(files)
 {
-    _ui_updatefiles(_downloadbutton_peer)
+    _ui_updatefiles(document.getElementById('fileslist'), _button_peer, files)
 }
 
-function ui_begintransfer(fid)
+function ui_filedownloading(filename, percent)
 {
-	var f = "#fidspan" + fid;
-	$(f).html('0%');
-	f = "#fid" + fid;
-	$(f).hide();
+	$("#" + filename).html(percent + '%');
 }
 
-function ui_filedownloading(f, chunk)
+function ui_filedownloaded(filename)
 {
-	var fspan = "#fidspan" + f.fid;
-	$(fspan).html(Math.floor(chunk/f.chunks * 100) + '%');
-}
-
-function ui_filedownloaded(f)
-{
-	var fspan = "#fidspan" + f.fid;
-	$(fspan).hide();
-	$(fspan).html('');
-
-	var fsave = "#fidsave" + f.fid;
-	$(fsave).attr('href', $(fsave).attr('href') + encode64(f.data));
-	$(fsave).show();
+	document.getElementById(filename).savetodisk();
 
 	info("Transfer finished!");
 }
@@ -119,10 +218,4 @@ function ui_filedownloaded(f)
 function ui_peerstate(msg)
 {
 	$('#peer').html(msg);
-}
-
-function ui_hostdisconnected()
-{
-	$('#host').html("Host disconnected.");
-	$('#peer').html("You're disconnected!");
 }
