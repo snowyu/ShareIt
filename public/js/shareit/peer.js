@@ -1,10 +1,8 @@
 var downfiles = {}
+var cache = {}
 
 CACHE = 0
 SAVED = 1
-
-var filer = new Filer()
-	filer.init({persistent: true, size: 1 * 1024 * 1024 * 1024});
 
 socket.on('files.list', function(data)
 {
@@ -15,29 +13,25 @@ socket.on('files.list', function(data)
 
 socket.on('transfer.send_chunk', function(filename, chunk, data)
 {
-	var byteArray = new Uint8Array(data.length);
-    for(var i = 0; i < data.length; i++)
-	    byteArray[i] = data.charCodeAt(i) & 0xff;
+	var file = downfiles[filename];
+//	alert('transfer.send_chunk: '+filename+" "+file)
 
-	filer.write(filename, {data:byteArray, append:true},
-	function(fileEntry, fileWriter)
+	cache[filename] += data;
+
+	if(file.chunks == chunk)
 	{
-		var file = downfiles[filename];
-		if(file.chunks == chunk)
-		{
-			// Auto-save downloaded file
-			savetodisk(filename)
-	
-			ui_filedownloaded(filename);
-		}
-		else
-		{
-			ui_filedownloading(filename, Math.floor(chunk/file.chunks * 100));
-	
-			// Demand more data
-			socket.emit('transfer.query_chunk', filename, parseInt(chunk)+1);
-		}
-	})
+		// Auto-save downloaded file
+		savetodisk(file, filename)
+
+		ui_filedownloaded(filename);
+	}
+	else
+	{
+		ui_filedownloading(filename, Math.floor(chunk/file.chunks * 100));
+
+		// Demand more data
+		socket.emit('transfer.query_chunk', filename, parseInt(chunk)+1);
+	}
 })
 
 function transfer_begin(file)
@@ -49,24 +43,18 @@ function transfer_begin(file)
 		chunks = Math.floor(chunks) + 1;
 
 	downfiles[file.name] = {chunk:0, chunks:chunks, ubication:CACHE}
-	filer.create(file.name, true,
-	function(fileEntry)
-	{
-		// Demand data from the begining of the file
-		socket.emit('transfer.query_chunk', file.name, 0);
-	},
-	function(e)
-	{
-		console.log('Error' + e.name);
-		console.log("File '" + file.name + "' exists.");
-	})
+	cache[file.name] = ''
+
+	// Demand data from the begining of the file
+//	alert('transfer_begin: '+file+" "+file.name)
+	socket.emit('transfer.query_chunk', file.name, 0);
 }
 
-function savetodisk(filename)
+function savetodisk(file, filename)
 {
 	// Auto-save downloaded file
     var save = document.createElement("A");
-    	save.href = filer.pathToFilesystemURL(filename)
+    	save.href = "data:" + file.type + ";base64," + encode64(cache[filename])
 		save.download = filename	// This force to download with a filename instead of navigate
 
 	var evt = document.createEvent('MouseEvents');
@@ -74,17 +62,9 @@ function savetodisk(filename)
 
 	save.dispatchEvent(evt);
 
-	// Delete cache file
-	filer.open(filename,
-	function(file)
-	{
-		downfiles[filename].ubication = SAVED
+	// Delete cache
+	delete cache[filename]
 
-		files_add(file, filename)
-	},
-	function(e)
-	{
-		console.log('Error' + e.name);
-		console.log("File '" + filename + "' exists.");
-	})
+	downfiles[filename].ubication = SAVED
+	files_add(downfiles, file)
 }
