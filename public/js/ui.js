@@ -78,7 +78,7 @@ function _button_peer(file)
 		div.appendChild(progress);
 	}
 	
-	div.savetodisk = function()
+	div.downloaded = function()
 	{
 		// Show file as downloaded
 		while(div.firstChild)
@@ -86,7 +86,11 @@ function _button_peer(file)
 		div.appendChild(document.createTextNode("Downloaded!"));
 	}
 
-	div.transfer()
+    // Show if file have been downloaded previously or if we can transfer it
+    if(file.downloaded)
+        div.downloaded()
+    else
+    	div.transfer()
 
     return div
 }
@@ -165,14 +169,19 @@ function ui_updatefiles_peer(files)
     _ui_updatefiles(document.getElementById('fileslist'), _button_peer, files)
 }
 
-function ui_filedownloading(filename, percent)
+function ui_filedownloading(filename, value, total)
 {
-	$("#" + filename).html(percent + '%');
+    var div = $("#" + filename)
+
+    if(total != undefined)
+        div.total = total;
+
+	div.html(Math.floor(value/div.total * 100) + '%');
 }
 
 function ui_filedownloaded(filename)
 {
-	document.getElementById(filename).savetodisk();
+	document.getElementById(filename).downloaded();
 
 	info("Transfer finished!");
 }
