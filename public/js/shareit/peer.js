@@ -1,8 +1,3 @@
-var cache = {}
-
-CACHE = 0
-SAVED = 1
-
 function Bitmap(size)
 {
 	var result = {}
@@ -37,24 +32,32 @@ socket.on('transfer.send_chunk', function(filename, chunk, data)
 
 	db.sharepoints_get(filename, function(file)
 	{
-		cache[filename] += data;
 		alert("transfer.send_chunk '"+filename+"' = "+JSON.stringify(file))
 		delete file.bitmap[chunk]
+
+        // Create new "fake" file
+	    var blob = Blob([file, data], {"type": file.type})
+	        blob.name = file.name
+	        blob.lastModifiedDate = file.lastModifiedDate
+        	blob.bitmap = Bitmap(chunks)
+
+        db.sharepoints_put(blob, function()
+        {
+		    if(blob.bitmap.keys())
+		    {
+			    ui_filedownloading(filename, chunk);
 	
-		if(file.bitmap.keys())
-		{
-			ui_filedownloading(filename, chunk);
+			    // Demand more data
+			    socket.emit('transfer.query_chunk', filename, chunk+1);
+		    }
+		    else
+		    {
+			    // Auto-save downloaded file
+			    savetodisk(blob, filename)
 	
-			// Demand more data
-			socket.emit('transfer.query_chunk', filename, chunk+1);
-		}
-		else
-		{
-			// Auto-save downloaded file
-			savetodisk(file, filename)
-	
-			ui_filedownloaded(filename);
-		}
+			    ui_filedownloaded(filename);
+		    }
+        })
 	})
 })
 
@@ -79,8 +82,6 @@ function transfer_begin(file)
 	db.sharepoints_add(blob,
 	function()
 	{
-        cache[file.name] = ''
-
 		// Demand data from the begining of the file
 	//	alert('transfer_begin: '+file+" "+file.name)
 		socket.emit('transfer.query_chunk', file.name, 0);
@@ -103,7 +104,6 @@ function savetodisk(file, filename)
 
 	save.dispatchEvent(evt);
 
-	// Delete cache
+	// Set file as fully downloaded and saved on disk
 	delete file.bitmap
-	delete cache[filename]
 }
