@@ -85,7 +85,7 @@ function DB(onsuccess)
 	        // Hack for old versions of Chrome/Chromium
 	        if(version != db.version)
 	        {
-	            var setVrequest = db.setVersion(v);
+	            var setVrequest = db.setVersion(version);
 	                setVrequest.onsuccess = function(e)
 	                {
 	                    upgradedb(db);
