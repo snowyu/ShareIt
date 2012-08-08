@@ -55,12 +55,12 @@ function DB(onsuccess)
 			};
 	}
 
-	result.sharepoints_getAll = function(onsuccess)
+	result.sharepoints_getAll = function(range, onsuccess)
 	{
 	    var result = [];
 
 	    var sharepoints = db.transaction("sharepoints").objectStore("sharepoints");
-		    sharepoints.openCursor().onsuccess = function(event)
+		    sharepoints.openCursor(range).onsuccess = function(event)
 		    {
 		        var cursor = event.target.result;
 		        if(cursor)
