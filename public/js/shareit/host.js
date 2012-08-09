@@ -61,6 +61,9 @@ DB(function(result)
 	
 		ui_updatefiles_host(filelist)
 	})
+
+	// Load websocket connection after IndexedDB is ready
+	Conn_init()
 })
 
 function files_change(filelist)
