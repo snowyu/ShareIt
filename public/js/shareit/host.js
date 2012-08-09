@@ -34,7 +34,7 @@ else
 	})
 }
 
-socket.on('peer.connected', function(data)
+function peer_connected(data)
 {
 	ui_peerstate("Peer connected!");
 
@@ -42,12 +42,12 @@ socket.on('peer.connected', function(data)
 	{
 		send_files_list(filelist)
 	})
-})
+}
 
-socket.on('peer.disconnected', function(data)
+function peer_disconnected(data)
 {
 	ui_peerstate("Peer disconnected.");
-})
+}
 
 
 var db;
