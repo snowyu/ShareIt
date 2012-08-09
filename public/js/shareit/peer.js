@@ -6,10 +6,8 @@ function Bitmap(size)
 	return result
 }
 
-socket.on('files.list', function(data)
+function files_list(files)
 {
-	var files = JSON.parse(data)
-
 	// Check if we have already any of the files
 	// It's stupid to try to download it... and also give errors
 	db.sharepoints_getAll(null, function(filelist)
@@ -26,10 +24,8 @@ socket.on('files.list', function(data)
 	})
 });
 
-socket.on('transfer.send_chunk', function(filename, chunk, data)
+function transfer_send_chunk(filename, chunk, data)
 {
-	chunk = parseInt(chunk)
-
 	db.sharepoints_get(filename, function(file)
 	{
 		alert("transfer.send_chunk '"+filename+"' = "+JSON.stringify(file))
@@ -53,7 +49,7 @@ socket.on('transfer.send_chunk', function(filename, chunk, data)
 		    else
 		    {
 			    // Auto-save downloaded file
-			    savetodisk(blob)
+			    _savetodisk(blob)
 	
 			    ui_filedownloaded(filename);
 		    }
@@ -92,7 +88,7 @@ function transfer_begin(file)
 	})
 }
 
-function savetodisk(file)
+function _savetodisk(file)
 {
 	// Auto-save downloaded file
     var save = document.createElement("A");
