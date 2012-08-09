@@ -36,7 +36,7 @@ socket.on('transfer.send_chunk', function(filename, chunk, data)
 		delete file.bitmap[chunk]
 
         // Create new "fake" file
-	    var blob = Blob([file, data], {"type": file.type})
+	    var blob = new Blob([file, data], {"type": file.type})
 	        blob.name = file.name
 	        blob.lastModifiedDate = file.lastModifiedDate
         	blob.bitmap = Bitmap(chunks)
@@ -71,7 +71,7 @@ function transfer_begin(file)
 	ui_filedownloading(file.name, 0, chunks)
 
     // Create new "fake" file
-	var blob = Blob('', {"type": file.type})
+	var blob = new Blob([''], {"type": file.type})
 	    blob.name = file.name
 	    blob.lastModifiedDate = file.lastModifiedDate
     	blob.bitmap = Bitmap(chunks)
