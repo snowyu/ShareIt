@@ -38,7 +38,7 @@ function peer_connected(data)
 {
 	ui_peerstate("Peer connected!");
 
-	db.sharepoints_getAll(null, send_files_list)
+	db.sharepoints_getAll(null, _send_files_list)
 }
 
 function peer_disconnected(data)
@@ -64,18 +64,18 @@ function files_change(filelist)
 	for(var i = 0, file; file = filelist[i]; i++)
 		db.sharepoints_add(file)
 
-//	send_files_list(filelist)	// Send just new files
+//	_send_files_list(filelist)	// Send just new files
 
 	db.sharepoints_getAll(null, _updatefiles)
 }
 
 function _updatefiles(filelist)
 {
-	send_files_list(filelist)
+	_send_files_list(filelist)
 	ui_updatefiles_host(filelist)
 }
 
-function send_files_list(filelist)
+function _send_files_list(filelist)
 {
 	var files_send = []
 
