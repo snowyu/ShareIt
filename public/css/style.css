@@ -7,7 +7,7 @@ dl, dt, dd, ol, ul, li,
 fieldset, form, label, legend,
 table, caption, tbody, tfoot, thead, tr, th, td,
 article, aside, canvas, details, embed, 
-figure, figcaption, footer, header, hgroup, 
+figure, figcaption, footer, hgroup, 
 menu, nav, output, ruby, section, summary,
 time, mark, audio, video {
 	margin: 0;
@@ -19,7 +19,7 @@ time, mark, audio, video {
 }
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure, 
-footer, header, hgroup, menu, nav, section {
+footer, hgroup, menu, nav, section {
 	display: block;
 }
 body {
@@ -49,33 +49,6 @@ a{
 
 #container{
 		
-}
-
-#header{
-	font-size: 8em;
-	text-align: center;
-	font-family: Helvetica;
-	padding-top:20px;
-	padding-bottom: 20px;
-	letter-spacing:10px;
-}
-
-#subheader{
-	font-size: 2.7em;
-	text-align: center;
-	font-family: 'Monsieur La Doulaise', cursive;
-	padding-bottom: 20px;
-}
-
-#description{
-	font-size: 1.1em;
-	text-align: center;
-	padding-bottom: 40px;
-	width: 700px;
-	margin: 0 auto;
-	letter-spacing:1px;
-	line-height: 1.3em;
-	padding-top: 20px;
 }
 
 #what{
