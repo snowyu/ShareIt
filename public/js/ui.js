@@ -41,13 +41,19 @@ function warning(msg)
 //    }, false);
 //})
 
-ui_ready_fileschange(func)
+function ui_ready_fileschange(func)
 {
 	document.getElementById('files').addEventListener('change', function(event)
 	{
 		func(event.target.files); // FileList object
     }, false);
 })
+
+var transfer_begin
+function ui_ready_transferbegin(func)
+{
+	transfer_begin = func
+}
 
 function _button_host()
 {
@@ -68,7 +74,8 @@ function _button_peer(file)
 	    	transfer.href = ""
 	    	transfer.onclick = function()
 	    	{
-		    	transfer_begin(file);
+	    		if(transfer_begin)
+			    	transfer_begin(file);
 		    	return false;
 	    	}
 			transfer.appendChild(document.createTextNode("Transfer"));
