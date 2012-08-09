@@ -73,6 +73,27 @@ function DB(onsuccess)
 			};
 	}
 
+	result.sharepoints_put = function(file, onsuccess, onerror)
+	{
+	    var transaction = db.transaction("sharepoints", "readwrite");
+	    var sharepoints = transaction.objectStore("sharepoints");
+	
+	    // [To-Do] Check current sharepoints and update files on duplicates
+	
+	    var request = sharepoints.put(file);
+	    if(onsuccess != undefined)
+	        request.onsuccess = function(event)
+	        {
+	            onsuccess()
+	        };
+	    if(onerror != undefined)
+	        request.onerror = function(event)
+	        {
+    	        alert("Database error: " + event.target.result);
+	            onerror(event.target.errorCode)
+	        }
+	}
+
 	var request = indexedDB.open("ShareIt", version);
 	    request.onerror = function(event)
 	    {
@@ -85,7 +106,7 @@ function DB(onsuccess)
 	        // Hack for old versions of Chrome/Chromium
 	        if(version != db.version)
 	        {
-	            var setVrequest = db.setVersion(v);
+	            var setVrequest = db.setVersion(version);
 	                setVrequest.onsuccess = function(e)
 	                {
 	                    upgradedb(db);
