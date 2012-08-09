@@ -33,7 +33,7 @@ function Conn_init(ws_url, host, onsuccess)
 		});
 		socket.on('transfer.send_chunk', function(filename, chunk, data)
 		{
-			transfer_send_chunk(filename, parseInt(chunk), data)
+			host.transfer_send_chunk(filename, parseInt(chunk), data)
 		})
 	
 		socket.emit('joiner', $.url().segment(1));	

@@ -7,38 +7,6 @@ function Bitmap(size)
 }
 
 
-function transfer_send_chunk(filename, chunk, data)
-{
-	db.sharepoints_get(filename, function(file)
-	{
-		alert("transfer.send_chunk '"+filename+"' = "+JSON.stringify(file))
-		delete file.bitmap[chunk]
-
-        // Create new "fake" file
-	    var blob = new Blob([file, data], {"type": file.type})
-	        blob.name = file.name
-	        blob.lastModifiedDate = file.lastModifiedDate
-        	blob.bitmap = Bitmap(chunks)
-
-        db.sharepoints_put(blob, function()
-        {
-		    if(blob.bitmap.keys())
-		    {
-			    ui_filedownloading(filename, chunk);
-	
-			    // Demand more data
-			    socket.emit('transfer.query_chunk', filename, chunk+1);
-		    }
-		    else
-		    {
-			    // Auto-save downloaded file
-			    _savetodisk(blob)
-	
-			    ui_filedownloaded(filename);
-		    }
-        })
-	})
-})
 
 function transfer_begin(file)
 {
