@@ -14,10 +14,11 @@ function Conn_init(ws_url, host, onsuccess)
 		{
 			info(data);
 		});
-	
-		// Host
+
 		socket.on('peer.connected',       host.peer_connected)
 		socket.on('peer.disconnected',    host.peer_disconnected)
+
+		// Host
 		socket.on('transfer.query_chunk', function(filename, chunk)
 		{
 			var func = host.transfer_query_chunk
@@ -28,7 +29,7 @@ function Conn_init(ws_url, host, onsuccess)
 		// Peer
 		socket.on('files.list', function(data)
 		{
-			files_list(JSON.parse(data))
+			host.files_list(JSON.parse(data))
 		});
 		socket.on('transfer.send_chunk', function(filename, chunk, data)
 		{

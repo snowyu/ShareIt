@@ -6,23 +6,6 @@ function Bitmap(size)
 	return result
 }
 
-function files_list(files)
-{
-	// Check if we have already any of the files
-	// It's stupid to try to download it... and also give errors
-	db.sharepoints_getAll(null, function(filelist)
-	{
-		for(var i=0, file; file = files[i]; i++)
-			for(var j=0, file_hosted; file_hosted = filelist[j]; j++)
-				if(file.name == file_hosted.name)
-				{
-					file.downloaded = true;
-					break;
-				}
-
-		ui_updatefiles_peer(files)
-	})
-});
 
 function transfer_send_chunk(filename, chunk, data)
 {

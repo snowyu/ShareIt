@@ -14,6 +14,8 @@ DB_init(function(db)
 {
 	var host = {}
 
+	// Common
+
 	host.peer_connected = function(data)
 	{
 		ui_peerstate("Peer connected!");
@@ -25,6 +27,8 @@ DB_init(function(db)
 	{
 		ui_peerstate("Peer disconnected.");
 	}
+
+	// Host
 
 	// Filereader support (be able to host files from the filesystem)
 	if(typeof FileReader != "undefined")
@@ -48,6 +52,27 @@ DB_init(function(db)
 				reader.readAsBinaryString(file.slice(start, stop + 1));
 			})
 		})
+
+	// Peer
+
+	host.files_list = function(files)
+	{
+		// Check if we have already any of the files
+		// It's stupid to try to download it... and also give errors
+		db.sharepoints_getAll(null, function(filelist)
+		{
+			for(var i=0, file; file = files[i]; i++)
+				for(var j=0, file_hosted; file_hosted = filelist[j]; j++)
+					if(file.name == file_hosted.name)
+					{
+						file.downloaded = true;
+						break;
+					}
+	
+			ui_updatefiles_peer(files)
+		})
+	});
+
 
 	function _send_files_list(filelist)
 	{
