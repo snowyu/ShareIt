@@ -4,88 +4,80 @@ if(Blob.slice != undefined)
 
 // Filereader support (be able to host files from the filesystem)
 if(typeof FileReader == "undefined")
-{
 	oldBrowser();
 
-	function transfer_query_chunk(filename, chunk){}
-}
-else
+DB_init(function(db)
 {
-	var reader = new FileReader();
+	var host = {}
 
-	function transfer_query_chunk(filename, chunk)
+	host.peer_connected = function(data)
 	{
-		db.sharepoints_get(filename, function(file)
+		ui_peerstate("Peer connected!");
+	
+		db.sharepoints_getAll(null, _send_files_list)
+	}
+	
+	host.peer_disconnected = function(data)
+	{
+		ui_peerstate("Peer disconnected.");
+	}
+
+	// Filereader support (be able to host files from the filesystem)
+	if(typeof FileReader != "undefined")
+		host.transfer_query_chunk = function(filename, chunk)
 		{
-			var start = chunk * chunksize;
-			var stop = parseInt(file.size) - 1;
-			if(stop > start + chunksize - 1)
-				stop = start + chunksize - 1;
-		
+			var reader = new FileReader();
 			// If we use onloadend, we need to check the readyState.
 			reader.onloadend = function(evt)
 			{
 				if(evt.target.readyState == FileReader.DONE)
-				{
-					// DONE == 2
-					var data = evt.target.result;
-					socket.emit('transfer.send_chunk', filename, chunk, data);
-				}
+					socket.emit('transfer.send_chunk', filename, chunk, evt.target.result);
 			};
-		
-			reader.readAsBinaryString(file.slice(start, stop + 1));
+
+			db.sharepoints_get(filename, function(file)
+			{
+				var start = chunk * chunksize;
+				var stop = parseInt(file.size) - 1;
+				if(stop > start + chunksize - 1)
+					stop = start + chunksize - 1;
+
+				reader.readAsBinaryString(file.slice(start, stop + 1));
+			})
 		})
-	})
-}
 
-function peer_connected(data)
-{
-	ui_peerstate("Peer connected!");
+	function _send_files_list(filelist)
+	{
+		var files_send = []
+	
+		for(var i = 0, file; file = filelist[i]; i++)
+			files_send.push({"lastModifiedDate": file.lastModifiedDate, "name": file.name,
+							 "size": file.size, "type": file.type});
+	
+		socket.emit('files.list', JSON.stringify(files_send));
+	}
 
-	db.sharepoints_getAll(null, _send_files_list)
-}
-
-function peer_disconnected(data)
-{
-	ui_peerstate("Peer disconnected.");
-}
-
-
-var db;
-DB(function(result)
-{
-	db = result
-
-	db.sharepoints_getAll(null, _updatefiles)
+	function _updatefiles(filelist)
+	{
+		_send_files_list(filelist)
+		ui_updatefiles_host(filelist)
+	}
 
 	// Load websocket connection after IndexedDB is ready
-	Conn_init('http://localhost:8000', onopen)
+	Conn_init('http://localhost:8000', host, function()
+	{
+		db.sharepoints_getAll(null, _updatefiles)
+
+		onopen()
+
+		ui_ready_fileschange(function(filelist)
+		{
+			// Loop through the FileList and append files to list.
+			for(var i = 0, file; file = filelist[i]; i++)
+				db.sharepoints_add(file)
+		
+		//	_send_files_list(filelist)	// Send just new files
+		
+			db.sharepoints_getAll(null, _updatefiles)
+		})
+	})
 })
-
-function files_change(filelist)
-{
-	// Loop through the FileList and append files to list.
-	for(var i = 0, file; file = filelist[i]; i++)
-		db.sharepoints_add(file)
-
-//	_send_files_list(filelist)	// Send just new files
-
-	db.sharepoints_getAll(null, _updatefiles)
-}
-
-function _updatefiles(filelist)
-{
-	_send_files_list(filelist)
-	ui_updatefiles_host(filelist)
-}
-
-function _send_files_list(filelist)
-{
-	var files_send = []
-
-	for(var i = 0, file; file = filelist[i]; i++)
-		files_send.push({"lastModifiedDate": file.lastModifiedDate, "name": file.name,
-						 "size": file.size, "type": file.type});
-
-	socket.emit('files.list', JSON.stringify(files_send));
-}

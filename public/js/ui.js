@@ -33,11 +33,19 @@ function warning(msg)
 	log('warning', msg);
 }
 
-$(document).ready(function()
+//$(document).ready(function()
+//{
+//	document.getElementById('files').addEventListener('change', function(event)
+//	{
+//		files_change(event.target.files); // FileList object
+//    }, false);
+//})
+
+ui_ready_fileschange(func)
 {
 	document.getElementById('files').addEventListener('change', function(event)
 	{
-		files_change(event.target.files); // FileList object
+		func(event.target.files); // FileList object
     }, false);
 })
 

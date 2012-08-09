@@ -1,6 +1,6 @@
-function Conn_init(url, onsuccess)
+function Conn_init(ws_url, host, onsuccess)
 {
-	var socket = io.connect(url)
+	var socket = io.connect(ws_url)
 
 	socket.on('connect', function(data)
 	{
@@ -16,10 +16,15 @@ function Conn_init(url, onsuccess)
 		});
 	
 		// Host
-		socket.on('peer.connected',       peer_connected)
-		socket.on('peer.disconnected',    peer_disconnected)
-		socket.on('transfer.query_chunk', transfer_query_chunk(filename, chunk))
-		
+		socket.on('peer.connected',       host.peer_connected)
+		socket.on('peer.disconnected',    host.peer_disconnected)
+		socket.on('transfer.query_chunk', function(filename, chunk)
+		{
+			var func = host.transfer_query_chunk
+			if(func != undefined)
+				func(filename, chunk))
+		}
+
 		// Peer
 		socket.on('files.list', function(data)
 		{
@@ -29,9 +34,10 @@ function Conn_init(url, onsuccess)
 		{
 			transfer_send_chunk(filename, parseInt(chunk), data)
 		})
-
-		onsuccess();
 	
 		socket.emit('joiner', $.url().segment(1));	
+
+		if(onsuccess)
+			onsuccess();
 	})
 }

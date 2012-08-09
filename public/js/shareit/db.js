@@ -1,6 +1,6 @@
 window.indexedDB = window.indexedDB || window.webkitIndexedDB || window.mozIndexedDB || window.msIndexedDB;
 
-function DB(onsuccess)
+function DB_init(onsuccess)
 {
 	var version = 2
 
