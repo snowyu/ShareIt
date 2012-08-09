@@ -28,6 +28,19 @@ If you'd like to discuss P2P web applications further, send an email to
 
 and you'll be part of the discussion mailing list! [(Archives here.)](http://librelist.com/browser/webp2p/)
 
+## How to test it
+
+Currently, the web app is served by a Node.js server that also works as a websockets proxy, so you'll need to have installed
+Node.js and the modules 'express' and 'socket.io' (you can install them with the Node.js 'npm' tool). Later, you can be able
+to launch it just writting on a terminal 'node server.js' and access to the server on http://localhost:8000.
+
+Regarding to the browser, you will need Firefox > v14 or Internet Explorer 10 (Chrome/Chromium will be available when is fixed
+a bug related to [storing File object references on IndexedDB](http://code.google.com/p/chromium/issues/detail?id=108012),
+luckily on [September](http://en.wikipedia.org/wiki/September_(singer)) - pun intended ;-) ). Because the IndexedDB is common
+accesed by all the browser tabs, to test it locally on the same machine instead of with two computers/browsers/virtual machines
+you can do it with Firefox launching two instances each one with it's own profile. You can be able to do it with 'firefox -P -no-remote'
+to show the Firefox ProfileManager and force to create a new full instance instead of open a new browser on the current running up.
+
 ## TODO
 
 * Work on doing proper PeerConnection based transfers when builds are available.
