@@ -10,6 +10,15 @@ if(typeof FileReader == "undefined")
 var chunksize = 65536
 
 
+function Bitmap(size)
+{
+	var result = {}
+	for(var i=0; i<size; i++)
+		result[i] = true;
+	return result
+}
+
+
 DB_init(function(db)
 {
 	var host = {}

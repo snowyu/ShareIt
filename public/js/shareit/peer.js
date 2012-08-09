@@ -1,13 +1,3 @@
-function Bitmap(size)
-{
-	var result = {}
-	for(var i=0; i<size; i++)
-		result[i] = true;
-	return result
-}
-
-
-
 function transfer_begin(file)
 {
     // Calc number of necesary chunks to download
