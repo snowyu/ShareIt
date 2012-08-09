@@ -4,12 +4,16 @@ if(Blob.slice != undefined)
 
 // Filereader support (be able to host files from the filesystem)
 if(typeof FileReader == "undefined")
+{
 	oldBrowser();
+
+	function transfer_query_chunk(filename, chunk){}
+}
 else
 {
 	var reader = new FileReader();
 
-	socket.on('transfer.query_chunk', function(filename, chunk)
+	function transfer_query_chunk(filename, chunk)
 	{
 		db.sharepoints_get(filename, function(file)
 		{
