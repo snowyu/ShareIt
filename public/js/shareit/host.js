@@ -6,6 +6,10 @@ if(Blob.slice != undefined)
 if(typeof FileReader == "undefined")
 	oldBrowser();
 
+
+var chunksize = 65536
+
+
 DB_init(function(db)
 {
 	var host = {}
