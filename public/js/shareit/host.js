@@ -38,10 +38,7 @@ function peer_connected(data)
 {
 	ui_peerstate("Peer connected!");
 
-	db.sharepoints_getAll(null, function(filelist)
-	{
-		send_files_list(filelist)
-	})
+	db.sharepoints_getAll(null, send_files_list)
 }
 
 function peer_disconnected(data)
@@ -55,12 +52,7 @@ DB(function(result)
 {
 	db = result
 
-	db.sharepoints_getAll(null, function(filelist)
-	{
-		send_files_list(filelist)
-	
-		ui_updatefiles_host(filelist)
-	})
+	db.sharepoints_getAll(null, _updatefiles)
 
 	// Load websocket connection after IndexedDB is ready
 	Conn_init()
@@ -74,11 +66,13 @@ function files_change(filelist)
 
 //	send_files_list(filelist)	// Send just new files
 
-	db.sharepoints_getAll(null, function(filelist)
-	{
-		send_files_list(filelist)
-		ui_updatefiles_host(filelist)
-	})
+	db.sharepoints_getAll(null, _updatefiles)
+}
+
+function _updatefiles(filelist)
+{
+	send_files_list(filelist)
+	ui_updatefiles_host(filelist)
 }
 
 function send_files_list(filelist)
