@@ -106,6 +106,22 @@ DB_init(function(db)
 		})
 	})
 
+	function _savetodisk(file)
+	{
+		// Auto-save downloaded file
+	    var save = document.createElement("A");
+	    	save.href = "data:" + file.type + ";base64," + encode64(file)
+			save.download = file.name	// This force to download with a filename instead of navigate
+	
+		var evt = document.createEvent('MouseEvents');
+			evt.initMouseEvent('click', true, true, window, 1, 0, 0, 0, 0, false, false, false, false, 0, null);
+	
+		save.dispatchEvent(evt);
+	
+		// Set file as fully downloaded and saved on disk
+		delete file.bitmap
+	}
+
 	function _send_files_list(filelist)
 	{
 		var files_send = []
