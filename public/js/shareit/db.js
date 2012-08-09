@@ -16,84 +16,6 @@ function DB(onsuccess)
 //	    alert("upgradedb");
 	}
 
-	var result = {}
-
-	var db;
-
-	result.sharepoints_add = function(file, onsuccess, onerror)
-	{
-	    var transaction = db.transaction("sharepoints", "readwrite");
-	    var sharepoints = transaction.objectStore("sharepoints");
-	
-	    // [To-Do] Check current sharepoints and update files on duplicates
-	
-	    var request = sharepoints.add(file);
-	    if(onsuccess != undefined)
-	        request.onsuccess = function(event)
-	        {
-	            onsuccess()
-	        };
-	    if(onerror != undefined)
-	        request.onerror = function(event)
-	        {
-    	        alert("Database error: " + event.target.result);
-	            onerror(event.target.errorCode)
-	        }
-	}
-
-	result.sharepoints_get = function(key, onsuccess)
-	{
-		var sharepoints = db.transaction("sharepoints").objectStore("sharepoints");
-		var request = sharepoints.get(key);
-			request.onerror = function(event)
-			{
-				// Handle errors!
-			};
-			request.onsuccess = function(event)
-			{
-				onsuccess(request.result);
-			};
-	}
-
-	result.sharepoints_getAll = function(range, onsuccess)
-	{
-	    var result = [];
-
-	    var sharepoints = db.transaction("sharepoints").objectStore("sharepoints");
-		    sharepoints.openCursor(range).onsuccess = function(event)
-		    {
-		        var cursor = event.target.result;
-		        if(cursor)
-		        {
-		            result.push(cursor.value);
-		            cursor.continue();
-		        }
-		        else
-		            onsuccess(result);
-			};
-	}
-
-	result.sharepoints_put = function(file, onsuccess, onerror)
-	{
-	    var transaction = db.transaction("sharepoints", "readwrite");
-	    var sharepoints = transaction.objectStore("sharepoints");
-	
-	    // [To-Do] Check current sharepoints and update files on duplicates
-	
-	    var request = sharepoints.put(file);
-	    if(onsuccess != undefined)
-	        request.onsuccess = function(event)
-	        {
-	            onsuccess()
-	        };
-	    if(onerror != undefined)
-	        request.onerror = function(event)
-	        {
-    	        alert("Database error: " + event.target.result);
-	            onerror(event.target.errorCode)
-	        }
-	}
-
 	var request = indexedDB.open("ShareIt", version);
 	    request.onerror = function(event)
 	    {
@@ -101,7 +23,7 @@ function DB(onsuccess)
 	    };
 	    request.onsuccess = function(event)
 	    {
-	        db = request.result;
+	        var db = request.result;
 	
 	        // Hack for old versions of Chrome/Chromium
 	        if(version != db.version)
@@ -112,16 +34,91 @@ function DB(onsuccess)
 	                    upgradedb(db);
 	                };
 	        }
+
+            // Compose (and return) DB wrapper
+        	var result = {}
+
+	        result.sharepoints_add = function(file, onsuccess, onerror)
+	        {
+	            var transaction = db.transaction("sharepoints", "readwrite");
+	            var sharepoints = transaction.objectStore("sharepoints");
 	
+	            // [To-Do] Check current sharepoints and update files on duplicates
+	
+	            var request = sharepoints.add(file);
+	            if(onsuccess != undefined)
+	                request.onsuccess = function(event)
+	                {
+	                    onsuccess()
+	                };
+	            if(onerror != undefined)
+	                request.onerror = function(event)
+	                {
+            	        alert("Database error: " + event.target.result);
+	                    onerror(event.target.errorCode)
+	                }
+	        }
+
+	        result.sharepoints_get = function(key, onsuccess)
+	        {
+	            var transaction = db.transaction("sharepoints");
+	            var sharepoints = transaction.objectStore("sharepoints");
+		        var request = sharepoints.get(key);
+			        request.onerror = function(event)
+			        {
+				        // Handle errors!
+			        };
+			        request.onsuccess = function(event)
+			        {
+				        onsuccess(request.result);
+			        };
+	        }
+
+	        result.sharepoints_getAll = function(range, onsuccess)
+	        {
+	            var result = [];
+
+	            var transaction = db.transaction("sharepoints");
+	            var sharepoints = transaction.objectStore("sharepoints");
+		            sharepoints.openCursor(range).onsuccess = function(event)
+		            {
+		                var cursor = event.target.result;
+		                if(cursor)
+		                {
+		                    result.push(cursor.value);
+		                    cursor.continue();
+		                }
+		                else
+		                    onsuccess(result);
+			        };
+	        }
+
+	        result.sharepoints_put = function(file, onsuccess, onerror)
+	        {
+	            var transaction = db.transaction("sharepoints", "readwrite");
+	            var sharepoints = transaction.objectStore("sharepoints");
+	
+	            // [To-Do] Check current sharepoints and update files on duplicates
+	
+	            var request = sharepoints.put(file);
+	            if(onsuccess != undefined)
+	                request.onsuccess = function(event)
+	                {
+	                    onsuccess()
+	                };
+	            if(onerror != undefined)
+	                request.onerror = function(event)
+	                {
+            	        alert("Database error: " + event.target.result);
+	                    onerror(event.target.errorCode)
+	                }
+	        }
+
 			if(onsuccess)
 				onsuccess(result);
 	    };
 	    request.onupgradeneeded = function(event)
 	    {
-	        db = event.target.result;
-	
-	        upgradedb(db);
+	        upgradedb(event.target.result);
 	    };
-
-	return result
 }

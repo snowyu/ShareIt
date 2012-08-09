@@ -49,17 +49,19 @@ socket.on('peer.disconnected', function(data)
 	ui_peerstate("Peer disconnected.");
 })
 
-function db_ready(db)
+
+var db;
+DB(function(result)
 {
+	db = result
+
 	db.sharepoints_getAll(null, function(filelist)
 	{
 		send_files_list(filelist)
 	
 		ui_updatefiles_host(filelist)
 	})
-}
-
-var db = DB(db_ready)
+})
 
 function files_change(filelist)
 {
