@@ -1,6 +1,6 @@
-function Conn_init()
+function Conn_init(url, onsuccess)
 {
-	var socket = io.connect('http://localhost:8000')
+	var socket = io.connect(url)
 
 	socket.on('connect', function(data)
 	{
@@ -30,7 +30,7 @@ function Conn_init()
 			transfer_send_chunk(filename, parseInt(chunk), data)
 		})
 
-		onopen();
+		onsuccess();
 	
 		socket.emit('joiner', $.url().segment(1));	
 	})

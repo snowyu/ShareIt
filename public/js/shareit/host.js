@@ -59,7 +59,7 @@ DB(function(result)
 	db.sharepoints_getAll(null, _updatefiles)
 
 	// Load websocket connection after IndexedDB is ready
-	Conn_init()
+	Conn_init('http://localhost:8000', onopen)
 })
 
 function files_change(filelist)
