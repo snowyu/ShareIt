@@ -47,7 +47,7 @@ function ui_ready_fileschange(func)
 	{
 		func(event.target.files); // FileList object
     }, false);
-})
+}
 
 var transfer_begin
 function ui_ready_transferbegin(func)

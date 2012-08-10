@@ -49,7 +49,7 @@ DB_init(function(db)
 			{
 				if(evt.target.readyState == FileReader.DONE)
 					socket.emit('transfer.send_chunk', filename, chunk, evt.target.result);
-			};
+			}
 
 			db.sharepoints_get(filename, function(file)
 			{
@@ -60,7 +60,7 @@ DB_init(function(db)
 
 				reader.readAsBinaryString(file.slice(start, stop + 1));
 			})
-		})
+		}
 
 	// Peer
 
@@ -80,7 +80,7 @@ DB_init(function(db)
 	
 			ui_updatefiles_peer(files)
 		})
-	});
+	}
 
 	host.transfer_send_chunk = function(filename, chunk, data)
 	{
@@ -113,7 +113,7 @@ DB_init(function(db)
 			    }
 	        })
 		})
-	})
+	}
 
 	function _savetodisk(file)
 	{

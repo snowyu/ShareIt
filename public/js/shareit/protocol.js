@@ -23,8 +23,8 @@ function Conn_init(ws_url, host, onsuccess)
 		{
 			var func = host.transfer_query_chunk
 			if(func != undefined)
-				func(filename, chunk))
-		}
+				func(filename, chunk);
+		})
 
 		// Peer
 		socket.on('files.list', function(data)
