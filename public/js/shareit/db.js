@@ -51,7 +51,6 @@ function DB_init(onsuccess)
 	            if(onerror != undefined)
 	                request.onerror = function(event)
 	                {
-            	        console.error("Database error: " + event.target.result);
 	                    onerror(event.target.errorCode)
 	                }
 	        }

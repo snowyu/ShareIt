@@ -96,21 +96,26 @@ DB_init(function(db)
 			host.transfer_query_chunk = function(filename, chunk)
 			{
 				var reader = new FileReader();
-				// If we use onloadend, we need to check the readyState.
-				reader.onloadend = function(evt)
-				{
-					if(evt.target.readyState == FileReader.DONE)
+					reader.onerror = function(evt)
+					{
+						console.error("host.transfer_query_chunk("+filename+", "+chunk+") = '"+evt.target.result+"'")
+					}
+					reader.onload = function(evt)
+					{
+//						console.debug("host.transfer_query_chunk("+filename+", "+chunk+") = '"+evt.target.result+"'")
 						connection.emit('transfer.send_chunk', filename, chunk, evt.target.result);
-				}
+					}
 	
+				var start = chunk * chunksize;
+				var stop  = start + chunksize;
+
 				db.sharepoints_get(filename, function(file)
 				{
-					var start = chunk * chunksize;
-					var stop = parseInt(file.size) - 1;
-					if(stop > start + chunksize - 1)
-						stop = start + chunksize - 1;
+					var filesize = parseInt(file.size);
+					if(stop > filesize)
+						stop = filesize;
 	
-					reader.readAsBinaryString(file.slice(start, stop + 1));
+					reader.readAsBinaryString(file.slice(start, stop));
 				})
 			}
 
@@ -204,7 +209,7 @@ DB_init(function(db)
 			},
 			function(errorCode)
 			{
-				console.error("transfer_begin errorCode: "+errorCode)
+				console.error("Transfer begin: '"+blob.name+"' is already in database.")
 			})
 		})
 	})
