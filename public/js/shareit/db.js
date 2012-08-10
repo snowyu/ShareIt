@@ -35,10 +35,7 @@ function DB_init(onsuccess)
 	                };
 	        }
 
-            // Compose (and return) DB wrapper
-        	var result = {}
-
-	        result.sharepoints_add = function(file, onsuccess, onerror)
+	        db.sharepoints_add = function(file, onsuccess, onerror)
 	        {
 	            var transaction = db.transaction("sharepoints", "readwrite");
 	            var sharepoints = transaction.objectStore("sharepoints");
@@ -59,7 +56,7 @@ function DB_init(onsuccess)
 	                }
 	        }
 
-	        result.sharepoints_get = function(key, onsuccess)
+	        db.sharepoints_get = function(key, onsuccess)
 	        {
 	            var transaction = db.transaction("sharepoints");
 	            var sharepoints = transaction.objectStore("sharepoints");
@@ -74,7 +71,7 @@ function DB_init(onsuccess)
 			        };
 	        }
 
-	        result.sharepoints_getAll = function(range, onsuccess)
+	        db.sharepoints_getAll = function(range, onsuccess)
 	        {
 	            var result = [];
 
@@ -93,7 +90,7 @@ function DB_init(onsuccess)
 			        };
 	        }
 
-	        result.sharepoints_put = function(file, onsuccess, onerror)
+	        db.sharepoints_put = function(file, onsuccess, onerror)
 	        {
 	            var transaction = db.transaction("sharepoints", "readwrite");
 	            var sharepoints = transaction.objectStore("sharepoints");
@@ -115,7 +112,7 @@ function DB_init(onsuccess)
 	        }
 
 			if(onsuccess)
-				onsuccess(result);
+				onsuccess(db);
 	    };
 	    request.onupgradeneeded = function(event)
 	    {
