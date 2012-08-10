@@ -7,11 +7,11 @@ function DB_init(onsuccess)
 	function upgradedb(db)
 	{
 	    // Create an objectStore to hold information about the share points.
-	    var sharepoints = db.createObjectStore("sharepoints", { keyPath: "name" });
+	    db.createObjectStore("sharepoints", { keyPath: "name" });
 	
 	    // Create an objectStore to hold information about the shared files. We're
 	    // going to use "hash" as our key path because it's guaranteed to be unique.
-	    var files = db.createObjectStore("files", { keyPath: "hash" });
+	    db.createObjectStore("files", { keyPath: "hash" });
 	
 //	    alert("upgradedb");
 	}
