@@ -24,6 +24,8 @@ function Conn_init(ws_url, host, onsuccess)
 			var func = host.transfer_query_chunk
 			if(func != undefined)
 				func(filename, chunk);
+			else
+				console.warn("'host.transfer_query_chunk' is not available");
 		})
 
 		// Peer
@@ -36,6 +38,8 @@ function Conn_init(ws_url, host, onsuccess)
 			var func = host.transfer_send_chunk
 			if(func != undefined)
 				func(filename, parseInt(chunk), data)
+			else
+				console.warn("'host.transfer_send_chunk' is not available");
 		})
 	
 		connection.emit('joiner', $.url().segment(1));	

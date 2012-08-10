@@ -31,6 +31,8 @@ DB_init(function(db)
 
 		if(host._send_files_list)
 			db.sharepoints_getAll(null, host._send_files_list)
+		else
+			console.warn("'host._send_files_list' is not available");
 	}
 	
 	host.peer_disconnected = function(data)
@@ -78,6 +80,8 @@ DB_init(function(db)
 	{
 		if(host._send_files_list)
 			host._send_files_list(filelist)
+		else
+			console.warn("'host._send_files_list' is not available");
 
 		ui_updatefiles_host(filelist)
 	}
@@ -168,7 +172,9 @@ DB_init(function(db)
 
 			//if(host._send_files_list)
 			//	host._send_files_list(filelist)	// Send just new files
-		
+			//else
+			//	console.warn("'host._send_files_list' is not available");
+
 			db.sharepoints_getAll(null, _updatefiles)
 		})
 
