@@ -1,25 +1,25 @@
 function Conn_init(ws_url, host, onsuccess)
 {
-	var socket = io.connect(ws_url)
+	var connection = io.connect(ws_url)
 
-	socket.on('connect', function(data)
+	connection.on('connect', function(data)
 	{
 		// Common
-		socket.on('warning', function(data)
+		connection.on('warning', function(data)
 		{
 			warning(data);
 		});
 	
-		socket.on('info', function(data)
+		connection.on('info', function(data)
 		{
 			info(data);
 		});
 
-		socket.on('peer.connected',       host.peer_connected)
-		socket.on('peer.disconnected',    host.peer_disconnected)
+		connection.on('peer.connected',       host.peer_connected)
+		connection.on('peer.disconnected',    host.peer_disconnected)
 
 		// Host
-		socket.on('transfer.query_chunk', function(filename, chunk)
+		connection.on('transfer.query_chunk', function(filename, chunk)
 		{
 			var func = host.transfer_query_chunk
 			if(func != undefined)
@@ -27,18 +27,20 @@ function Conn_init(ws_url, host, onsuccess)
 		})
 
 		// Peer
-		socket.on('files.list', function(data)
+		connection.on('files.list', function(data)
 		{
 			host.files_list(JSON.parse(data))
 		});
-		socket.on('transfer.send_chunk', function(filename, chunk, data)
+		connection.on('transfer.send_chunk', function(filename, chunk, data)
 		{
-			host.transfer_send_chunk(filename, parseInt(chunk), data)
+			var func = host.transfer_send_chunk
+			if(func != undefined)
+				func(filename, parseInt(chunk), data)
 		})
 	
-		socket.emit('joiner', $.url().segment(1));	
+		connection.emit('joiner', $.url().segment(1));	
 
 		if(onsuccess)
-			onsuccess();
+			onsuccess(connection);
 	})
 }
