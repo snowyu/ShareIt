@@ -120,7 +120,7 @@ DB_init(function(db)
 		{
 			db.sharepoints_get(filename, function(file)
 			{
-				alert("transfer.send_chunk '"+filename+"' = "+JSON.stringify(file))
+				console.debug("[host.transfer_send_chunk] '"+filename+"' = "+JSON.stringify(file))
 				delete file.bitmap[chunk]
 		
 		        // Create new "fake" file
@@ -192,20 +192,19 @@ DB_init(function(db)
 			    blob.name = file.name
 			    blob.lastModifiedDate = file.lastModifiedDate
 		    	blob.bitmap = Bitmap(chunks)
-		
-			alert("transfer_begin '"+blob.name+"' = "+JSON.stringify(blob))
-		
+
 		    // Insert new "fake" file inside IndexedDB
 			db.sharepoints_add(blob,
 			function()
 			{
+				console.log("Transfer begin: '"+blob.name+"' = "+JSON.stringify(blob))
+
 				// Demand data from the begining of the file
-			//	alert('transfer_begin: '+file+" "+file.name)
 				connection.emit('transfer.query_chunk', file.name, 0);
 			},
 			function(errorCode)
 			{
-				alert("transfer_begin errorCode: "+errorCode)
+				console.error("transfer_begin errorCode: "+errorCode)
 			})
 		})
 	})

@@ -13,7 +13,7 @@ function DB_init(onsuccess)
 	    // going to use "hash" as our key path because it's guaranteed to be unique.
 	    db.createObjectStore("files", { keyPath: "hash" });
 	
-//	    alert("upgradedb");
+	    console.debug("upgradedb");
 	}
 
 	var request = indexedDB.open("ShareIt", version);
@@ -51,7 +51,7 @@ function DB_init(onsuccess)
 	            if(onerror != undefined)
 	                request.onerror = function(event)
 	                {
-            	        alert("Database error: " + event.target.result);
+            	        console.error("Database error: " + event.target.result);
 	                    onerror(event.target.errorCode)
 	                }
 	        }
@@ -106,7 +106,7 @@ function DB_init(onsuccess)
 	            if(onerror != undefined)
 	                request.onerror = function(event)
 	                {
-            	        alert("Database error: " + event.target.result);
+            	        console.error("Database error: " + event.target.result);
 	                    onerror(event.target.errorCode)
 	                }
 	        }
