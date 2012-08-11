@@ -52,7 +52,11 @@ DB_init(function(db)
 				for(var j=0, file_hosted; file_hosted = filelist[j]; j++)
 					if(file.name == file_hosted.name)
 					{
-						file.downloaded = true;
+						if(file_hosted.bitmap)
+							file.bitmap = file_hosted.bitmap
+						else
+							file.downloaded = true;
+
 						break;
 					}
 	

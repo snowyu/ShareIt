@@ -103,7 +103,19 @@ function _button_peer(file)
 	}
 
     // Show if file have been downloaded previously or if we can transfer it
-    if(file.downloaded)
+    if(file.bitmap)
+    {
+        div.progressbar()
+
+		var chunks = file.size/chunksize;
+		if(chunks % 1 != 0)
+			chunks = Math.floor(chunks) + 1;
+
+        div.total = chunks;
+
+		div.html(Math.floor((1 - file.bitmap.keys().length/div.total) * 100) + '%');
+    }
+    else if(file.downloaded)
         div.downloaded()
     else
     	div.transfer()
