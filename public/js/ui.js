@@ -100,8 +100,6 @@ function _button(file, hosting)
 		div.appendChild(open);
 	}
 
-	console.debug("'"+file.name+"', '"+file.bitmap+"', '"+file.blob+"'")
-
     // Show if file have been downloaded previously or if we can transfer it
     if(file.bitmap)
     {
@@ -111,9 +109,9 @@ function _button(file, hosting)
 		if(chunks % 1 != 0)
 			chunks = Math.floor(chunks) + 1;
 
-        div.total = chunks;
+		var value = chunks - Object.keys(file.bitmap).length
 
-		div.html(Math.floor((1 - Object.keys(file.bitmap).length/div.total) * 100) + '%');
+		ui_filedownloading(file.name, value, chunks)
     }
     else if(file.blob)
         div.open(file.blob)
