@@ -68,7 +68,7 @@ DB_init(function(db)
 	{
 		// Auto-save downloaded file
 	    var save = document.createElement("A");
-	    	save.href = "data:" + file.type + ";base64," + encode64(file)
+	    	save.href = window.URL.createObjectURL(file)
 			save.download = file.name	// This force to download with a filename instead of navigate
 	
 		var evt = document.createEvent('MouseEvents');
@@ -76,6 +76,8 @@ DB_init(function(db)
 	
 		save.dispatchEvent(evt);
 	
+		window.URL.revokeObjectURL(save.href)
+
 		// Set file as fully downloaded and saved on disk
 		delete file.bitmap
 	}
