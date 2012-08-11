@@ -55,7 +55,7 @@ function ui_ready_transferbegin(func)
 	transfer_begin = func
 }
 
-function _button(file)
+function _button(file, hosting)
 {
     var div = document.createElement("DIV");
     	div.id = file.name
@@ -101,7 +101,9 @@ function _button(file)
 	}
 
     // Show if file have been downloaded previously or if we can transfer it
-    if(file.bitmap)
+    if(file.downloaded || hosting)
+        div.open()
+    else if(file.bitmap)
     {
         div.progressbar()
 
@@ -113,8 +115,6 @@ function _button(file)
 
 		div.html(Math.floor((1 - file.bitmap.keys().length/div.total) * 100) + '%');
     }
-    else if(file.downloaded)
-        div.open()
     else
     	div.transfer()
 
@@ -158,7 +158,7 @@ function encode64(input)
 	return output;
 }
 
-function _ui_updatefiles(area, files)
+function _ui_updatefiles(area, files, hosting)
 {
 	var filestable = document.createElement('TABLE');
 		filestable.id = "filestable"
@@ -217,19 +217,19 @@ function _ui_updatefiles(area, files)
 
 			var td = document.createElement('TD');
 				td.class = "end"
-				td.appendChild(_button(file));
+				td.appendChild(_button(file, hosting));
 			tr.appendChild(td)
 		}
 }
 
 function ui_updatefiles_host(files)
 {
-    _ui_updatefiles(document.getElementById('clicky'), files)
+    _ui_updatefiles(document.getElementById('clicky'), files, true)
 }
 
 function ui_updatefiles_peer(files)
 {
-    _ui_updatefiles(document.getElementById('fileslist'), files)
+    _ui_updatefiles(document.getElementById('fileslist'), files, false)
 }
 
 function ui_filedownloading(filename, value, total)
