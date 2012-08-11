@@ -131,13 +131,8 @@ DB_init(function(db)
 
 		host.transfer_send_chunk = function(filename, chunk, data)
 		{
-//			console.debug("[host.transfer_send_chunk] '"+filename+"' = '"+data+"'")
-
 			db.sharepoints_get(filename, function(file)
 			{
-//				console.debug("[host.transfer_send_chunk] '"+filename+"' = "+JSON.stringify(file))
-//				console.debug("[host.transfer_send_chunk] '"+filename+"' = "+file.blob)
-
 				delete file.bitmap[chunk]
 
 		        // Update blob
@@ -149,13 +144,9 @@ DB_init(function(db)
                     byteArray[i] = data.charCodeAt(i) & 0xff;
 
 		        var blob = file.blob
-			    var blob2 = new Blob([blob, byteArray.buffer], {"type": blob.type})
-				console.debug(blob.size+" + "+data.length+" = "+blob2.size)
-			    file.blob = blob2
+			    file.blob = new Blob([blob, byteArray.buffer], {"type": blob.type})
 //			    file.blob = new Blob([blob.slice(0, start-1), data, blob.slice(stop+1)],
 //									 {"type": blob.type})
-
-				console.debug("Chunk: "+chunk+", "+start+"-"+stop+", File blob size: "+blob.size+" -> "+file.blob.size+", "+JSON.stringify(Object.keys(file.bitmap)))
 
 				var pending_chunks = Object.keys(file.bitmap).length
 				if(pending_chunks)
