@@ -136,7 +136,11 @@ DB_init(function(db)
                     byteArray[i] = data.charCodeAt(i) & 0xff;
 
 		        var blob = file.blob
-			    file.blob = new Blob([blob.slice(0, start-1), byteArray.buffer, blob.slice(stop+1)],
+		        var head = blob.slice(0, start-1)
+		        var padding = start-head.size
+		        if(padding < 0)
+		        	padding = 0;
+			    file.blob = new Blob([head, ArrayBuffer(padding), byteArray.buffer, blob.slice(stop+1)],
 			    					 {"type": blob.type})
 
 				var pending_chunks = Object.keys(file.bitmap).length
@@ -150,8 +154,6 @@ DB_init(function(db)
 		
 					function random_chunk()
 					{
-						return chunk + 1
-
 						var keys = Object.keys(file.bitmap)
 						return keys[Math.floor(Math.random() * keys.length)]
 					}
