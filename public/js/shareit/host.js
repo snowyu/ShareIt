@@ -121,6 +121,12 @@ DB_init(function(db)
 
 		// Peer
 
+		function random_chunk(object)
+		{
+			var keys = Object.keys(object)
+			return keys[Math.floor(Math.random() * keys.length)]
+		}
+
 		host.transfer_send_chunk = function(filename, chunk, data)
 		{
 			db.sharepoints_get(filename, function(file)
@@ -136,11 +142,12 @@ DB_init(function(db)
                     byteArray[i] = data.charCodeAt(i) & 0xff;
 
 		        var blob = file.blob
-		        var head = blob.slice(0, start-1)
+		        var head = blob.slice(0, start)
 		        var padding = start-head.size
 		        if(padding < 0)
 		        	padding = 0;
-			    file.blob = new Blob([head, ArrayBuffer(padding), byteArray.buffer, blob.slice(stop+1)],
+//		        console.debug("chunk: "+chunk+", head.size: "+head.size+", padding: "+padding)
+			    file.blob = new Blob([head, ArrayBuffer(padding), byteArray.buffer, blob.slice(stop)],
 			    					 {"type": blob.type})
 
 				var pending_chunks = Object.keys(file.bitmap).length
@@ -151,17 +158,11 @@ DB_init(function(db)
 						chunks = Math.floor(chunks) + 1;
 
 				    ui_filedownloading(file.name, chunks - pending_chunks);
-		
-					function random_chunk()
-					{
-						var keys = Object.keys(file.bitmap)
-						return keys[Math.floor(Math.random() * keys.length)]
-					}
 
 				    // Demand more data from one of the pending chunks
 			        db.sharepoints_put(file, function()
 			        {
-					    connection.emit('transfer.query_chunk', file.name, random_chunk());
+					    connection.emit('transfer.query_chunk', file.name, random_chunk(file.bitmap));
 					})
 				}
 				else
@@ -228,7 +229,8 @@ DB_init(function(db)
 				console.log("Transfer begin: '"+key+"' = "+JSON.stringify(file))
 
 				// Demand data from the begining of the file
-				connection.emit('transfer.query_chunk', key, 0);
+//				connection.emit('transfer.query_chunk', key, 0);
+				connection.emit('transfer.query_chunk', key, random_chunk(file.bitmap));
 			},
 			function(errorCode)
 			{
