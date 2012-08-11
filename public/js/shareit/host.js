@@ -200,12 +200,12 @@ DB_init(function(db)
 
 		    // Insert new "fake" file inside IndexedDB
 			db.sharepoints_add(blob,
-			function()
+			function(key)
 			{
-				console.log("Transfer begin: '"+blob.name+"' = "+JSON.stringify(blob))
+				console.log("Transfer begin: '"+key+"' = "+JSON.stringify(blob))
 
 				// Demand data from the begining of the file
-				connection.emit('transfer.query_chunk', file.name, 0);
+				connection.emit('transfer.query_chunk', key, 0);
 			},
 			function(errorCode)
 			{

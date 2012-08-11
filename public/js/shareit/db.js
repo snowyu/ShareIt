@@ -46,7 +46,7 @@ function DB_init(onsuccess)
 	            if(onsuccess != undefined)
 	                request.onsuccess = function(event)
 	                {
-	                    onsuccess()
+	                    onsuccess(request.result)
 	                };
 	            if(onerror != undefined)
 	                request.onerror = function(event)
