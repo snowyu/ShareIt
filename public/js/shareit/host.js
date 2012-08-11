@@ -131,7 +131,6 @@ DB_init(function(db)
 		        // Create new "fake" file
 			    var blob = new Blob([file, data], {"type": file.type})
 			        blob.name = file.name
-			        blob.lastModifiedDate = file.lastModifiedDate
 		        	blob.bitmap = Bitmap(chunks)
 		
 		        db.sharepoints_put(blob, function()
@@ -159,8 +158,7 @@ DB_init(function(db)
 			var files_send = []
 		
 			for(var i = 0, file; file = filelist[i]; i++)
-				files_send.push({"lastModifiedDate": file.lastModifiedDate, "name": file.name,
-								 "size": file.size, "type": file.type});
+				files_send.push({"name": file.name, "size": file.size, "type": file.type});
 		
 			connection.emit('files.list', JSON.stringify(files_send));
 		}
@@ -192,17 +190,24 @@ DB_init(function(db)
 		
 			ui_filedownloading(file.name, 0, chunks)
 		
-		    // Create new "fake" file
-			var blob = new Blob([''], {"type": file.type})
-			    blob.name = file.name
-			    blob.lastModifiedDate = file.lastModifiedDate
-		    	blob.bitmap = Bitmap(chunks)
+		    // Add a blob container and a bitmap to our file stub
+			file.blob = new Blob([''], {"type": file.type})
+		    file.bitmap = Bitmap(chunks)
 
-		    // Insert new "fake" file inside IndexedDB
-			db.sharepoints_add(blob,
+		    // Insert new "file" inside IndexedDB
+			db.sharepoints_add(file,
 			function(key)
 			{
-				console.log("Transfer begin: '"+key+"' = "+JSON.stringify(blob))
+				console.log("Transfer begin: '"+key+"' = "+JSON.stringify(file))
+
+				db.sharepoints_get(key, function(object)
+				{
+					console.debug(JSON.stringify(object))
+					console.debug("object="+object)
+					console.debug("object.blob.type="+object.blob.type)
+					console.debug("object.name="+object.name)
+					console.debug("object.bitmap="+object.bitmap)
+				})
 
 				// Demand data from the begining of the file
 				connection.emit('transfer.query_chunk', key, 0);
