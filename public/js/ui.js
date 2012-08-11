@@ -33,23 +33,29 @@ function warning(msg)
 	log('warning', msg);
 }
 
-$(document).ready(function()
+//$(document).ready(function()
+//{
+//	document.getElementById('files').addEventListener('change', function(event)
+//	{
+//		files_change(event.target.files); // FileList object
+//    }, false);
+//})
+
+function ui_ready_fileschange(func)
 {
 	document.getElementById('files').addEventListener('change', function(event)
 	{
-		files_change(event.target.files); // FileList object
+		func(event.target.files); // FileList object
     }, false);
-})
-
-function _button_host()
-{
-	var bold = document.createElement("B");
-		bold.appendChild(document.createTextNode("Sharing!"));
-
-	return bold
 }
 
-function _button_peer(file)
+var transfer_begin
+function ui_ready_transferbegin(func)
+{
+	transfer_begin = func
+}
+
+function _button(file, hosting)
 {
     var div = document.createElement("DIV");
     	div.id = file.name
@@ -60,7 +66,8 @@ function _button_peer(file)
 	    	transfer.href = ""
 	    	transfer.onclick = function()
 	    	{
-		    	transfer_begin(file);
+	    		if(transfer_begin)
+			    	transfer_begin(file);
 		    	return false;
 	    	}
 			transfer.appendChild(document.createTextNode("Transfer"));
@@ -79,61 +86,44 @@ function _button_peer(file)
 		div.appendChild(progress);
 	}
 	
-	div.downloaded = function()
+	div.open = function(blob)
 	{
-		// Show file as downloaded
+	    var open = document.createElement("A");
+	    	open.href = window.URL.createObjectURL(blob)
+			open.appendChild(document.createTextNode("Open"));
+
 		while(div.firstChild)
+		{
+			window.URL.revokeObjectURL(div.firstChild.href);
 			div.removeChild(div.firstChild);
-		div.appendChild(document.createTextNode("Downloaded!"));
+		}
+		div.appendChild(open);
 	}
 
     // Show if file have been downloaded previously or if we can transfer it
-    if(file.downloaded)
-        div.downloaded()
+    if(file.bitmap)
+    {
+        div.progressbar()
+
+		var chunks = file.size/chunksize;
+		if(chunks % 1 != 0)
+			chunks = Math.floor(chunks) + 1;
+
+		var value = chunks - Object.keys(file.bitmap).length
+
+		ui_filedownloading(file.name, value, chunks)
+    }
+    else if(file.blob)
+        div.open(file.blob)
+    else if(hosting)
+        div.open(file)
     else
     	div.transfer()
 
     return div
 }
 
-function encode64(input)
-{
-	var keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "abcdefghijklmnopqrstuvwxyz" + "0123456789" + "+/=";
-
-	var output = "";
-    var chr1, chr2, chr3 = "";
-    var enc1, enc2, enc3, enc4 = "";
-    var i = 0;
-
-    do
-    {
-    	chr1 = input.charCodeAt(i++);
-        chr2 = input.charCodeAt(i++);
-        chr3 = input.charCodeAt(i++);
-
-        enc1 = chr1 >> 2;
-        enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
-        enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
-        enc4 = chr3 & 63;
-
-        if(isNaN(chr2))
-            enc3 = enc4 = 64;
-        else if(isNaN(chr3))
-            enc4 = 64;
-
-        output = output +
-            keyStr.charAt(enc1) +
-            keyStr.charAt(enc2) +
-            keyStr.charAt(enc3) +
-            keyStr.charAt(enc4);
-        chr1 = chr2 = chr3 = "";
-    	enc1 = enc2 = enc3 = enc4 = "";
-	} while(i < input.length);
-
-	return output;
-}
-
-function _ui_updatefiles(area, button, files)
+function _ui_updatefiles(area, files, hosting)
 {
 	var filestable = document.createElement('TABLE');
 		filestable.id = "filestable"
@@ -192,19 +182,19 @@ function _ui_updatefiles(area, button, files)
 
 			var td = document.createElement('TD');
 				td.class = "end"
-				td.appendChild(button(file));
+				td.appendChild(_button(file, hosting));
 			tr.appendChild(td)
 		}
 }
 
 function ui_updatefiles_host(files)
 {
-    _ui_updatefiles(document.getElementById('clicky'), _button_host, files)
+    _ui_updatefiles(document.getElementById('clicky'), files, true)
 }
 
 function ui_updatefiles_peer(files)
 {
-    _ui_updatefiles(document.getElementById('fileslist'), _button_peer, files)
+    _ui_updatefiles(document.getElementById('fileslist'), files, false)
 }
 
 function ui_filedownloading(filename, value, total)
@@ -217,9 +207,9 @@ function ui_filedownloading(filename, value, total)
 	div.html(Math.floor(value/div.total * 100) + '%');
 }
 
-function ui_filedownloaded(filename)
+function ui_filedownloaded(file)
 {
-	document.getElementById(filename).downloaded();
+	document.getElementById(file.name).open(file.blob);
 
 	info("Transfer finished!");
 }

@@ -1,0 +1,7 @@
+= Browser =
+Firefox 14
+Internet Explorer 10
+
+== Technologies ==
+FileReader
+IndexedDB (with File support)
