@@ -44,23 +44,29 @@ DB_init(function(db)
 
 	host.files_list = function(files)
 	{
+		console.debug("host.files_list = '"+files[0].name+"'")
+
 		// Check if we have already any of the files
 		// It's stupid to try to download it... and also give errors
 		db.sharepoints_getAll(null, function(filelist)
 		{
+			console.debug("db.sharepoints_getAll = '"+filelist[0].name+"'")
+
 			for(var i=0, file; file = files[i]; i++)
 				for(var j=0, file_hosted; file_hosted = filelist[j]; j++)
 					if(file.name == file_hosted.name)
 					{
-						if(file_hosted.bitmap)
-							file.bitmap = file_hosted.bitmap
-						else
-							file.downloaded = true;
+						console.debug("'"+file_hosted.name+" = '"+file_hosted.name+"'")
+
+						file.bitmap = file_hosted.bitmap
+						file.blob   = file_hosted.blob || file_hosted
 
 						break;
 					}
 	
 			ui_updatefiles_peer(files)
+
+			console.debug("host.files_list = '"+files[0].bitmap+"', '"+files[0].blob+"'")
 		})
 	}
 
@@ -164,7 +170,7 @@ DB_init(function(db)
 					    // Auto-save downloaded file
 					    _savetodisk(file)
 			
-					    ui_filedownloaded(file.name);
+					    ui_filedownloaded(file);
 				    }
 		        })
 			})
@@ -227,7 +233,7 @@ DB_init(function(db)
 			},
 			function(errorCode)
 			{
-				console.error("Transfer begin: '"+blob.name+"' is already in database.")
+				console.error("Transfer begin: '"+file.name+"' is already in database.")
 			})
 		})
 	})

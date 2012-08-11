@@ -86,10 +86,10 @@ function _button(file, hosting)
 		div.appendChild(progress);
 	}
 	
-	div.open = function()
+	div.open = function(blob)
 	{
 	    var open = document.createElement("A");
-	    	open.href = window.URL.createObjectURL(file)
+	    	open.href = window.URL.createObjectURL(blob)
 			open.appendChild(document.createTextNode("Open"));
 
 		while(div.firstChild)
@@ -100,10 +100,10 @@ function _button(file, hosting)
 		div.appendChild(open);
 	}
 
+	console.debug("'"+file.name+"', '"+file.bitmap+"', '"+file.blob+"'")
+
     // Show if file have been downloaded previously or if we can transfer it
-    if(file.downloaded || hosting)
-        div.open()
-    else if(file.bitmap)
+    if(file.bitmap)
     {
         div.progressbar()
 
@@ -113,8 +113,12 @@ function _button(file, hosting)
 
         div.total = chunks;
 
-		div.html(Math.floor((1 - file.bitmap.keys().length/div.total) * 100) + '%');
+		div.html(Math.floor((1 - Object.keys(file.bitmap).length/div.total) * 100) + '%');
     }
+    else if(file.blob)
+        div.open(file.blob)
+    else if(hosting)
+        div.open(file)
     else
     	div.transfer()
 
@@ -205,9 +209,9 @@ function ui_filedownloading(filename, value, total)
 	div.html(Math.floor(value/div.total * 100) + '%');
 }
 
-function ui_filedownloaded(filename)
+function ui_filedownloaded(file)
 {
-	document.getElementById(filename).open();
+	document.getElementById(file.name).open(file.blob);
 
 	info("Transfer finished!");
 }
