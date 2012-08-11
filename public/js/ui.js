@@ -94,12 +94,15 @@ function _button_peer(file)
 		div.appendChild(progress);
 	}
 	
-	div.downloaded = function()
+	div.open = function()
 	{
-		// Show file as downloaded
+	    var open = document.createElement("A");
+	    	open.href = "data:" + file.type + ";base64," + encode64(file)
+			open.appendChild(document.createTextNode("Open"));
+
 		while(div.firstChild)
 			div.removeChild(div.firstChild);
-		div.appendChild(document.createTextNode("Downloaded!"));
+		div.appendChild(open);
 	}
 
     // Show if file have been downloaded previously or if we can transfer it
@@ -116,7 +119,7 @@ function _button_peer(file)
 		div.html(Math.floor((1 - file.bitmap.keys().length/div.total) * 100) + '%');
     }
     else if(file.downloaded)
-        div.downloaded()
+        div.open()
     else
     	div.transfer()
 
@@ -246,7 +249,7 @@ function ui_filedownloading(filename, value, total)
 
 function ui_filedownloaded(filename)
 {
-	document.getElementById(filename).downloaded();
+	document.getElementById(filename).open();
 
 	info("Transfer finished!");
 }
