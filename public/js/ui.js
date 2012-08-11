@@ -55,16 +55,7 @@ function ui_ready_transferbegin(func)
 	transfer_begin = func
 }
 
-function _button_host(file)
-{
-    var open = document.createElement("A");
-    	open.href = window.URL.createObjectURL(file)
-		open.appendChild(document.createTextNode("Open"));
-
-	return open
-}
-
-function _button_peer(file)
+function _button(file)
 {
     var div = document.createElement("DIV");
     	div.id = file.name
@@ -98,11 +89,14 @@ function _button_peer(file)
 	div.open = function()
 	{
 	    var open = document.createElement("A");
-	    	open.href = "data:" + file.type + ";base64," + encode64(file)
+	    	open.href = window.URL.createObjectURL(file)
 			open.appendChild(document.createTextNode("Open"));
 
 		while(div.firstChild)
+		{
+			window.URL.revokeObjectURL(div.firstChild.href);
 			div.removeChild(div.firstChild);
+		}
 		div.appendChild(open);
 	}
 
@@ -164,7 +158,7 @@ function encode64(input)
 	return output;
 }
 
-function _ui_updatefiles(area, button, files)
+function _ui_updatefiles(area, files)
 {
 	var filestable = document.createElement('TABLE');
 		filestable.id = "filestable"
@@ -223,19 +217,19 @@ function _ui_updatefiles(area, button, files)
 
 			var td = document.createElement('TD');
 				td.class = "end"
-				td.appendChild(button(file));
+				td.appendChild(_button(file));
 			tr.appendChild(td)
 		}
 }
 
 function ui_updatefiles_host(files)
 {
-    _ui_updatefiles(document.getElementById('clicky'), _button_host, files)
+    _ui_updatefiles(document.getElementById('clicky'), files)
 }
 
 function ui_updatefiles_peer(files)
 {
-    _ui_updatefiles(document.getElementById('fileslist'), _button_peer, files)
+    _ui_updatefiles(document.getElementById('fileslist'), files)
 }
 
 function ui_filedownloading(filename, value, total)
