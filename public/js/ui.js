@@ -55,15 +55,7 @@ function ui_ready_transferbegin(func)
 	transfer_begin = func
 }
 
-function _button_host()
-{
-	var bold = document.createElement("B");
-		bold.appendChild(document.createTextNode("Sharing!"));
-
-	return bold
-}
-
-function _button_peer(file)
+function _button(file, hosting)
 {
     var div = document.createElement("DIV");
     	div.id = file.name
@@ -94,24 +86,42 @@ function _button_peer(file)
 		div.appendChild(progress);
 	}
 	
-	div.downloaded = function()
+	div.open = function()
 	{
-		// Show file as downloaded
+	    var open = document.createElement("A");
+	    	open.href = window.URL.createObjectURL(file)
+			open.appendChild(document.createTextNode("Open"));
+
 		while(div.firstChild)
+		{
+			window.URL.revokeObjectURL(div.firstChild.href);
 			div.removeChild(div.firstChild);
-		div.appendChild(document.createTextNode("Downloaded!"));
+		}
+		div.appendChild(open);
 	}
 
     // Show if file have been downloaded previously or if we can transfer it
-    if(file.downloaded)
-        div.downloaded()
+    if(file.downloaded || hosting)
+        div.open()
+    else if(file.bitmap)
+    {
+        div.progressbar()
+
+		var chunks = file.size/chunksize;
+		if(chunks % 1 != 0)
+			chunks = Math.floor(chunks) + 1;
+
+        div.total = chunks;
+
+		div.html(Math.floor((1 - file.bitmap.keys().length/div.total) * 100) + '%');
+    }
     else
     	div.transfer()
 
     return div
 }
 
-function _ui_updatefiles(area, button, files)
+function _ui_updatefiles(area, files, hosting)
 {
 	var filestable = document.createElement('TABLE');
 		filestable.id = "filestable"
@@ -170,19 +180,19 @@ function _ui_updatefiles(area, button, files)
 
 			var td = document.createElement('TD');
 				td.class = "end"
-				td.appendChild(button(file));
+				td.appendChild(_button(file, hosting));
 			tr.appendChild(td)
 		}
 }
 
 function ui_updatefiles_host(files)
 {
-    _ui_updatefiles(document.getElementById('clicky'), _button_host, files)
+    _ui_updatefiles(document.getElementById('clicky'), files, true)
 }
 
 function ui_updatefiles_peer(files)
 {
-    _ui_updatefiles(document.getElementById('fileslist'), _button_peer, files)
+    _ui_updatefiles(document.getElementById('fileslist'), files, false)
 }
 
 function ui_filedownloading(filename, value, total)
@@ -197,7 +207,7 @@ function ui_filedownloading(filename, value, total)
 
 function ui_filedownloaded(filename)
 {
-	document.getElementById(filename).downloaded();
+	document.getElementById(filename).open();
 
 	info("Transfer finished!");
 }

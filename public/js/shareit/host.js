@@ -52,7 +52,11 @@ DB_init(function(db)
 				for(var j=0, file_hosted; file_hosted = filelist[j]; j++)
 					if(file.name == file_hosted.name)
 					{
-						file.downloaded = true;
+						if(file_hosted.bitmap)
+							file.bitmap = file_hosted.bitmap
+						else
+							file.downloaded = true;
+
 						break;
 					}
 	
@@ -107,7 +111,7 @@ DB_init(function(db)
 //						console.debug("host.transfer_query_chunk("+filename+", "+chunk+") = '"+evt.target.result+"'")
 						connection.emit('transfer.send_chunk', filename, chunk, evt.target.result);
 					}
-	
+
 				var start = chunk * chunksize;
 				var stop  = start + chunksize;
 
@@ -125,14 +129,20 @@ DB_init(function(db)
 
 		host.transfer_send_chunk = function(filename, chunk, data)
 		{
+//			console.debug("[host.transfer_send_chunk] '"+filename+"' = '"+data+"'")
+
 			db.sharepoints_get(filename, function(file)
 			{
 				console.debug("[host.transfer_send_chunk] '"+filename+"' = "+JSON.stringify(file))
 				delete file.bitmap[chunk]
-		
+
 		        // Update blob
+				var start = chunk * chunksize;
+				var stop  = start + chunksize;
+
 		        var blob = file.blob
-			    file.blob = new Blob([blob, data], {"type": blob.type})
+			    file.blob = new Blob([blob.slice(0, start-1), data, blob.slice(stop+1)],
+									 {"type": blob.type})
 		
 		        db.sharepoints_put(file, function()
 		        {
@@ -140,8 +150,14 @@ DB_init(function(db)
 				    {
 					    ui_filedownloading(file.name, chunk);
 			
-					    // Demand more data
-					    connection.emit('transfer.query_chunk', file.name, chunk+1);
+						function random_chunk()
+						{
+							var keys = Object.keys(file.bitmap)
+							return keys[Math.floor(Math.random() * keys.length)]
+						}
+
+					    // Demand more data from one of the pending chunks
+					    connection.emit('transfer.query_chunk', filename, random_chunk());
 				    }
 				    else
 				    {
