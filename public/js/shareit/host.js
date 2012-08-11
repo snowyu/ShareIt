@@ -64,7 +64,7 @@ DB_init(function(db)
 	{
 		// Auto-save downloaded file
 	    var save = document.createElement("A");
-	    	save.href = "data:" + file.type + ";base64," + encode64(file)
+	    	save.href = "data:" + file.blob.type + ";base64," + encode64(file.blob)
 			save.download = file.name	// This force to download with a filename instead of navigate
 	
 		var evt = document.createEvent('MouseEvents');
@@ -128,26 +128,25 @@ DB_init(function(db)
 				console.debug("[host.transfer_send_chunk] '"+filename+"' = "+JSON.stringify(file))
 				delete file.bitmap[chunk]
 		
-		        // Create new "fake" file
-			    var blob = new Blob([file, data], {"type": file.type})
-			        blob.name = file.name
-		        	blob.bitmap = Bitmap(chunks)
+		        // Update blob
+		        var blob = file.blob
+			    file.blob = new Blob([blob, data], {"type": blob.type})
 		
-		        db.sharepoints_put(blob, function()
+		        db.sharepoints_put(file, function()
 		        {
-				    if(blob.bitmap.keys())
+				    if(Object.keys(file.bitmap).length)
 				    {
-					    ui_filedownloading(filename, chunk);
+					    ui_filedownloading(file.name, chunk);
 			
 					    // Demand more data
-					    connection.emit('transfer.query_chunk', filename, chunk+1);
+					    connection.emit('transfer.query_chunk', file.name, chunk+1);
 				    }
 				    else
 				    {
 					    // Auto-save downloaded file
-					    _savetodisk(blob)
+					    _savetodisk(file)
 			
-					    ui_filedownloaded(filename);
+					    ui_filedownloaded(file.name);
 				    }
 		        })
 			})
@@ -203,10 +202,6 @@ DB_init(function(db)
 				db.sharepoints_get(key, function(object)
 				{
 					console.debug(JSON.stringify(object))
-					console.debug("object="+object)
-					console.debug("object.blob.type="+object.blob.type)
-					console.debug("object.name="+object.name)
-					console.debug("object.bitmap="+object.bitmap)
 				})
 
 				// Demand data from the begining of the file
