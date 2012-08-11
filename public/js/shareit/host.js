@@ -105,7 +105,7 @@ DB_init(function(db)
 //						console.debug("host.transfer_query_chunk("+filename+", "+chunk+") = '"+evt.target.result+"'")
 						connection.emit('transfer.send_chunk', filename, chunk, evt.target.result);
 					}
-	
+
 				var start = chunk * chunksize;
 				var stop  = start + chunksize;
 
@@ -123,25 +123,38 @@ DB_init(function(db)
 
 		host.transfer_send_chunk = function(filename, chunk, data)
 		{
+//			console.debug("[host.transfer_send_chunk] '"+filename+"' = '"+data+"'")
+
 			db.sharepoints_get(filename, function(file)
 			{
 				console.debug("[host.transfer_send_chunk] '"+filename+"' = "+JSON.stringify(file))
 				delete file.bitmap[chunk]
-		
-		        // Create new "fake" file
-			    var blob = new Blob([file, data], {"type": file.type})
+
+				var start = chunk * chunksize;
+				var stop  = start + chunksize;
+
+		        // Create a new "fake" file with the chunk data inserted (not optimus...)
+			    var blob = new Blob([file.slice(0, start-1), data, file.slice(stop+1)],
+			    					{"type": file.type})
 			        blob.name = file.name
 			        blob.lastModifiedDate = file.lastModifiedDate
 		        	blob.bitmap = Bitmap(chunks)
-		
+
+			    // Replace the old file inside IndexedDB with the new "fake" one
 		        db.sharepoints_put(blob, function()
 		        {
 				    if(blob.bitmap.keys())
 				    {
 					    ui_filedownloading(filename, chunk);
-			
-					    // Demand more data
-					    connection.emit('transfer.query_chunk', filename, chunk+1);
+
+						function random_chunk()
+						{
+							var keys = file.bitmap.keys()
+							return keys[Math.floor(Math.random() * keys.length)]
+						}
+
+					    // Demand more data from one of the pending chunks
+					    connection.emit('transfer.query_chunk', filename, random_chunk());
 				    }
 				    else
 				    {
@@ -192,13 +205,13 @@ DB_init(function(db)
 		
 			ui_filedownloading(file.name, 0, chunks)
 		
-		    // Create new "fake" file
+		    // Create a new empty "fake" file
 			var blob = new Blob([''], {"type": file.type})
 			    blob.name = file.name
 			    blob.lastModifiedDate = file.lastModifiedDate
 		    	blob.bitmap = Bitmap(chunks)
 
-		    // Insert new "fake" file inside IndexedDB
+		    // Insert the new empty "fake" file inside IndexedDB
 			db.sharepoints_add(blob,
 			function()
 			{
