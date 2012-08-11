@@ -55,12 +55,13 @@ function ui_ready_transferbegin(func)
 	transfer_begin = func
 }
 
-function _button_host()
+function _button_host(file)
 {
-	var bold = document.createElement("B");
-		bold.appendChild(document.createTextNode("Sharing!"));
+    var open = document.createElement("A");
+    	open.href = window.URL.createObjectURL(file)
+		open.appendChild(document.createTextNode("Open"));
 
-	return bold
+	return open
 }
 
 function _button_peer(file)
