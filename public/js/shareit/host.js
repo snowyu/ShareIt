@@ -103,27 +103,19 @@ DB_init(function(db)
 					}
 					reader.onload = function(evt)
 					{
-//						console.debug("host.transfer_query_chunk("+filename+", "+chunk+") = '"+evt.target.result+"'")
 						connection.emit('transfer.send_chunk', filename, chunk, evt.target.result);
 					}
 
-//				var start = chunk * chunksize;
-//				var stop  = start + chunksize;
+				var start = chunk * chunksize;
+				var stop  = start + chunksize;
 
 				db.sharepoints_get(filename, function(file)
 				{
-					var start = chunk * chunksize;
-	        		var stop = parseInt(file.size) - 1;
-			        if(stop > start + chunksize - 1)
-						stop = start + chunksize - 1;
+					var filesize = parseInt(file.size);
+					if(stop > filesize)
+						stop = filesize;
 
-					reader.readAsBinaryString(file.slice(start, stop+1));
-
-//					var filesize = parseInt(file.size);
-//					if(stop > filesize)
-//						stop = filesize;
-//
-//					reader.readAsBinaryString(file.slice(start, stop));
+					reader.readAsBinaryString(file.slice(start, stop));
 				})
 			}
 
@@ -144,9 +136,8 @@ DB_init(function(db)
                     byteArray[i] = data.charCodeAt(i) & 0xff;
 
 		        var blob = file.blob
-			    file.blob = new Blob([blob, byteArray.buffer], {"type": blob.type})
-//			    file.blob = new Blob([blob.slice(0, start-1), data, blob.slice(stop+1)],
-//									 {"type": blob.type})
+			    file.blob = new Blob([blob.slice(0, start-1), byteArray.buffer, blob.slice(stop+1)],
+			    					 {"type": blob.type})
 
 				var pending_chunks = Object.keys(file.bitmap).length
 				if(pending_chunks)
