@@ -75,9 +75,6 @@ DB_init(function(db)
 		save.dispatchEvent(evt);
 
 		window.URL.revokeObjectURL(save.href)
-
-		// Set file as fully downloaded and saved on disk
-		delete file.bitmap
 	}
 
 	function _updatefiles(filelist)
@@ -132,6 +129,7 @@ DB_init(function(db)
 			db.sharepoints_get(filename, function(file)
 			{
 				console.debug("[host.transfer_send_chunk] '"+filename+"' = "+JSON.stringify(file))
+
 				delete file.bitmap[chunk]
 
 		        // Update blob
@@ -141,30 +139,41 @@ DB_init(function(db)
 		        var blob = file.blob
 			    file.blob = new Blob([blob.slice(0, start-1), data, blob.slice(stop+1)],
 									 {"type": blob.type})
-		
-		        db.sharepoints_put(file, function()
-		        {
-				    if(Object.keys(file.bitmap).length)
-				    {
-					    ui_filedownloading(file.name, chunk);
-			
-						function random_chunk()
-						{
-							var keys = Object.keys(file.bitmap)
-							return keys[Math.floor(Math.random() * keys.length)]
-						}
 
-					    // Demand more data from one of the pending chunks
-					    connection.emit('transfer.query_chunk', filename, random_chunk());
-				    }
-				    else
-				    {
+				var pending_chunks = Object.keys(file.bitmap).length
+				if(pending_chunks)
+				{
+					var chunks = file.size/chunksize;
+					if(chunks % 1 != 0)
+						chunks = Math.floor(chunks) + 1;
+
+				    ui_filedownloading(file.name, chunks - pending_chunks);
+		
+					function random_chunk()
+					{
+						var keys = Object.keys(file.bitmap)
+						return keys[Math.floor(Math.random() * keys.length)]
+					}
+
+				    // Demand more data from one of the pending chunks
+			        db.sharepoints_put(file, function()
+			        {
+					    connection.emit('transfer.query_chunk', file.name, random_chunk());
+					})
+				}
+				else
+				{
+					// There are no more chunks, set file as fully downloaded
+					delete file.bitmap;
+
+			        db.sharepoints_put(file, function()
+			        {
 					    // Auto-save downloaded file
 					    _savetodisk(file)
 			
 					    ui_filedownloaded(file);
-				    }
-		        })
+			        })
+				}
 			})
 		}
 
