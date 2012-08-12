@@ -104,7 +104,7 @@ DB_init(function(db)
 					}
 					reader.onload = function(evt)
 					{
-						connection.emit('transfer.send_chunk', filename, chunk, evt.target.result);
+						connection.transfer_send_chunk(filename, chunk, evt.target.result);
 					}
 
 				var start = chunk * chunksize;
@@ -163,7 +163,7 @@ DB_init(function(db)
 				    // Demand more data from one of the pending chunks
 			        db.sharepoints_put(file, function()
 			        {
-					    connection.emit('transfer.query_chunk', file.name, random_chunk(file.bitmap));
+					    connection.transfer_query_chunk(file.name, random_chunk(file.bitmap));
 					})
 				}
 				else
@@ -188,8 +188,8 @@ DB_init(function(db)
 		
 			for(var i = 0, file; file = filelist[i]; i++)
 				files_send.push({"name": file.name, "size": file.size, "type": file.type});
-		
-			connection.emit('files.list', JSON.stringify(files_send));
+
+			connection.files_list(files_send);
 		}
 
 		db.sharepoints_getAll(null, _updatefiles)
@@ -230,8 +230,7 @@ DB_init(function(db)
 				console.log("Transfer begin: '"+key+"' = "+JSON.stringify(file))
 
 				// Demand data from the begining of the file
-//				connection.emit('transfer.query_chunk', key, 0);
-				connection.emit('transfer.query_chunk', key, random_chunk(file.bitmap));
+				connection.transfer_query_chunk(key, random_chunk(file.bitmap))
 			},
 			function(errorCode)
 			{

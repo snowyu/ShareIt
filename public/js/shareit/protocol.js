@@ -28,11 +28,22 @@ function Conn_init(ws_url, host, onsuccess)
 				console.warn("'host.transfer_query_chunk' is not available");
 		})
 
+		connection.transfer_send_chunk = function(filename, chunk, data)
+		{
+			connection.emit('transfer.send_chunk', filename, chunk, data);
+		}
+
 		// Peer
 		connection.on('files.list', function(data)
 		{
 			host.files_list(JSON.parse(data))
 		});
+
+		connection.files_list = function(files_send)
+		{
+			connection.emit('files.list', JSON.stringify(files_send));
+		}
+
 		connection.on('transfer.send_chunk', function(filename, chunk, data)
 		{
 			var func = host.transfer_send_chunk
@@ -41,7 +52,12 @@ function Conn_init(ws_url, host, onsuccess)
 			else
 				console.warn("'host.transfer_send_chunk' is not available");
 		})
-	
+
+		connection.transfer_query_chunk = function(filename, chunk)
+        {
+		    connection.emit('transfer.query_chunk', filename, chunk);
+		})
+
 		connection.emit('joiner', $.url().segment(1));	
 
 		if(onsuccess)
