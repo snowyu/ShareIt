@@ -56,7 +56,7 @@ function Conn_init(ws_url, host, onsuccess)
 		connection.transfer_query_chunk = function(filename, chunk)
         {
 		    connection.emit('transfer.query_chunk', filename, chunk);
-		})
+		}
 
 		connection.emit('joiner', $.url().segment(1));	
 

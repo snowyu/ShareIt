@@ -89,7 +89,7 @@ DB_init(function(db)
 	}
 
 	// Load websocket connection after IndexedDB is ready
-	Conn_init('http://localhost:8000', host, function(connection)
+	Conn_init('http://localhost:8001', host, function(connection)
 	{
 		// Host
 	

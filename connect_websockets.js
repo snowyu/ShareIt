@@ -1,3 +1,7 @@
+// HTTP server
+app = require('http').createServer()
+app.listen(8001);
+
 // P2P Stuff
 var io = require('socket.io').listen(app)
 
