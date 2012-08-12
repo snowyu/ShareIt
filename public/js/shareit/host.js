@@ -67,6 +67,7 @@ DB_init(function(db)
 		// Auto-save downloaded file
 	    var save = document.createElement("A");
 	    	save.href = window.URL.createObjectURL(file.blob)
+	    	save.target = "_blank"		// This can give problems...
 			save.download = file.name	// This force to download with a filename instead of navigate
 	
 		var evt = document.createEvent('MouseEvents');

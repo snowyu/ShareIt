@@ -89,6 +89,7 @@ function _button(file, hosting)
 	{
 	    var open = document.createElement("A");
 	    	open.href = window.URL.createObjectURL(blob)
+	    	open.target = "_blank"
 			open.appendChild(document.createTextNode("Open"));
 
 		while(div.firstChild)
