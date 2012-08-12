@@ -35,11 +35,12 @@ and you'll be part of the discussion mailing list!
 
 ## How to test it
 
-Currently, the web app is served by a Node.js server that also works as a
-websockets proxy, so you'll need to have installed Node.js and the modules
-'express' and 'socket.io' (you can install them with the Node.js 'npm' tool).
-Later, you can be able to launch it just writting on a terminal 'node server.js'
-and access to the server on http://localhost:8000.
+Currently, the web app run over a web server and a socket.io proxy on Node.js,
+so you'll need to have installed Node.js and the modules 'express' and
+'socket.io' (you can install them with the Node.js 'npm' tool). Later, you can
+be able to launch them just writting on a terminal 'node ui_html.js' and 'node
+connect_websockets.js' and access to the web server on http://localhost:8000.
+The socket.io proxy will be running on http://localhost:8001.
 
 Regarding to the browser, you will need Firefox v14 or Internet Explorer 10
 (Chrome/Chromium will be available when is fixed a bug related to
