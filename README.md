@@ -35,12 +35,22 @@ and you'll be part of the discussion mailing list!
 
 ## How to test it
 
-Currently, the web app run over a web server and a socket.io proxy on Node.js,
-so you'll need to have installed Node.js and the modules 'express' and
-'socket.io' (you can install them with the Node.js 'npm' tool). Later, you can
-be able to launch them just writting on a terminal 'node ui_html.js' and 'node
-connect_websockets.js' and access to the web server on http://localhost:8000.
-The socket.io proxy will be running on http://localhost:8001.
+Currently, the web app static files on the 'html' folder can be served by a
+regular web server. For example, if you have Python installed they can be served
+directly from the folder using
+
+> python -m SimpleHTTPServer 8000
+
+so the web server will be available on http://localhost:8000.
+
+The peer connections are managed by a socket.io proxy build on Node.js, so
+you'll need to have installed Node.js and the module 'socket.io' (you can
+install it with the Node.js 'npm' tool). Later, you can be able to launch it
+just writting on a terminal
+
+> node connect_websockets.js
+
+and the socket.io proxy will be running on http://localhost:8001.
 
 Regarding to the browser, you will need Firefox v14 or Internet Explorer 10
 (Chrome/Chromium will be available when is fixed a bug related to
