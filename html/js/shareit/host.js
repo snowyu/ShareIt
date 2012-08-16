@@ -19,7 +19,7 @@ function Bitmap(size)
 }
 
 
-function DB_ready(db)
+function Host_init(db, onsuccess)
 {
 	var host = {}
 
@@ -62,34 +62,8 @@ function DB_ready(db)
 		})
 	}
 
-	function _savetodisk(file)
-	{
-		// Auto-save downloaded file
-	    var save = document.createElement("A");
-	    	save.href = window.URL.createObjectURL(file.blob)
-	    	save.target = "_blank"		// This can give problems...
-			save.download = file.name	// This force to download with a filename instead of navigate
-	
-		var evt = document.createEvent('MouseEvents');
-			evt.initMouseEvent('click', true, true, window, 1, 0, 0, 0, 0, false, false, false, false, 0, null);
-	
-		save.dispatchEvent(evt);
-
-		window.URL.revokeObjectURL(save.href)
-	}
-
-	function _updatefiles(filelist)
-	{
-		if(host._send_files_list)
-			host._send_files_list(filelist)
-		else
-			console.warn("'host._send_files_list' is not available");
-
-		ui_updatefiles_host(filelist)
-	}
-
-	// Load websocket connection after IndexedDB is ready
-	Conn_init('wss://localhost:8001', host, db, Conn_ready)
+		if(onsuccess)
+			onsuccess(host);
 }
 
 function Conn_ready(connection, host, db)
@@ -129,6 +103,32 @@ function Conn_ready(connection, host, db)
 	{
 		var keys = Object.keys(object)
 		return keys[Math.floor(Math.random() * keys.length)]
+	}
+
+	function _savetodisk(file)
+	{
+		// Auto-save downloaded file
+	    var save = document.createElement("A");
+	    	save.href = window.URL.createObjectURL(file.blob)
+	    	save.target = "_blank"		// This can give problems...
+			save.download = file.name	// This force to download with a filename instead of navigate
+	
+		var evt = document.createEvent('MouseEvents');
+			evt.initMouseEvent('click', true, true, window, 1, 0, 0, 0, 0, false, false, false, false, 0, null);
+	
+		save.dispatchEvent(evt);
+
+		window.URL.revokeObjectURL(save.href)
+	}
+
+	function _updatefiles(filelist)
+	{
+		if(host._send_files_list)
+			host._send_files_list(filelist)
+		else
+			console.warn("'host._send_files_list' is not available");
+
+		ui_updatefiles_host(filelist)
 	}
 
 	host.transfer_send_chunk = function(filename, chunk, data)
