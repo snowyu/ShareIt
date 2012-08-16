@@ -1,18 +1,3 @@
-function randomString()
-{
-	var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghijklmnopqrstuvwxyz";
-	var string_length = 8;
-
-	var randomstring = '';
-	for(var i=0; i<string_length; i++)
-	{
-		var rnum = Math.floor(Math.random() * chars.length);
-		randomstring += chars.substring(rnum,rnum+1);
-	}
-
-	return randomstring;
-}
-
 function Conn_init(ws_url, host, onsuccess)
 {
 	var connection = io.connect(ws_url, {secure: true})
@@ -72,11 +57,6 @@ function Conn_init(ws_url, host, onsuccess)
         {
 		    connection.emit('transfer.query_chunk', filename, chunk);
 		}
-
-		if(!window.location.hash)
-			window.location.hash = '#'+randomString()
-
-		connection.emit('joiner', window.location.hash.substring(1));	
 
 		if(onsuccess)
 			onsuccess(connection);
