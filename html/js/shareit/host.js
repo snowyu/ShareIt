@@ -66,7 +66,7 @@ function Host_init(db, onsuccess)
 			onsuccess(host);
 }
 
-function Conn_ready(connection, host, db)
+function Host_onconnect(connection, host, db)
 {
 	// Host
 

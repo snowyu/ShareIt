@@ -5,7 +5,10 @@ window.addEventListener("load", function()
 	    Host_init(db, function(host)
 	    {
 	        // Load websocket connection after IndexedDB is ready
-	        Conn_init('wss://localhost:8001', host, db, Conn_ready)
+	        Conn_init('wss://localhost:8001', host, function(connection)
+	        {
+	            Host_onconnect(connection, host, db)
+	        })
 	    })
 	})
 })
