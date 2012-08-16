@@ -31,7 +31,7 @@ function Host_init(db, onsuccess)
 
 	// Common
 
-	host.peer_connected = function(data)
+	host.peer_connected = function(socket_id)
 	{
 		ui_peerstate("Peer connected!");
 
@@ -39,6 +39,8 @@ function Host_init(db, onsuccess)
 			db.sharepoints_getAll(null, host._send_files_list)
 		else
 			console.warn("'host._send_files_list' is not available");
+
+		info(socket_id + " joined!");
 	}
 	
 	host.peer_disconnected = function(data)
@@ -68,8 +70,8 @@ function Host_init(db, onsuccess)
 		})
 	}
 
-		if(onsuccess)
-			onsuccess(host);
+	if(onsuccess)
+		onsuccess(host);
 }
 
 function Host_onconnect(connection, host, db, onsuccess)

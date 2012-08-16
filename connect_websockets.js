@@ -36,14 +36,11 @@ io.sockets.on('connection', function(socket)
 					socket.peer.peer = socket;
 
 					// Notify to both peers that we are now connected
-					socket.emit('peer.connected');
-					socket.peer.emit('peer.connected');
+					socket.emit('peer.connected', socket.id);
+					socket.peer.emit('peer.connected', socket.id);
 				}
 			}
 		}
-
-		// Tell all clients on the room that a new peer has joined
-		io.sockets.in(data).emit('info', socket.id + " joined!");
 	});
 
 	socket.on('disconnect', function()

@@ -12,11 +12,6 @@ function Conn_init(ws_url, host, onconnect, onsuccess)
 		{
 			warning(data);
 		});
-	
-		connection.on('info', function(data)
-		{
-			info(data);
-		});
 
 		connection.on('peer.connected',    host.peer_connected)
 		connection.on('peer.disconnected', host.peer_disconnected)
