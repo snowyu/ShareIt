@@ -1,9 +1,19 @@
+// SSL Certificates
+var fs = require('fs');
+
+var privateKey  = fs.readFileSync('certs/privatekey.pem').toString()
+var certificate = fs.readFileSync('certs/certificate.pem').toString()
+var ca          = fs.readFileSync('certs/certrequest.csr').toString()
+
 // HTTP server
-app = require('http').createServer()
-app.listen(8001);
+var credentials = require('crypto').createCredentials({key: privateKey, cert: certificate, ca: ca})
+
+var server = require('http').createServer()
+	server.setSecure(credentials)
+	server.listen(8001);
 
 // P2P Stuff
-var io = require('socket.io').listen(app)
+var io = require('socket.io').listen(server, {key: privateKey, cert: certificate, ca: ca})
 
 io.set('log level', 1);
 io.sockets.on('connection', function(socket)
