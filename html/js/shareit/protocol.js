@@ -8,9 +8,9 @@ function Conn_init(ws_url, host, onconnect, onsuccess)
 			onconnect(connection);
 
 		// Common
-		connection.on('warning', function(data)
+		connection.on('joiner.room_full', function()
 		{
-			warning(data);
+			warning("This connection is full. Please try later.");
 		});
 
 		connection.on('peer.connected',    host.peer_connected)
