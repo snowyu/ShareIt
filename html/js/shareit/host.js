@@ -18,6 +18,12 @@ function Bitmap(size)
 	return result
 }
 
+function random_chunk(object)
+{
+	var keys = Object.keys(object)
+	return keys[Math.floor(Math.random() * keys.length)]
+}
+
 
 function Host_init(db, onsuccess)
 {
@@ -66,7 +72,7 @@ function Host_init(db, onsuccess)
 			onsuccess(host);
 }
 
-function Host_onconnect(connection, host, db)
+function Host_onconnect(connection, host, db, onsuccess)
 {
 	// Host
 
@@ -99,12 +105,6 @@ function Host_onconnect(connection, host, db)
 
 	// Peer
 
-	function random_chunk(object)
-	{
-		var keys = Object.keys(object)
-		return keys[Math.floor(Math.random() * keys.length)]
-	}
-
 	function _savetodisk(file)
 	{
 		// Auto-save downloaded file
@@ -119,16 +119,6 @@ function Host_onconnect(connection, host, db)
 		save.dispatchEvent(evt);
 
 		window.URL.revokeObjectURL(save.href)
-	}
-
-	function _updatefiles(filelist)
-	{
-		if(host._send_files_list)
-			host._send_files_list(filelist)
-		else
-			console.warn("'host._send_files_list' is not available");
-
-		ui_updatefiles_host(filelist)
 	}
 
 	host.transfer_send_chunk = function(filename, chunk, data)
@@ -195,49 +185,6 @@ function Host_onconnect(connection, host, db)
 		connection.files_list(files_send);
 	}
 
-	db.sharepoints_getAll(null, _updatefiles)
-
-	onopen()
-
-	ui_ready_fileschange(function(filelist)
-	{
-		// Loop through the FileList and append files to list.
-		for(var i = 0, file; file = filelist[i]; i++)
-			db.sharepoints_add(file)
-
-		//if(host._send_files_list)
-		//	host._send_files_list(filelist)	// Send just new files
-		//else
-		//	console.warn("'host._send_files_list' is not available");
-
-		db.sharepoints_getAll(null, _updatefiles)
-	})
-
-	ui_ready_transferbegin(function(file)
-	{
-	    // Calc number of necesary chunks to download
-		var chunks = file.size/chunksize;
-		if(chunks % 1 != 0)
-			chunks = Math.floor(chunks) + 1;
-
-		ui_filedownloading(file.name, 0, chunks)
-
-	    // Add a blob container and a bitmap to our file stub
-		file.blob = new Blob([''], {"type": file.type})
-	    file.bitmap = Bitmap(chunks)
-
-	    // Insert new "file" inside IndexedDB
-		db.sharepoints_add(file,
-		function(key)
-		{
-			console.log("Transfer begin: '"+key+"' = "+JSON.stringify(file))
-
-			// Demand data from the begining of the file
-			connection.transfer_query_chunk(key, random_chunk(file.bitmap))
-		},
-		function(errorCode)
-		{
-			console.error("Transfer begin: '"+file.name+"' is already in database.")
-		})
-	})
+	if(onsuccess)
+		onsuccess();
 })
