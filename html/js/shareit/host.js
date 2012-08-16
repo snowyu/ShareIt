@@ -19,7 +19,7 @@ function Bitmap(size)
 }
 
 
-DB_init(function(db)
+function DB_ready(db)
 {
 	var host = {}
 
@@ -89,7 +89,7 @@ DB_init(function(db)
 	}
 
 	// Load websocket connection after IndexedDB is ready
-	Conn_init('http://localhost:8001', host, function(connection)
+	Conn_init('wss://localhost:8001', host, function(connection)
 	{
 		// Host
 	
@@ -238,4 +238,9 @@ DB_init(function(db)
 			})
 		})
 	})
+}
+
+window.addEventListener("load", function()
+{
+	DB_init(DB_ready)
 })

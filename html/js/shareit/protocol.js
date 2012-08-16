@@ -15,7 +15,7 @@ function randomString()
 
 function Conn_init(ws_url, host, onsuccess)
 {
-	var connection = io.connect(ws_url)
+	var connection = io.connect(ws_url, {secure: true})
 
 	connection.on('connect', function(data)
 	{
