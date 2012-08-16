@@ -13,7 +13,7 @@ function randomString()
 	return randomstring;
 }
 
-function Conn_init(ws_url, host, onsuccess)
+function Conn_init(ws_url, host, db, onsuccess)
 {
 	var connection = io.connect(ws_url, {secure: true})
 
@@ -79,6 +79,6 @@ function Conn_init(ws_url, host, onsuccess)
 		connection.emit('joiner', window.location.hash.substring(1));	
 
 		if(onsuccess)
-			onsuccess(connection);
+			onsuccess(connection, host, db);
 	})
 }
