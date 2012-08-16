@@ -12,6 +12,11 @@ function Conn_init(ws_url, host, onconnect, onsuccess)
 		connection.on('peer.connected',    host.peer_connected)
 		connection.on('peer.disconnected', host.peer_disconnected)
 
+		connection.joiner = function(room)
+		{
+	        connection.emit('joiner', room);	
+		}
+
 		// Host
 		connection.on('transfer.query_chunk', host.transfer_query_chunk)
 
@@ -24,18 +29,16 @@ function Conn_init(ws_url, host, onconnect, onsuccess)
 		connection.on('files.list', function(data)
 		{
 			host.files_list(JSON.parse(data))
-		});
-
-		connection.files_list = function(files_send)
-		{
-			connection.emit('files.list', JSON.stringify(files_send));
-		}
-
+		})
 		connection.on('transfer.send_chunk', function(filename, chunk, data)
 		{
 			host.transfer_send_chunk(filename, parseInt(chunk), data)
 		})
 
+		connection.files_list = function(files_send)
+		{
+			connection.emit('files.list', JSON.stringify(files_send));
+		}
 		connection.transfer_query_chunk = function(filename, chunk)
         {
 		    connection.emit('transfer.query_chunk', filename, chunk);

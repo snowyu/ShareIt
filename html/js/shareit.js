@@ -32,7 +32,7 @@ window.addEventListener("load", function()
 		        if(!window.location.hash)
 			        window.location.hash = '#'+randomString()
 
-		        connection.emit('joiner', window.location.hash.substring(1));	
+		        connection.joiner(window.location.hash.substring(1));	
 
 				function _updatefiles(filelist)
 				{
