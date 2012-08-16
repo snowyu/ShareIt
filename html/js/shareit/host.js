@@ -77,7 +77,12 @@ function Host_onconnect(connection, host, db, onsuccess)
 	// Host
 
 	// Filereader support (be able to host files from the filesystem)
-	if(typeof FileReader != "undefined")
+	if(typeof FileReader == "undefined")
+	{
+		console.warn("'Filereader' is not available, can't be able to host files");
+		host.transfer_query_chunk = function(filename, chunk){}
+	}
+	else
 		host.transfer_query_chunk = function(filename, chunk)
 		{
 			var reader = new FileReader();

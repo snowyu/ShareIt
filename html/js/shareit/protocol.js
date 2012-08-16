@@ -1,9 +1,12 @@
-function Conn_init(ws_url, host, onsuccess)
+function Conn_init(ws_url, host, onconnect, onsuccess)
 {
 	var connection = io.connect(ws_url, {secure: true})
 
 	connection.on('connect', function(data)
 	{
+		if(onconnect)
+			onconnect(connection);
+
 		// Common
 		connection.on('warning', function(data)
 		{
@@ -15,18 +18,11 @@ function Conn_init(ws_url, host, onsuccess)
 			info(data);
 		});
 
-		connection.on('peer.connected',       host.peer_connected)
-		connection.on('peer.disconnected',    host.peer_disconnected)
+		connection.on('peer.connected',    host.peer_connected)
+		connection.on('peer.disconnected', host.peer_disconnected)
 
 		// Host
-		connection.on('transfer.query_chunk', function(filename, chunk)
-		{
-			var func = host.transfer_query_chunk
-			if(func != undefined)
-				func(filename, chunk);
-			else
-				console.warn("'host.transfer_query_chunk' is not available");
-		})
+		connection.on('transfer.query_chunk', host.transfer_query_chunk)
 
 		connection.transfer_send_chunk = function(filename, chunk, data)
 		{
@@ -46,11 +42,7 @@ function Conn_init(ws_url, host, onsuccess)
 
 		connection.on('transfer.send_chunk', function(filename, chunk, data)
 		{
-			var func = host.transfer_send_chunk
-			if(func != undefined)
-				func(filename, parseInt(chunk), data)
-			else
-				console.warn("'host.transfer_send_chunk' is not available");
+			host.transfer_send_chunk(filename, parseInt(chunk), data)
 		})
 
 		connection.transfer_query_chunk = function(filename, chunk)
