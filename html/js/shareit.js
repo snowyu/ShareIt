@@ -19,8 +19,14 @@ window.addEventListener("load", function()
 	{
 	    Host_init(db, function(host)
 	    {
+            // Get websocket room
+	        if(!window.location.hash)
+		        window.location.hash = '#'+randomString()
+
+	        var room = window.location.hash.substring(1)
+
 	        // Load websocket connection after IndexedDB is ready
-	        Conn_init('wss://localhost:8001', host,
+	        Conn_init('wss://localhost:8001', room, host,
 	        function(connection)
 	        {
                 // Add connection methods to host
@@ -28,12 +34,6 @@ window.addEventListener("load", function()
 	        },
 	        function(connection)
 	        {
-	            // Get websocket room
-		        if(!window.location.hash)
-			        window.location.hash = '#'+randomString()
-
-		        connection.joiner(window.location.hash.substring(1));	
-
 				function _updatefiles(filelist)
 				{
 					if(host._send_files_list)
@@ -89,6 +89,14 @@ window.addEventListener("load", function()
 		                console.error("Transfer begin: '"+file.name+"' is already in database.")
 	                })
                 })
+	        },
+	        function(type)
+	        {
+		        switch(type)
+		        {
+			        case 'room full':
+				        warning("This connection is full. Please try later.");
+		        }
 	        })
 	    })
 	})

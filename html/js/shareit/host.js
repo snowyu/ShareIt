@@ -31,11 +31,6 @@ function Host_init(db, onsuccess)
 
 	// Common
 
-	host.joiner_room_full = function()
-	{
-		warning("This connection is full. Please try later.");
-	}
-
 	host.peer_connected = function(socket_id)
 	{
 		ui_peerstate("Peer connected!");

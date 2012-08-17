@@ -20,11 +20,13 @@ io.sockets.on('connection', function(socket)
 		var len = io.sockets.clients(data).length;
 
 		if(len >= 2)
-			socket.emit('joiner.room_full');
+			socket.emit('joiner.error', 'room full');
 		else
 		{
 			socket.join(data);
 			socket.room = data;
+
+			socket.emit('joiner.success');
 
 			if(len == 1)
 			{
