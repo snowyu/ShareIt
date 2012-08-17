@@ -41,7 +41,16 @@ window.addEventListener("load", function()
 					ui_updatefiles_host(filelist)
 				}
 
-                db.sharepoints_getAll(null, _updatefiles)
+                db.sharepoints_getAll(null, function(filelist)
+                {
+                    _updatefiles(filelist)
+
+                    // Restard downloads
+	                for(var i = 0, file; file = filelist[i]; i++)
+                        if(file.bitmap)
+                            connection.transfer_query_chunk(file.name,
+                                                            random_chunk(file.bitmap))
+                })
 
                 ui_onopen()
 
