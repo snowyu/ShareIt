@@ -62,38 +62,9 @@ window.addEventListener("load", function()
 	                db.sharepoints_getAll(null, _updatefiles)
                 })
 
-                function _transferbegin(file, onsucess)
-                {
-                    // Calc number of necesary chunks to download
-	                var chunks = file.size/chunksize;
-	                if(chunks % 1 != 0)
-		                chunks = Math.floor(chunks) + 1;
-
-                    // Add a blob container and a bitmap to our file stub
-	                file.blob = new Blob([''], {"type": file.type})
-                    file.bitmap = Bitmap(chunks)
-
-                    // Insert new "file" inside IndexedDB
-	                db.sharepoints_add(file,
-	                function(key)
-	                {
-    	                if(onsucess)
-    	                    onsucess(chunks);
-
-		                console.log("Transfer begin: '"+key+"' = "+JSON.stringify(file))
-
-		                // Demand data from the begining of the file
-		                connection.transfer_query_chunk(key, random_chunk(file.bitmap))
-	                },
-	                function(errorCode)
-	                {
-		                console.error("Transfer begin: '"+file.name+"' is already in database.")
-	                })
-                })
-
                 ui_ready_transferbegin(function(file)
                 {
-                    _transferbegin(file, function(chunks)
+                    host._transferbegin(file, function(chunks)
 	                {
     	                ui_filedownloading(file.name, 0, chunks)
 	                })
