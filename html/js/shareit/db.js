@@ -139,6 +139,26 @@ function DB_init(onsuccess)
                 db._put("sharepoints", file, onsuccess, onerror);
             }
 
+            db.files_add = function(file, onsuccess, onerror)
+            {
+                db._add("files", file, onsuccess, onerror);
+            }
+
+            db.files_get = function(key, onsuccess, onerror)
+            {
+                db._get("files", key, onsuccess, onerror);
+            }
+
+            db.files_getAll = function(range, onsuccess, onerror)
+            {
+                db._getAll("files", range, onsuccess, onerror);
+            }
+
+            db.files_put = function(file, onsuccess, onerror)
+            {
+                db._put("files", file, onsuccess, onerror);
+            }
+
 			if(onsuccess)
 				onsuccess(db);
 	    };
