@@ -9,8 +9,9 @@ function DB_init(onsuccess)
 	    // Create an objectStore to hold information about the share points.
 	    db.createObjectStore("sharepoints", { keyPath: "name" });
 	
-	    // Create an objectStore to hold information about the shared files. We're
-	    // going to use "hash" as our key path because it's guaranteed to be unique.
+	    // Create an objectStore to hold information about the shared files.
+	    // We're going to use "hash" as our key path because it's guaranteed to
+	    // be unique.
 	    db.createObjectStore("files", { keyPath: "hash" });
 	
 	    console.debug("upgradedb");
@@ -35,14 +36,14 @@ function DB_init(onsuccess)
 	                };
 	        }
 
-	        db.sharepoints_add = function(file, onsuccess, onerror)
+	        db._add = function(objectStore, data, onsuccess, onerror)
 	        {
-	            var transaction = db.transaction("sharepoints", "readwrite");
-	            var sharepoints = transaction.objectStore("sharepoints");
+	            var transaction = db.transaction(objectStore, "readwrite");
+	            var objectStore = transaction.objectStore(objectStore);
 	
-	            // [To-Do] Check current sharepoints and update files on duplicates
+	            // [To-Do] Check current objectStore and update files on duplicates
 	
-	            var request = sharepoints.add(file);
+	            var request = objectStore.add(data);
 	            if(onsuccess != undefined)
 	                request.onsuccess = function(event)
 	                {
@@ -55,60 +56,88 @@ function DB_init(onsuccess)
 	                }
 	        }
 
-	        db.sharepoints_get = function(key, onsuccess)
+	        db._get = function(objectStore, key, onsuccess, onerror)
 	        {
-	            var transaction = db.transaction("sharepoints");
-	            var sharepoints = transaction.objectStore("sharepoints");
-		        var request = sharepoints.get(key);
-			        request.onerror = function(event)
-			        {
-				        // Handle errors!
-			        };
-			        request.onsuccess = function(event)
-			        {
-				        onsuccess(request.result);
-			        };
+	            var transaction = db.transaction(objectStore);
+	            var objectStore = transaction.objectStore(objectStore);
+
+		        var request = objectStore.get(key);
+                    request.onsuccess = function(event)
+                    {
+                        onsuccess(request.result);
+                    };
+                if(onerror != undefined)
+                    request.onerror = function(event)
+                    {
+                        onerror(event.target.errorCode)
+                    };
 	        }
 
-	        db.sharepoints_getAll = function(range, onsuccess)
+	        db._getAll = function(objectStore, range, onsuccess, onerror)
 	        {
 	            var result = [];
 
-	            var transaction = db.transaction("sharepoints");
-	            var sharepoints = transaction.objectStore("sharepoints");
-		            sharepoints.openCursor(range).onsuccess = function(event)
-		            {
-		                var cursor = event.target.result;
-		                if(cursor)
-		                {
-		                    result.push(cursor.value);
-		                    cursor.continue();
-		                }
-		                else
-		                    onsuccess(result);
-			        };
+	            var transaction = db.transaction(objectStore);
+	            var objectStore = transaction.objectStore(objectStore);
+
+		        var cursor = objectStore.openCursor(range)
+                    cursor.onsuccess = function(event)
+                    {
+                        var cursor = event.target.result;
+                        if(cursor)
+                        {
+                            result.push(cursor.value);
+                            cursor.continue();
+                        }
+                        else
+                            onsuccess(result);
+                    };
+                if(onerror != undefined)
+                    cursor.onerror = function(event)
+                    {
+                        onerror(event.target.errorCode);
+                    };
 	        }
 
-	        db.sharepoints_put = function(file, onsuccess, onerror)
+	        db._put = function(objectStore, data, onsuccess, onerror)
 	        {
-	            var transaction = db.transaction("sharepoints", "readwrite");
-	            var sharepoints = transaction.objectStore("sharepoints");
+	            var transaction = db.transaction(objectStore, "readwrite");
+	            var objectStore = transaction.objectStore(objectStore);
 	
 	            // [To-Do] Check current sharepoints and update files on duplicates
 	
-	            var request = sharepoints.put(file);
+	            var request = objectStore.put(file);
 	            if(onsuccess != undefined)
 	                request.onsuccess = function(event)
 	                {
-	                    onsuccess()
+	                    onsuccess(request.result)
 	                };
 	            if(onerror != undefined)
 	                request.onerror = function(event)
 	                {
-            	        console.error("Database error: " + event.target.result);
 	                    onerror(event.target.errorCode)
 	                }
 	        }
+
+            db.sharepoints_add = function(file, onsuccess, onerror)
+            {
+                db._add("sharepoints", file, onsuccess, onerror);
+            }
+
+            db.sharepoints_get = function(key, onsuccess, onerror)
+            {
+                db._get("sharepoints", key, onsuccess, onerror);
+            }
+
+            db.sharepoints_getAll = function(range, onsuccess, onerror)
+            {
+                db._getAll("sharepoints", range, onsuccess, onerror);
+            }
+
+            db.sharepoints_put = function(file, onsuccess, onerror)
+            {
+                db._put("sharepoints", file, onsuccess, onerror);
+            }
 
 			if(onsuccess)
 				onsuccess(db);
