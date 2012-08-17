@@ -3,7 +3,7 @@ function oldBrowser()
 	$('#clicky').html('Your browser is not modern enough to serve as a host. :(<br /><br />(Try Chrome or Firefox!)');
 }
 
-function onopen()
+function ui_onopen()
 {
 	$('#clicky').html("<br /><br /><br /><br />Click here to choose files");
 	$('#fileslist').html('Awaiting file list..');

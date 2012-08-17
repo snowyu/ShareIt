@@ -46,7 +46,7 @@ window.addEventListener("load", function()
 
                 db.sharepoints_getAll(null, _updatefiles)
 
-                onopen()
+                ui_onopen()
 
                 ui_ready_fileschange(function(filelist)
                 {
