@@ -29,25 +29,6 @@ function Host_init(db, onsuccess)
 {
 	var host = {}
 
-	// Common
-
-	host.peer_connected = function(socket_id)
-	{
-		ui_peerstate("Peer connected!");
-
-		if(host._send_files_list)
-			db.sharepoints_getAll(null, host._send_files_list)
-		else
-			console.warn("'host._send_files_list' is not available");
-
-		info(socket_id + " joined!");
-	}
-	
-	host.peer_disconnected = function(data)
-	{
-		ui_peerstate("Peer disconnected.");
-	}
-
 	// Peer
 
 	host.files_list = function(files)
@@ -76,6 +57,22 @@ function Host_init(db, onsuccess)
 
 function Host_onconnect(connection, host, db, onsuccess)
 {
+	// Common
+
+	host.peer_connected = function(socket_id)
+	{
+		ui_peerstate("Peer connected!");
+
+		db.sharepoints_getAll(null, host._send_files_list)
+
+		info(socket_id + " joined!");
+	}
+	
+	host.peer_disconnected = function(data)
+	{
+		ui_peerstate("Peer disconnected.");
+	}
+
 	// Host
 
 	// Filereader support (be able to host files from the filesystem)

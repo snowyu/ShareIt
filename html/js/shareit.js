@@ -36,10 +36,7 @@ window.addEventListener("load", function()
 	        {
 				function _updatefiles(filelist)
 				{
-					if(host._send_files_list)
-						host._send_files_list(filelist)
-					else
-						console.warn("'host._send_files_list' is not available");
+					host._send_files_list(filelist)
 			
 					ui_updatefiles_host(filelist)
 				}
@@ -54,10 +51,7 @@ window.addEventListener("load", function()
 	                for(var i = 0, file; file = filelist[i]; i++)
 		                db.sharepoints_add(file)
 
-	                //if(host._send_files_list)
-	                //	host._send_files_list(filelist)	// Send just new files
-	                //else
-	                //	console.warn("'host._send_files_list' is not available");
+	                //host._send_files_list(filelist)	// Send just new files
 
 	                db.sharepoints_getAll(null, _updatefiles)
                 })
