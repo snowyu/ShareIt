@@ -86,15 +86,10 @@ a{
 
 html, body { height: 100%; }
 
-#tabs {
-    height: 100%;
-}
-
 #Downloading {
     border: 2px dashed #BBBBBB;
     color: #BBBBBB;
     text-align: center;
-    height: 100%;
     font-size: 1.3em;
     text-align: center;
     font-family: Helvetica;

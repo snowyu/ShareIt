@@ -27,6 +27,21 @@
             $(function()
             {
                 $("#tabs").tabs().find(".ui-tabs-nav").sortable({axis: "x"});
+
+                $("#dialog-config").dialog(
+                {
+                    autoOpen: false,
+                    height: 300,
+                    width: 350,
+                    modal: true,
+                    buttons:
+                    {
+                        Cancel: function()
+                        {
+                            $(this).dialog("close");
+                        }
+                    }
+                });
             });
         </script>
     </head>
@@ -34,6 +49,9 @@
         <ul>
             <li><a href="#Downloading">Downloading</a></li>
             <li><a href="#Sharing">Sharing</a></li>
+            <li><a onclick='$("#dialog-config").dialog("open")'>
+                <img src="images/configure.png"/>
+            </a></li>
         </ul>
         <div id="Downloading"></div>
         <div id="Sharing">
@@ -41,6 +59,19 @@
                 <div id="clicky"><br /><br /><br /><br />Loading...</div>
             </div>
             <input type="file" id="files" name="files[]" multiple style="height: 20px; opacity: 0; filter:alpha(opacity: 0);  position: relative; top: -40px; left: -20px;" />
+        </div>
+        <div id="dialog-config" title="Create new user">
+            <p class="validateTips">All form fields are required.</p>
+            <form>
+            <fieldset>
+                <label for="name">Name</label>
+                <input type="text" name="name" id="name" class="text ui-widget-content ui-corner-all" />
+                <label for="email">Email</label>
+                <input type="text" name="email" id="email" value="" class="text ui-widget-content ui-corner-all" />
+                <label for="password">Password</label>
+                <input type="password" name="password" id="password" value="" class="text ui-widget-content ui-corner-all" />
+            </fieldset>
+            </form>
         </div>
     </body>
 </html>
