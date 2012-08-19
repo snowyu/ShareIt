@@ -216,8 +216,8 @@ function Host_onconnect(connection, host, db, onsuccess)
         {
             console.error("Transfer begin: '"+file.name+"' is already in database.")
         })
-    })
+    }
 
 	if(onsuccess)
 		onsuccess();
-})
+}
