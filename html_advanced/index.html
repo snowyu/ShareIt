@@ -31,14 +31,18 @@
                 $("#dialog-config").dialog(
                 {
                     autoOpen: false,
-                    height: 300,
-                    width: 350,
+                    width: 800,
+                    height: 600,
                     modal: true,
                     show: "fold",
                     hide: "fold",
                     buttons:
                     {
                         Cancel: function()
+                        {
+                            $(this).dialog("close");
+                        },
+                        Accept: function()
                         {
                             $(this).dialog("close");
                         }
@@ -56,22 +60,15 @@
             </a></li>
         </ul>
         <div id="Downloading"></div>
-        <div id="Sharing">
-            <div id="drop_zone" onClick="$('#files').click()" >
-                <div id="clicky"><br /><br /><br /><br />Loading...</div>
-            </div>
-            <input type="file" id="files" name="files[]" multiple style="height: 20px; opacity: 0; filter:alpha(opacity: 0);  position: relative; top: -40px; left: -20px;" />
-        </div>
-        <div id="dialog-config" title="Create new user">
-            <p class="validateTips">All form fields are required.</p>
+        <div id="Sharing">Loading...</div>
+
+        <div id="dialog-config" title="Config">
             <form>
             <fieldset>
-                <label for="name">Name</label>
-                <input type="text" name="name" id="name" class="text ui-widget-content ui-corner-all" />
-                <label for="email">Email</label>
-                <input type="text" name="email" id="email" value="" class="text ui-widget-content ui-corner-all" />
-                <label for="password">Password</label>
-                <input type="password" name="password" id="password" value="" class="text ui-widget-content ui-corner-all" />
+                <div onClick="$('#files').click()" >
+                    <div id="Sharedpoints"><br /><br /><br /><br />Loading...</div>
+                </div>
+                <input type="file" id="files" name="files[]" multiple style="height: 20px; opacity: 0; filter:alpha(opacity: 0);  position: relative; top: -40px; left: -20px;" />
             </fieldset>
             </form>
         </div>

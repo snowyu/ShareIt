@@ -64,11 +64,17 @@ a{
 	cursor: pointer;
 }
 
-#clicky{
-    height: 200px;
+#Sharing{
+    border: 2px dashed #BBBBBB;
+    color: #BBBBBB;
+    text-align: center;
+    font-size: 1.3em;
+    text-align: center;
+    font-family: Helvetica;
+    cursor: pointer;
 }
 
-#drop_zone {
+#Sharedpoints {
     border: 2px dashed #BBBBBB;
     border-radius: 5px 5px 5px 5px;
     color: #BBBBBB;

@@ -1,11 +1,11 @@
 function oldBrowser()
 {
-	$('#clicky').html('Your browser is not modern enough to serve as a host. :(<br /><br />(Try Chrome or Firefox!)');
+	$('#Sharedpoints').html('Your browser is not modern enough to serve as a host. :(<br /><br />(Try Chrome or Firefox!)');
 }
 
 function ui_onopen()
 {
-	$('#clicky').html("<br /><br /><br /><br />Click here to choose files");
+	$('#Sharedpoints').html("<br /><br /><br /><br />Click here to choose files");
 	$('#Downloading').html('Awaiting file list...');
 
     console.log("Awaiting peer...");
@@ -191,7 +191,7 @@ function _ui_updatefiles(area, files, hosting)
 
 function ui_updatefiles_host(files)
 {
-    _ui_updatefiles(document.getElementById('clicky'), files, true)
+    _ui_updatefiles(document.getElementById('Sharing'), files, true)
 }
 
 function ui_updatefiles_peer(files)
