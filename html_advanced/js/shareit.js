@@ -15,6 +15,8 @@ function randomString()
 
 window.addEventListener("load", function()
 {
+    UI_init()
+
 	DB_init(function(db)
 	{
 	    Host_init(db, function(host)

@@ -215,3 +215,29 @@ function ui_filedownloaded(file)
 
 	info("Transfer finished!");
 }
+
+function UI_init()
+{
+    $("#tabs").tabs().find(".ui-tabs-nav").sortable({axis: "x"});
+
+    $("#dialog-config").dialog(
+    {
+        autoOpen: false,
+        width: 800,
+        height: 600,
+        modal: true,
+        show: "fold",
+        hide: "fold",
+        buttons:
+        {
+            Cancel: function()
+            {
+                $(this).dialog("close");
+            },
+            Accept: function()
+            {
+                $(this).dialog("close");
+            }
+        }
+    });
+}

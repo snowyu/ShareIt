@@ -22,34 +22,6 @@
     	<script type="text/javascript" src="js/shareit/protocol.js"></script>
     	<script type="text/javascript" src="js/shareit.js"></script>
     	<script type="text/javascript" src="js/ui.js"></script>
-
-        <script>
-            $(function()
-            {
-                $("#tabs").tabs().find(".ui-tabs-nav").sortable({axis: "x"});
-
-                $("#dialog-config").dialog(
-                {
-                    autoOpen: false,
-                    width: 800,
-                    height: 600,
-                    modal: true,
-                    show: "fold",
-                    hide: "fold",
-                    buttons:
-                    {
-                        Cancel: function()
-                        {
-                            $(this).dialog("close");
-                        },
-                        Accept: function()
-                        {
-                            $(this).dialog("close");
-                        }
-                    }
-                });
-            });
-        </script>
     </head>
     <body id="tabs">
         <ul>
