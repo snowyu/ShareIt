@@ -5,19 +5,10 @@ function oldBrowser()
 
 function ui_onopen()
 {
-	$('#Sharedpoints').html("<br /><br /><br /><br />Click here to choose files");
 	$('#Downloading').html('Awaiting file list...');
 
     console.log("Awaiting peer...");
 }
-
-//$(document).ready(function()
-//{
-//	document.getElementById('files').addEventListener('change', function(event)
-//	{
-//		files_change(event.target.files); // FileList object
-//    }, false);
-//})
 
 function ui_ready_fileschange(func)
 {
@@ -175,6 +166,11 @@ function ui_updatefiles_peer(files)
     _ui_updatefiles(document.getElementById('Downloading'), files, false)
 }
 
+function ui_update_sharedpoints(sharedpoints)
+{
+    _ui_updatefiles(document.getElementById('Sharedpoints'), sharedpoints, false)
+}
+
 function ui_filedownloading(filename, value, total)
 {
     var div = $("#" + filename)
@@ -199,21 +195,11 @@ function UI_init()
     $("#dialog-config").dialog(
     {
         autoOpen: false,
+        resizable: false,
         width: 800,
         height: 600,
         modal: true,
         show: "fold",
-        hide: "fold",
-        buttons:
-        {
-            Cancel: function()
-            {
-                $(this).dialog("close");
-            },
-            Accept: function()
-            {
-                $(this).dialog("close");
-            }
-        }
+        hide: "fold"
     });
 }
