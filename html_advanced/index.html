@@ -30,23 +30,17 @@
             });
         </script>
     </head>
-    <body>
-        <div id="tabs">
-            <ul>
-                <li><a href="#Downloading">Downloading</a></li>
-                <li><a href="#Sharing">Sharing</a></li>
-            </ul>
-            <div id="Downloading"></div>
-            <div id="Sharing">
-                <div id="drop_zone" onClick="$('#files').click()" >
-                    <div id="clicky"><br /><br /><br /><br />Loading...</div>
-                </div>
-                <input type="file" id="files" name="files[]" multiple style="height: 20px; opacity: 0; filter:alpha(opacity: 0);  position: relative; top: -40px; left: -20px;" />
+    <body id="tabs">
+        <ul>
+            <li><a href="#Downloading">Downloading</a></li>
+            <li><a href="#Sharing">Sharing</a></li>
+        </ul>
+        <div id="Downloading"></div>
+        <div id="Sharing">
+            <div id="drop_zone" onClick="$('#files').click()" >
+                <div id="clicky"><br /><br /><br /><br />Loading...</div>
             </div>
-        </div>
-        <div id="infoholder">
-            <div id="peer">Awaiting peer...</div>
-            <div id="log"></div>
+            <input type="file" id="files" name="files[]" multiple style="height: 20px; opacity: 0; filter:alpha(opacity: 0);  position: relative; top: -40px; left: -20px;" />
         </div>
     </body>
 </html>
