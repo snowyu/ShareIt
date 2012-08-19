@@ -82,12 +82,12 @@ a{
     padding-top: 25px;
     padding-bottom: 25px;
     text-align: center;
-    width: 800px;
+    height: 450px;
+    width: 700px;
     font-size: 1.3em;
 	text-align: center;
 	font-family: Helvetica;
     margin: 0 auto;
-    cursor: pointer;
 }
 
 html, body { height: 100%; }
