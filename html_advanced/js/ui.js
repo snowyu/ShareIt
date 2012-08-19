@@ -6,7 +6,7 @@ function oldBrowser()
 function ui_onopen()
 {
 	$('#clicky').html("<br /><br /><br /><br />Click here to choose files");
-	$('#fileslist').html('Awaiting file list..');
+	$('#Downloading').html('Awaiting file list..');
 }
 
 function log(level, msg)
@@ -194,7 +194,7 @@ function ui_updatefiles_host(files)
 
 function ui_updatefiles_peer(files)
 {
-    _ui_updatefiles(document.getElementById('fileslist'), files, false)
+    _ui_updatefiles(document.getElementById('Downloading'), files, false)
 }
 
 function ui_filedownloading(filename, value, total)
