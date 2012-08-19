@@ -61,7 +61,7 @@ function Host_onconnect(connection, host, db, onsuccess)
 
 	host.peer_connected = function(socket_id)
 	{
-		ui_peerstate("Peer connected!");
+		console.log("Peer connected!");
 
 		db.sharepoints_getAll(null, host._send_files_list)
 
@@ -70,7 +70,7 @@ function Host_onconnect(connection, host, db, onsuccess)
 	
 	host.peer_disconnected = function(data)
 	{
-		ui_peerstate("Peer disconnected.");
+		console.log("Peer disconnected.");
 	}
 
 	// Host

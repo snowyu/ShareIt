@@ -6,7 +6,9 @@ function oldBrowser()
 function ui_onopen()
 {
 	$('#clicky').html("<br /><br /><br /><br />Click here to choose files");
-	$('#Downloading').html('Awaiting file list..');
+	$('#Downloading').html('Awaiting file list...');
+
+    console.log("Awaiting peer...");
 }
 
 function log(level, msg)
@@ -20,7 +22,7 @@ function log(level, msg)
 
 	msg += '<br/>'
 
-	$('#log').append(msg);
+	console.log(msg);
 }
 
 function info(msg)
@@ -212,9 +214,4 @@ function ui_filedownloaded(file)
 	document.getElementById(file.name).open(file.blob);
 
 	info("Transfer finished!");
-}
-
-function ui_peerstate(msg)
-{
-	$('#peer').html(msg);
 }
