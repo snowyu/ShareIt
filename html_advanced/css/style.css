@@ -115,6 +115,12 @@ a{
     cursor: pointer;
 }
 
+html, body { height: 100%; }
+
+#tabs {
+    height: 100%;
+}
+
 #Downloading {
     border: 2px dashed #BBBBBB;
     border-radius: 5px 5px 5px 5px;
@@ -123,7 +129,7 @@ a{
     padding-top: 25px;
     padding-bottom: 25px;
     text-align: center;
-    width: 800px;
+    height: 100%;
     font-size: 1.3em;
 	text-align: center;
 	font-family: Helvetica;
