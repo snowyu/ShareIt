@@ -15,10 +15,21 @@ function randomString()
 
 window.addEventListener("load", function()
 {
+    // Init user interface
     UI_init()
 
+    // Init database
 	DB_init(function(db)
 	{
+        // Get shared points and init them
+        db.sharepoints_getAll(null, function(sharedpoints)
+        {
+            ui_update_sharedpoints(sharedpoints)
+
+            // [To-Do] Start hashing new files on the shared points
+        })
+
+        // Init host
 	    Host_init(db, function(host)
 	    {
             // Get websocket room
@@ -56,15 +67,15 @@ window.addEventListener("load", function()
 
                 ui_onopen()
 
-                ui_ready_fileschange(function(filelist)
+                ui_ready_fileschange(function(sharedpoints)
                 {
-	                // Loop through the FileList and append files to list.
-	                for(var i = 0, file; file = filelist[i]; i++)
-		                db.sharepoints_add(file)
+	                // Loop through the FileList and add sharedpoints to list.
+	                for(var i = 0, sp; sp = sharedpoints[i]; i++)
+		                db.sharepoints_add(sp)
 
-	                //host._send_files_list(filelist)	// Send just new files
+	                // [To-Do] Start hashing of files in a new worker
 
-	                db.sharepoints_getAll(null, _updatefiles)
+	                db.sharepoints_getAll(null, ui_update_sharedpoints)
                 })
 
                 ui_ready_transferbegin(function(file)
