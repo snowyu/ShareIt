@@ -11,30 +11,6 @@ function ui_onopen()
     console.log("Awaiting peer...");
 }
 
-function log(level, msg)
-{
-	switch(level)
-	{
-		case 'warning':
-			msg = '<span style="color: red;">' + msg + '</span>'
-			break
-	}
-
-	msg += '<br/>'
-
-	console.log(msg);
-}
-
-function info(msg)
-{
-	log('info', msg);
-}
-
-function warning(msg)
-{
-	log('warning', msg);
-}
-
 //$(document).ready(function()
 //{
 //	document.getElementById('files').addEventListener('change', function(event)
@@ -213,7 +189,7 @@ function ui_filedownloaded(file)
 {
 	document.getElementById(file.name).open(file.blob);
 
-	info("Transfer finished!");
+	console.log("Transfer of "+file.name+" finished!");
 }
 
 function UI_init()

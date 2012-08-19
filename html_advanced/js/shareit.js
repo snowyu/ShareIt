@@ -80,7 +80,7 @@ window.addEventListener("load", function()
 		        switch(type)
 		        {
 			        case 'room full':
-				        warning("This connection is full. Please try later.");
+				        console.warn("This connection is full. Please try later.");
 		        }
 	        })
 	    })

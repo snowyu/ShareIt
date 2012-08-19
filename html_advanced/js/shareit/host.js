@@ -65,7 +65,7 @@ function Host_onconnect(connection, host, db, onsuccess)
 
 		db.sharepoints_getAll(null, host._send_files_list)
 
-		info(socket_id + " joined!");
+		console.log(socket_id + " joined!");
 	}
 	
 	host.peer_disconnected = function(data)
