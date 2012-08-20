@@ -94,42 +94,14 @@ function _button(file, hosting)
 
 function _ui_updatefiles(area, files, hosting)
 {
-	var filestable = document.createElement('TABLE');
-		filestable.id = "filestable"
-		filestable.cellspacing = 0
-		filestable.summary = ""
-
-	var tr = document.createElement('TR');
-	filestable.appendChild(tr);
-
-	var th = document.createElement('TH');
-		th.scope = "col"
-		th.abbr = "Filename"
-		th.class = "nobg"
-		th.width = "60%"
-		th.appendChild(document.createTextNode("Filename"));
-	tr.appendChild(th);
-
-	var th = document.createElement('TH');
-		th.scope = "col"
-		th.abbr = "Size"
-		th.class = "nobg"
-		th.width = "20%"
-		th.appendChild(document.createTextNode("Size"));
-	tr.appendChild(th);
-
-	var th = document.createElement('TH');
-		th.scope = "col"
-		th.abbr = "Status"
-		th.class = "nobg"
-		th.width = "20%"
-		th.appendChild(document.createTextNode("Action"));
-	tr.appendChild(th);
+    var filestable = area
+//	var filestable = document.createElement('TABLE');
+//		filestable.id = "filestable"
 
 	// Remove old table and add new empty one
 	while(area.firstChild)
 		area.removeChild(area.firstChild);
-  	area.appendChild(filestable)
+//  	area.appendChild(filestable)
 
 	for(var filename in files)
 		if(files.hasOwnProperty(filename))
@@ -158,17 +130,17 @@ function _ui_updatefiles(area, files, hosting)
 
 function ui_updatefiles_host(files)
 {
-    _ui_updatefiles(document.getElementById('Sharing'), files, true)
+    _ui_updatefiles(document.getElementById('Sharing').getElementsByTagName("tbody")[0], files, true)
 }
 
 function ui_updatefiles_peer(files)
 {
-    _ui_updatefiles(document.getElementById('Downloading'), files, false)
+    _ui_updatefiles(document.getElementById('Downloading').getElementsByTagName("tbody")[0], files, false)
 }
 
 function ui_update_sharedpoints(sharedpoints)
 {
-    _ui_updatefiles(document.getElementById('Sharedpoints'), sharedpoints, false)
+    _ui_updatefiles(document.getElementById('Sharedpoints').getElementsByTagName("tbody")[0], sharedpoints, false)
 }
 
 function ui_filedownloading(filename, value, total)
@@ -202,4 +174,8 @@ function UI_init()
         show: "fold",
         hide: "fold"
     });
+
+    $("#Downloading").treeTable();
+    $("#Sharing").treeTable();
+    $("#Sharedpoints").treeTable();
 }
