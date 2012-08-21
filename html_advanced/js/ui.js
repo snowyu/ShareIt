@@ -162,7 +162,15 @@ function ui_filedownloaded(file)
 
 function UI_init()
 {
-    $("#tabs").tabs().find(".ui-tabs-nav").sortable({axis: "x"});
+    $("#tabs").tabs(
+    {
+        tabTemplate: "<li><a href='#{href}'>#{label}</a> <span class='ui-icon ui-icon-close'>Remove Tab</span></li>",
+        add: function(event, ui)
+        {
+            var tab_content = $tab_content_input.val() || "Tab " + tab_counter + " content.";
+            $(ui.panel).append("<p>" + tab_content + "</p>");
+        }
+    }).find(".ui-tabs-nav").sortable({axis: "x"});
 
     $("#dialog-config").dialog(
     {
