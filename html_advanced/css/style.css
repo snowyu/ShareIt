@@ -47,48 +47,23 @@ a{
 	text-decoration: underline;
 }
 
-#container{
-		
-}
-
-#what{
-	font-size: 1em;
-	text-align: center;
-	padding-bottom: 40px;
-	width: 700px;
-	margin: 0 auto;
-	letter-spacing:1px;
-	line-height: 1.3em;
-	padding-top: 20px;
-	color: #111111;
-	cursor: pointer;
-}
-
 #tabs{
     height: 95%;
 }
 
 #Sharing{
-    border: 2px dashed #BBBBBB;
-    color: #BBBBBB;
-    text-align: center;
-    font-size: 1.3em;
     text-align: center;
     font-family: Helvetica;
     cursor: pointer;
 }
 
 #Sharedpoints {
-    border: 2px dashed #BBBBBB;
     border-radius: 5px 5px 5px 5px;
-    color: #BBBBBB;
     padding: 25px;
     padding-top: 25px;
     padding-bottom: 25px;
     text-align: center;
     width: 100%;
-    font-size: 1.3em;
-	text-align: center;
 	font-family: Helvetica;
     margin: 0 auto;
 }
@@ -96,75 +71,52 @@ a{
 html, body { height: 100%; }
 
 #Downloading {
-    border: 2px dashed #BBBBBB;
-    color: #BBBBBB;
-    text-align: center;
-    font-size: 1.3em;
     text-align: center;
     font-family: Helvetica;
     cursor: pointer;
     height: 95%;
 }
 
-#filestable {
-	width: 700px;
-	padding: 0;
-	margin: 0 auto;
-	text-align: center;
-	table-layout: fixed;
+
+/* Header
+ * ------------------------------------------------------------------------- */
+table thead {
+  background: #aaa url(../images/bg-table-thead.png) repeat-x top left;
+  font-size: .9em;
 }
 
-th {
-	border-bottom: 1px solid #dddddd;
-	letter-spacing: 2px;
-	padding: 6px 6px 6px 12px;
-	color: #BBBBBB;
+table thead tr th {
+  border: 1px solid #888;
+  font-weight: normal;
+  padding: .3em 1.67em .1em 1.67em;
+  text-align: left;
 }
 
-th.nobg {
-	border-top: 0;
-	border-left: 0;
-	border-bottom: 1px solid #dddddd;
-	background: none;
-	text-align: left;
-	color: #BBBBBB;
-	overflow: hidden;              /* "overflow" value must be different from "visible" */   
-  	text-overflow:    ellipsis;  
+/* Body
+ * ------------------------------------------------------------------------- */
+table tbody tr td {
+  cursor: default;
+  padding: .3em 1.5em;
 }
 
-td {
-	border-bottom: 1px solid #dddddd;
-	background: #fff;
-	padding: 6px 6px 6px 12px;
-	color: #BBBBBB;
+table tbody tr.even {
+  background: #f3f3f3;
 }
 
-td.alt {
-	background: #dddddd;
-	color: #dddddd;
+table tbody tr.odd {
+  background: #fff;
 }
 
-th.spec {
-	border-left: 1px solid #dddddd;
-	border-top: 0;
-	text-align: left;
-	color: #000000;
-  	overflow: hidden;              /* "overflow" value must be different from "visible" */   
-  	text-overflow:    ellipsis;  
-  	width: 60%;
+table span {
+  background-position: center left;
+  background-repeat: no-repeat;
+  padding: .2em 0 .2em 1.5em;
 }
 
-tr{
-	margin: 0 auto;
+table span.file {
+  background-image: url(../images/page_white_text.png);
 }
 
-td.end {
-	border-right: 1px solid #dddddd;
-}
-
-th.specalt {
-	border-left: 1px solid #dddddd;
-	border-top: 0;
-	color: #dddddd;
-	margin: 0 auto;
+table span.folder {
+  background-image: url(../images/folder.png);
 }
