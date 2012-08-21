@@ -5,7 +5,7 @@ function oldBrowser()
 
 function ui_onopen()
 {
-	$('#Downloading').html('Awaiting file list...');
+//	$('#Downloading').html('Awaiting file list...');
 
     console.log("Awaiting peer...");
 }

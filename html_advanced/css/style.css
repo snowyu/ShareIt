@@ -64,6 +64,10 @@ a{
 	cursor: pointer;
 }
 
+#tabs{
+    height: 95%;
+}
+
 #Sharing{
     border: 2px dashed #BBBBBB;
     color: #BBBBBB;
@@ -82,8 +86,7 @@ a{
     padding-top: 25px;
     padding-bottom: 25px;
     text-align: center;
-    height: 450px;
-    width: 700px;
+    width: 100%;
     font-size: 1.3em;
 	text-align: center;
 	font-family: Helvetica;
@@ -100,6 +103,7 @@ html, body { height: 100%; }
     text-align: center;
     font-family: Helvetica;
     cursor: pointer;
+    height: 95%;
 }
 
 #filestable {

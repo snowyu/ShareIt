@@ -25,42 +25,44 @@
     	<script type="text/javascript" src="js/shareit.js"></script>
     	<script type="text/javascript" src="js/ui.js"></script>
     </head>
-    <body id="tabs">
-        <ul>
-            <li><a href="#Downloading">Downloading</a></li>
-            <li><a href="#Sharing">Sharing</a></li>
-            <li><a onclick='$("#dialog-config").dialog("open")' style="cursor: pointer;">
-                <img src="images/configure.png"/>
-            </a></li>
-        </ul>
-        <table id="Downloading" cellspacing="0" summary="">
-            <thead>
-                <tr>
-                    <th scope="col" abbr="Filename" class="nobg" width="60%">Filename</th>
-                    <th scope="col" abbr="Size" class="nobg" width="20%">Size</th>
-                    <th scope="col" abbr="Status" class="nobg" width="20%">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Loading...</td>
-                </tr>
-            </tbody>
-        </table>
-        <table id="Sharing" cellspacing="0" summary="">
-            <thead>
-                <tr>
-                    <th scope="col" abbr="Filename" class="nobg" width="60%">Filename</th>
-                    <th scope="col" abbr="Size" class="nobg" width="20%">Size</th>
-                    <th scope="col" abbr="Status" class="nobg" width="20%">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Loading...</td>
-                </tr>
-            </tbody>
-        </table>
+    <body>
+        <div id="tabs">
+            <ul>
+                <li><a onclick='$("#dialog-config").dialog("open")' style="cursor: pointer;">
+                    <img src="images/configure.png"/>
+                </a></li>
+                <li><a href="#Downloading">Downloading</a></li>
+                <li><a href="#Sharing">Sharing</a></li>
+            </ul>
+            <table id="Downloading" cellspacing="0" summary="">
+                <thead>
+                    <tr>
+                        <th scope="col" abbr="Filename" class="nobg" width="100%">Filename</th>
+                        <th scope="col" abbr="Size" class="nobg">Size</th>
+                        <th scope="col" abbr="Progress" class="nobg">Progress</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="3">Loading...</td>
+                    </tr>
+                </tbody>
+            </table>
+            <table id="Sharing" cellspacing="0" summary="">
+                <thead>
+                    <tr>
+                        <th scope="col" abbr="Filename" class="nobg" width="100%">Filename</th>
+                        <th scope="col" abbr="Size" class="nobg">Size</th>
+                        <th scope="col" abbr="Status" class="nobg">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="3">Loading...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
         <div id="dialog-config" title="Config">
             <form>
@@ -68,13 +70,13 @@
                 <table id="Sharedpoints" cellspacing="0" summary="">
                     <thead>
                         <tr>
-                            <th>Path</th>
+                            <th width="100%">Path</th>
                             <th>Remove</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>There are no shared points</td>
+                            <td colspan="2">There are no shared points</td>
                         </tr>
                     </tbody>
                 </table>
