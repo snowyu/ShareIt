@@ -94,28 +94,31 @@ function _button(file, hosting)
 
 function _ui_updatefiles(area, files, hosting)
 {
-    var filestable = area
-//	var filestable = document.createElement('TABLE');
-//		filestable.id = "filestable"
-
 	// Remove old table and add new empty one
 	while(area.firstChild)
 		area.removeChild(area.firstChild);
-//  	area.appendChild(filestable)
 
 	for(var filename in files)
 		if(files.hasOwnProperty(filename))
 		{
             var file = files[filename]
+            var path = ""
+            if(file.path)
+                path = file.path + '/';
 
 			var tr = document.createElement('TR');
-			filestable.appendChild(tr)
+			    tr.id = path + file.name
+			    if(path)
+			        tr.class = "child-of-" + path
+			area.appendChild(tr)
 
-			var th = document.createElement('TH');
-				th.scope = "row"
-				th.class = "spec"
-				th.appendChild(document.createTextNode(file.name));
-			tr.appendChild(th)
+            var td = document.createElement('TD');
+            tr.appendChild(td)
+
+            var span = document.createElement('SPAN');
+                span.className = "file"
+                span.appendChild(document.createTextNode(file.name));
+            td.appendChild(span)
 
 			var td = document.createElement('TD');
 				td.appendChild(document.createTextNode(file.size));
