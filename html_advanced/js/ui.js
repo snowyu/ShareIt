@@ -178,4 +178,38 @@ function UI_init()
     $("#Downloading").treeTable();
     $("#Sharing").treeTable();
     $("#Sharedpoints").treeTable();
+
+    $("#tools-menu").click(function()
+    {
+        var submenu = $("#tools-menu-submenu")
+
+        if(submenu.is(":hidden"))
+        {
+            var submenu_active = false;
+
+            function timeout(ms)
+            {
+                setTimeout(function()
+                {
+                    if(submenu_active === false)
+                        submenu.slideUp();
+                }, ms);
+            }
+
+            submenu.mouseenter(function()
+            {
+                submenu_active = true;
+            });
+            submenu.mouseleave(function()
+            {
+                submenu_active = false;
+                timeout(400)
+            });
+
+            submenu.slideDown();
+            timeout(1000)
+        }
+        else
+            submenu.slideUp();
+    });
 }

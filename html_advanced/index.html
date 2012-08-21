@@ -28,9 +28,17 @@
     <body>
         <div id="tabs">
             <ul>
-                <li><a onclick='$("#dialog-config").dialog("open")' style="cursor: pointer;">
-                    <img src="images/configure.png"/>
-                </a></li>
+                <li>
+                    <a id="tools-menu">
+                        <img src="images/configure.png"/>
+                    </a>
+                    <div id="tools-menu-submenu" style="background:#de9a44; width:64px; height:48px; display:none; position:absolute">
+                        <a onclick='$("#dialog-config").dialog("open")' style="cursor: pointer;">
+                            <img src="images/gtk-preferences.png"/>
+                        </a>
+                    </div>
+                </li>
+
                 <li><a href="#Downloading">Downloading</a></li>
                 <li><a href="#Sharing">Sharing</a></li>
             </ul>
