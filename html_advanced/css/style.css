@@ -57,18 +57,24 @@ html, body { height: 100%; }
     cursor: pointer;
     padding: 0;
     width: 100%;
+    cellspacing: 0;
+    summary: ""
 }
 
 #Downloading {
     cursor: pointer;
     height: 95%;
-    padding: 0
+    padding: 0;
+    cellspacing: 0;
+    summary: ""
 }
 
 #Sharing {
     cursor: pointer;
     height: 95%;
-    padding: 0
+    padding: 0;
+    cellspacing: 0;
+    summary: ""
 }
 
 
