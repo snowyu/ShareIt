@@ -72,6 +72,31 @@ html, body { height: 100%; }
 }
 
 
+/* Tools menu
+ * ------------------------------------------------------------------------- */
+
+li span {
+  background-position: center left;
+  background-repeat: no-repeat;
+  padding: .2em 0 .2em 1.5em;
+}
+
+li a {
+  cursor: "pointer"
+}
+
+li span.preferences {
+  background-image: url(../images/preferences.png);
+}
+
+li span.user {
+  background-image: url(../images/user.png);
+}
+
+
+/* TreeTable
+ * ------------------------------------------------------------------------- */
+
 /* Header
  * ------------------------------------------------------------------------- */
 table thead {

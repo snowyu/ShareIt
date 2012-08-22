@@ -32,16 +32,16 @@
                     <a id="tools-menu">
                         <img src="images/configure.png"/>
                     </a>
-                    <div id="tools-menu-submenu" style="background:#de9a44; width:64px; height:96px; display:none; position:absolute; top:45px">
+                    <div id="tools-menu-submenu" style="background:#de9a44; width:192px; height:96px; display:none; position:absolute; top:45px">
                         <ul>
                             <li>
-                                <a onclick='$("#dialog-config").dialog("open")' style="cursor: pointer;">
-                                    <img src="images/gtk-preferences.png"/>
+                                <a onclick='$("#dialog-config").dialog("open")'>
+                                    <span class="preferences">Preferences</span>
                                 </a>
                             </li>
                             <li>
-                                <a onclick='prompt("UID")' style="cursor: pointer;">
-                                    <img src="images/user.png"/>
+                                <a onclick='prompt("UID")'>
+                                    <span class="user">Connect to user</span>
                                 </a>
                             </li>
                         </ul>
