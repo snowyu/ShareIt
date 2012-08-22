@@ -75,6 +75,16 @@ html, body { height: 100%; }
 /* Tools menu
  * ------------------------------------------------------------------------- */
 
+#tools-menu-submenu
+{
+    background: #de9a44;
+    width: 192px;
+    height: 96px;
+    display: none;
+    position: absolute;
+    top: 45px
+}
+
 li span {
   background-position: center left;
   background-repeat: no-repeat;
