@@ -106,7 +106,7 @@ function DB_init(onsuccess)
 	
 	            // [To-Do] Check current sharepoints and update files on duplicates
 	
-	            var request = objectStore.put(file);
+	            var request = objectStore.put(data);
 	            if(onsuccess != undefined)
 	                request.onsuccess = function(event)
 	                {

@@ -49,7 +49,7 @@ window.addEventListener("load", function()
 	                for(var i = 0, file; file = filelist[i]; i++)
                         if(file.bitmap)
                             connection.transfer_query_chunk(file.name,
-                                                            random_chunk(file.bitmap))
+                                                            getRandom(file.bitmap))
                 })
 
                 ui_onopen()

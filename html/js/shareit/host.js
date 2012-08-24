@@ -12,18 +12,22 @@ var chunksize = 65536
 
 function Bitmap(size)
 {
-	var result = {}
-	for(var i=0; i<size; i++)
-		result[i] = true;
-	return result
+  var bitmap = new Array(size)
+  for(var i=0; i<size; i++)
+    bitmap[i] = i;
+
+  return bitmap
 }
 
-function random_chunk(object)
+function getRandom(bitmap)
 {
-	var keys = Object.keys(object)
-	return keys[Math.floor(Math.random() * keys.length)]
+  return bitmap[Math.floor(Math.random() * bitmap.length)]
 }
 
+function remove(bitmap, item)
+{
+  bitmap.splice(bitmap.indexOf(item), 1)
+}
 
 function Host_init(db, onsuccess)
 {
@@ -129,7 +133,7 @@ function Host_onconnect(connection, host, db, onsuccess)
 	{
 		db.sharepoints_get(filename, function(file)
 		{
-			delete file.bitmap[chunk]
+			remove(file.bitmap, chunk)
 
 	        // Update blob
 			var start = chunk * chunksize;
@@ -148,7 +152,7 @@ function Host_onconnect(connection, host, db, onsuccess)
 		    file.blob = new Blob([head, ArrayBuffer(padding), byteArray.buffer, blob.slice(stop)],
 		    					 {"type": blob.type})
 
-			var pending_chunks = Object.keys(file.bitmap).length
+			var pending_chunks = file.bitmap.length
 			if(pending_chunks)
 			{
 				var chunks = file.size/chunksize;
@@ -160,7 +164,7 @@ function Host_onconnect(connection, host, db, onsuccess)
 			    // Demand more data from one of the pending chunks
 		        db.sharepoints_put(file, function()
 		        {
-				    connection.transfer_query_chunk(file.name, random_chunk(file.bitmap));
+				    connection.transfer_query_chunk(file.name, getRandom(file.bitmap));
 				})
 			}
 			else
@@ -210,7 +214,7 @@ function Host_onconnect(connection, host, db, onsuccess)
             console.log("Transfer begin: '"+key+"' = "+JSON.stringify(file))
 
             // Demand data from the begining of the file
-            connection.transfer_query_chunk(key, random_chunk(file.bitmap))
+            connection.transfer_query_chunk(key, getRandom(file.bitmap))
         },
         function(errorCode)
         {
