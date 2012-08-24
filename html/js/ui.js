@@ -109,7 +109,7 @@ function _button(file, hosting)
 		if(chunks % 1 != 0)
 			chunks = Math.floor(chunks) + 1;
 
-		var value = chunks - Object.keys(file.bitmap).length
+		var value = chunks - file.bitmap.length
 
 		ui_filedownloading(file.name, value, chunks)
     }
