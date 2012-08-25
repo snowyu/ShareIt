@@ -92,43 +92,51 @@ function _button(file, hosting)
     return div
 }
 
+function _ui_row_downloading(file, hosting)
+{
+    var tr = document.createElement('TR');
+
+    var td = document.createElement('TD');
+    tr.appendChild(td)
+
+    var span = document.createElement('SPAN');
+        span.className = "file"
+        span.appendChild(document.createTextNode(file.name));
+    td.appendChild(span)
+
+    var td = document.createElement('TD');
+        td.appendChild(document.createTextNode(file.size));
+    tr.appendChild(td)
+
+    var td = document.createElement('TD');
+        td.class = "end"
+        td.appendChild(_button(file, hosting));
+    tr.appendChild(td)
+
+    return tr
+}
+
 function _ui_updatefiles(area, files, hosting)
 {
-	// Remove old table and add new empty one
-	while(area.firstChild)
-		area.removeChild(area.firstChild);
+    // Remove old table and add new empty one
+    while(area.firstChild)
+        area.removeChild(area.firstChild);
 
-	for(var filename in files)
-		if(files.hasOwnProperty(filename))
-		{
+    for(var filename in files)
+        if(files.hasOwnProperty(filename))
+        {
             var file = files[filename]
             var path = ""
             if(file.path)
                 path = file.path + '/';
 
-			var tr = document.createElement('TR');
-			    tr.id = path + file.name
-			    if(path)
-			        tr.class = "child-of-" + path
-			area.appendChild(tr)
+            var tr = _ui_row_downloading(file, hosting)
+		        tr.id = path + file.name
+		        if(path)
+		            tr.class = "child-of-" + path
 
-            var td = document.createElement('TD');
-            tr.appendChild(td)
-
-            var span = document.createElement('SPAN');
-                span.className = "file"
-                span.appendChild(document.createTextNode(file.name));
-            td.appendChild(span)
-
-			var td = document.createElement('TD');
-				td.appendChild(document.createTextNode(file.size));
-			tr.appendChild(td)
-
-			var td = document.createElement('TD');
-				td.class = "end"
-				td.appendChild(_button(file, hosting));
-			tr.appendChild(td)
-		}
+            area.appendChild(tr)
+        }
 }
 
 function ui_updatefiles_host(files)
