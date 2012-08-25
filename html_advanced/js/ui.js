@@ -92,7 +92,7 @@ function _button(file, hosting)
     return div
 }
 
-function _ui_row_downloading(file, hosting)
+function _ui_row_sharing(file)
 {
     var tr = document.createElement('TR');
 
@@ -110,13 +110,37 @@ function _ui_row_downloading(file, hosting)
 
     var td = document.createElement('TD');
         td.class = "end"
-        td.appendChild(_button(file, hosting));
+        td.appendChild(_button(file, true));
     tr.appendChild(td)
 
     return tr
 }
 
-function _ui_row_sharedpoints(file, hosting)
+function _ui_row_downloading(file)
+{
+    var tr = document.createElement('TR');
+
+    var td = document.createElement('TD');
+    tr.appendChild(td)
+
+    var span = document.createElement('SPAN');
+        span.className = "file"
+        span.appendChild(document.createTextNode(file.name));
+    td.appendChild(span)
+
+    var td = document.createElement('TD');
+        td.appendChild(document.createTextNode(file.size));
+    tr.appendChild(td)
+
+    var td = document.createElement('TD');
+        td.class = "end"
+        td.appendChild(_button(file, false));
+    tr.appendChild(td)
+
+    return tr
+}
+
+function _ui_row_sharedpoints(file)
 {
     var tr = document.createElement('TR');
 
@@ -146,7 +170,7 @@ function _ui_row_sharedpoints(file, hosting)
     return tr
 }
 
-function _ui_updatefiles(area, files, row_factory, hosting)
+function _ui_updatefiles(area, files, row_factory)
 {
     // Remove old table and add new empty one
     while(area.firstChild)
@@ -160,7 +184,7 @@ function _ui_updatefiles(area, files, row_factory, hosting)
             if(file.path)
                 path = file.path + '/';
 
-            var tr = row_factory(file, hosting)
+            var tr = row_factory(file)
 		        tr.id = path + file.name
 		        if(path)
 		            tr.class = "child-of-" + path
@@ -172,19 +196,19 @@ function _ui_updatefiles(area, files, row_factory, hosting)
 function ui_updatefiles_host(files)
 {
     var area = document.getElementById('Sharing').getElementsByTagName("tbody")[0]
-    _ui_updatefiles(area, files, _ui_row_downloading, true)
+    _ui_updatefiles(area, files, _ui_row_sharing)
 }
 
 function ui_updatefiles_peer(files)
 {
     var area = document.getElementById('Downloading').getElementsByTagName("tbody")[0]
-    _ui_updatefiles(area, files, _ui_row_downloading, false)
+    _ui_updatefiles(area, files, _ui_row_downloading)
 }
 
 function ui_update_sharedpoints(sharedpoints)
 {
     var area = document.getElementById('Sharedpoints').getElementsByTagName("tbody")[0]
-    _ui_updatefiles(area, sharedpoints, _ui_row_sharedpoints, false)
+    _ui_updatefiles(area, sharedpoints, _ui_row_sharedpoints)
 }
 
 function ui_filedownloading(filename, value, total)
