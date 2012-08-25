@@ -116,7 +116,7 @@ function _ui_row_downloading(file, hosting)
     return tr
 }
 
-function _ui_updatefiles(area, files, hosting)
+function _ui_updatefiles(area, files, row_factory, hosting)
 {
     // Remove old table and add new empty one
     while(area.firstChild)
@@ -130,7 +130,7 @@ function _ui_updatefiles(area, files, hosting)
             if(file.path)
                 path = file.path + '/';
 
-            var tr = _ui_row_downloading(file, hosting)
+            var tr = row_factory(file, hosting)
 		        tr.id = path + file.name
 		        if(path)
 		            tr.class = "child-of-" + path
@@ -141,17 +141,20 @@ function _ui_updatefiles(area, files, hosting)
 
 function ui_updatefiles_host(files)
 {
-    _ui_updatefiles(document.getElementById('Sharing').getElementsByTagName("tbody")[0], files, true)
+    var area = document.getElementById('Sharing').getElementsByTagName("tbody")[0]
+    _ui_updatefiles(area, files, _ui_row_downloading, true)
 }
 
 function ui_updatefiles_peer(files)
 {
-    _ui_updatefiles(document.getElementById('Downloading').getElementsByTagName("tbody")[0], files, false)
+    var area = document.getElementById('Downloading').getElementsByTagName("tbody")[0]
+    _ui_updatefiles(area, files, _ui_row_downloading, false)
 }
 
 function ui_update_sharedpoints(sharedpoints)
 {
-    _ui_updatefiles(document.getElementById('Sharedpoints').getElementsByTagName("tbody")[0], sharedpoints, false)
+    var area = document.getElementById('Sharedpoints').getElementsByTagName("tbody")[0]
+    _ui_updatefiles(area, sharedpoints, _ui_row_downloading, false)
 }
 
 function ui_filedownloading(filename, value, total)
