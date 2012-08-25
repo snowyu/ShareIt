@@ -116,6 +116,36 @@ function _ui_row_downloading(file, hosting)
     return tr
 }
 
+function _ui_row_sharedpoints(file, hosting)
+{
+    var tr = document.createElement('TR');
+
+    var td = document.createElement('TD');
+    tr.appendChild(td)
+
+    var span = document.createElement('SPAN');
+        span.className = "file"
+        span.appendChild(document.createTextNode(file.name));
+    td.appendChild(span)
+
+    var td = document.createElement('TD');
+        td.appendChild(document.createTextNode("0 GB"));
+    tr.appendChild(td)
+
+    var td = document.createElement('TD');
+        td.class = "end"
+    tr.appendChild(td)
+
+    var a = document.createElement("A");
+//        a.onclick = function()
+//        {
+//        }
+        a.appendChild(document.createTextNode("Delete"));
+    td.appendChild(a);
+
+    return tr
+}
+
 function _ui_updatefiles(area, files, row_factory, hosting)
 {
     // Remove old table and add new empty one
@@ -154,7 +184,7 @@ function ui_updatefiles_peer(files)
 function ui_update_sharedpoints(sharedpoints)
 {
     var area = document.getElementById('Sharedpoints').getElementsByTagName("tbody")[0]
-    _ui_updatefiles(area, sharedpoints, _ui_row_downloading, false)
+    _ui_updatefiles(area, sharedpoints, _ui_row_sharedpoints, false)
 }
 
 function ui_filedownloading(filename, value, total)
