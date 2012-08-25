@@ -105,6 +105,10 @@ function _ui_row_sharing(file)
     td.appendChild(span)
 
     var td = document.createElement('TD');
+        td.appendChild(document.createTextNode(file.type));
+    tr.appendChild(td)
+
+    var td = document.createElement('TD');
         td.appendChild(document.createTextNode(file.size));
     tr.appendChild(td)
 
@@ -129,12 +133,40 @@ function _ui_row_downloading(file)
     td.appendChild(span)
 
     var td = document.createElement('TD');
+        td.appendChild(document.createTextNode(file.type));
+    tr.appendChild(td)
+
+    var td = document.createElement('TD');
+        td.appendChild(document.createTextNode("0MB"));
+    tr.appendChild(td)
+
+    var td = document.createElement('TD');
         td.appendChild(document.createTextNode(file.size));
     tr.appendChild(td)
 
     var td = document.createElement('TD');
+        td.appendChild(document.createTextNode("0%"));
+    tr.appendChild(td)
+
+    var td = document.createElement('TD');
+        td.appendChild(document.createTextNode("Paused"));
+    tr.appendChild(td)
+
+    var td = document.createElement('TD');
+        td.appendChild(document.createTextNode("Unknown"));
+    tr.appendChild(td)
+
+    var td = document.createElement('TD');
+        td.appendChild(document.createTextNode("0Kb/s"));
+    tr.appendChild(td)
+
+    var td = document.createElement('TD');
+        td.appendChild(document.createTextNode("0"));
+    tr.appendChild(td)
+
+    var td = document.createElement('TD');
         td.class = "end"
-        td.appendChild(_button(file, false));
+        td.appendChild(document.createTextNode("0-0-0000"));
     tr.appendChild(td)
 
     return tr
