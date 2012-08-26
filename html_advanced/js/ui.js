@@ -94,8 +94,12 @@ function _button(file, hosting)
 
 function _ui_filetype2className(filetype)
 {
-    switch(filetype)
+    filetype = filetype.split('/')
+
+    switch(filetype[0])
     {
+        case 'image':   return "image"
+        case 'video':   return "video"
     }
 
     // Unknown file type, return generic file

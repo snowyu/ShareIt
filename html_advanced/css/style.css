@@ -148,10 +148,19 @@ table span {
   padding: .2em 0 .2em 1.5em;
 }
 
+
 table span.file {
   background-image: url(../images/page_white_text.png);
 }
 
 table span.folder {
   background-image: url(../images/folder.png);
+}
+
+table span.image {
+  background-image: url(../images/image.png);
+}
+
+table span.video {
+  background-image: url(../images/video.png);
 }
