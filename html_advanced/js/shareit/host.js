@@ -31,7 +31,7 @@ function Host_init(db, onsuccess)
 
 	// Peer
 
-	host.files_list = function(socketId, files)
+	host.fileslist_update = function(socketId, files)
 	{
 		// Check if we have already any of the files
 		// It's stupid to try to download it... and also give errors

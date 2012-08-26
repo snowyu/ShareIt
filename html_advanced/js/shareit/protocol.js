@@ -15,19 +15,23 @@ function Conn_init(ws_url, host, onconnect, onsuccess, onerror)
 			}
 
 			// Peer
-			connection.on('files.list', function(socketId, data)
+			connection.on('fileslist.update', function(socketId, data)
 			{
-				host.files_list(socketId, JSON.parse(data))
+				host.fileslist_update(socketId, JSON.parse(data))
 			})
 			connection.on('transfer.send_chunk', function(socketId, filename, chunk, data)
 			{
 				host.transfer_send_chunk(socketId, filename, parseInt(chunk), data)
 			})
 
-			connection.files_list = function(socketId, files_send)
-			{
-				connection.emit('files.list', socketId, JSON.stringify(files_send));
-			}
+            connection.fileslist_update = function(socketId, files_send)
+            {
+                connection.emit('fileslist.update', socketId, JSON.stringify(files_send));
+            }
+            connection.fileslist_request = function(socketId)
+            {
+                connection.emit('fileslist.request', socketId);
+            }
 			connection.transfer_query_chunk = function(socketId, filename, chunk)
 	        {
 			    connection.emit('transfer.query_chunk', socketId, filename, chunk);

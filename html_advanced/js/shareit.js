@@ -26,22 +26,17 @@ window.addEventListener("load", function()
 	        },
 	        function(connection)
 	        {
-				function _updatefiles(filelist)
-				{
-//			        var files_send = []
-//
-//			        for(var i = 0, file; file = filelist[i]; i++)
-//			            files_send.push({"name": file.name, "size": file.size,
-//			                             "type": file.type});
-//
-//			        connection.files_list(socketId, files_send);
-
-					ui_updatefiles_host(filelist)
-				}
-
                 db.sharepoints_getAll(null, function(filelist)
                 {
-                    _updatefiles(filelist)
+//                  var files_send = []
+//
+//                  for(var i = 0, file; file = filelist[i]; i++)
+//                      files_send.push({"name": file.name, "size": file.size,
+//                                       "type": file.type});
+//
+//                  connection.fileslist_update(socketId, files_send);
+
+                    ui_updatefiles_host(filelist)
 
 //                    // Restard downloads
 //                    for(var i = 0, file; file = filelist[i]; i++)
@@ -67,6 +62,11 @@ window.addEventListener("load", function()
 	                {
     	                ui_filedownloading(file.name, 0, chunks)
 	                })
+                })
+
+                ui_ready_connectuser(function(uid, table)
+                {
+                    connection.fileslist_request(uid)
                 })
 
                 ui_set_uid(connection.socket.sessionid)
