@@ -334,9 +334,53 @@ function UI_init()
 	    {
 	        uid = parseInt(uid)
 
-            $("#tabs").tabs("add", "#tabs-" + uid, uid);
+            $("#tabs").tabs("add", "#tabs-"+uid, "UID: "+uid);
 
-            $("#tabs-" + uid).append("Tab content.");
+            var tab = document.getElementById("tabs-"+uid)
+
+            var table = document.createElement("TABLE");
+                table.id = 'Peer'
+            tab.appendChild(table);
+
+            var thead = document.createElement("THEAD");
+            table.appendChild(thead);
+
+            var tr = document.createElement("TR");
+            thead.appendChild(tr);
+
+            var th = document.createElement("TH");
+                th.scope='col'
+                th.abbr='Filename'
+                th.class='nobg'
+                th.width='100%'
+                th.appendChild(document.createTextNode("Filename"))
+            tr.appendChild(th);
+
+            var th = document.createElement("TH");
+                th.scope='col'
+                th.abbr='Filename'
+                th.class='nobg'
+                th.appendChild(document.createTextNode("Type"))
+            tr.appendChild(th);
+
+            var th = document.createElement("TH");
+                th.scope='col'
+                th.abbr='Filename'
+                th.class='nobg'
+                th.appendChild(document.createTextNode("Size"))
+            tr.appendChild(th);
+
+            var tbody = document.createElement("TBODY");
+            table.appendChild(tbody);
+
+            var tr = document.createElement("TR");
+            tbody.appendChild(tr);
+
+            var td = document.createElement("TD");
+                td.colspan='3'
+                td.align='center'
+                td.appendChild(document.createTextNode("Waiting for the peer data"))
+            tr.appendChild(td);
 	    }
 	})
 }

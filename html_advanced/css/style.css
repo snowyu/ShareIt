@@ -53,9 +53,13 @@ html, body { height: 100%; }
     height: 95%;
 }
 
+#tabs .ui-tabs-panel
+{
+    padding: 0;
+}
+
 #Sharedpoints {
     cursor: pointer;
-    padding: 0;
     width: 100%;
     cellspacing: 0;
     summary: ""
@@ -64,7 +68,6 @@ html, body { height: 100%; }
 #Downloading {
     cursor: pointer;
     height: 95%;
-    padding: 0;
     cellspacing: 0;
     summary: ""
 }
@@ -72,7 +75,13 @@ html, body { height: 100%; }
 #Sharing {
     cursor: pointer;
     height: 95%;
-    padding: 0;
+    cellspacing: 0;
+    summary: ""
+}
+
+#Peer {
+    cursor: pointer;
+    height: 95%;
     cellspacing: 0;
     summary: ""
 }
