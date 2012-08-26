@@ -274,8 +274,7 @@ function UI_init()
         tabTemplate: "<li><a href='#{href}'>#{label}</a> <span class='ui-icon ui-icon-close'>Remove Tab</span></li>",
         add: function(event, ui)
         {
-            var tab_content = $tab_content_input.val() || "Tab " + tab_counter + " content.";
-            $(ui.panel).append("<p>" + tab_content + "</p>");
+            $("#tabs").tabs('select', '#' + ui.panel.id);
         }
     }).find(".ui-tabs-nav").sortable({axis: "x"});
 
@@ -287,7 +286,7 @@ function UI_init()
         height: 600,
         modal: true,
         show: "fold",
-        hide: "fold"
+//        hide: "fold"
     });
 
     $("#Downloading").treeTable();
@@ -327,6 +326,19 @@ function UI_init()
         else
             submenu.slideUp();
     });
+
+    $("#ConnectUser").click(function()
+	{
+	    var uid = prompt("UID to connect")
+	    if(uid != null && uid != '')
+	    {
+	        uid = parseInt(uid)
+
+            $("#tabs").tabs("add", "#tabs-" + uid, uid);
+
+            $("#tabs-" + uid).append("Tab content.");
+	    }
+	})
 }
 
 function ui_set_uid(sessionid)
