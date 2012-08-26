@@ -15,22 +15,22 @@ var io = require('socket.io').listen(server, options)
 io.set('log level', 1);
 io.sockets.on('connection', function(socket)
 {
-	socket.on('joiner', function(data)
+	socket.on('joiner', function(room)
 	{
-		var len = io.sockets.clients(data).length;
+		var len = io.sockets.clients(room).length;
 
 		if(len >= 2)
 			socket.emit('joiner.error', 'room full');
 		else
 		{
-			socket.join(data);
-			socket.room = data;
+			socket.join(room);
+			socket.room = room;
 
 			socket.emit('joiner.success');
 
 			if(len == 1)
 			{
-				socket.peer = io.sockets.clients(data)[0];
+				socket.peer = io.sockets.clients(room)[0];
 	
 				if(socket.peer != undefined)
 				{
