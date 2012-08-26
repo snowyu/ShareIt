@@ -15,63 +15,24 @@ var io = require('socket.io').listen(server, options)
 io.set('log level', 1);
 io.sockets.on('connection', function(socket)
 {
-	socket.on('joiner', function(data)
+	socket.on('files.list', function(socketId, data)
 	{
-		var len = io.sockets.clients(data).length;
-
-		if(len >= 2)
-			socket.emit('joiner.error', 'room full');
-		else
-		{
-			socket.join(data);
-			socket.room = data;
-
-			socket.emit('joiner.success');
-
-			if(len == 1)
-			{
-				socket.peer = io.sockets.clients(data)[0];
-	
-				if(socket.peer != undefined)
-				{
-					// Set this socket as the other socket peer
-					socket.peer.peer = socket;
-
-					// Notify to both peers that we are now connected
-					socket.emit('peer.connected', socket.id);
-					socket.peer.emit('peer.connected', socket.id);
-				}
-			}
-		}
+        var soc = io.sockets[socketId]
+		if(soc != undefined)
+			soc.emit('files.list', socket.id(), data);
 	});
 
-	socket.on('disconnect', function()
+	socket.on('transfer.query_chunk', function(socketId, filename, chunk)
 	{
-        if(socket.peer != undefined)
-        {
-	   	    socket.peer.emit('peer.disconnected');
-
-			socket.peer.peer = undefined;
-		}
+        var soc = io.sockets[socketId]
+		if(soc != undefined)
+			soc.emit('transfer.query_chunk', socket.id(), filename, chunk);
 	});
 
-	// Proxied events
-
-	socket.on('files.list', function(data)
+	socket.on('transfer.send_chunk', function(socketId, filename, chunk, data)
 	{
-		if(socket.peer != undefined)
-			socket.peer.emit('files.list', data);
+        var soc = io.sockets[socketId]
+		if(soc != undefined)
+			soc.emit('transfer.send_chunk', socket.id(), filename, chunk, data);
 	});
-
-	socket.on('transfer.query_chunk', function(filename, chunk)
-	{
-		if(socket.peer != undefined)
-			socket.peer.emit('transfer.query_chunk', filename, chunk);
-	});
-
-	socket.on('transfer.send_chunk', function(filename, chunk, data)
-	{
-		if(socket.peer != undefined)
-			socket.peer.emit('transfer.send_chunk', filename, chunk, data);
-	});
-});
+})
