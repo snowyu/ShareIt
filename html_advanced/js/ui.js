@@ -92,6 +92,16 @@ function _button(file, hosting)
     return div
 }
 
+function _ui_filetype2className(filetype)
+{
+    switch(filetype)
+    {
+    }
+
+    // Unknown file type, return generic file
+    return "file"
+}
+
 function _ui_row_sharing(file)
 {
     var tr = document.createElement('TR');
@@ -100,7 +110,7 @@ function _ui_row_sharing(file)
     tr.appendChild(td)
 
     var span = document.createElement('SPAN');
-        span.className = "file"
+        span.className = _ui_filetype2className(file.type)
         span.appendChild(document.createTextNode(file.name));
     td.appendChild(span)
 
@@ -128,7 +138,7 @@ function _ui_row_downloading(file)
     tr.appendChild(td)
 
     var span = document.createElement('SPAN');
-        span.className = "file"
+        span.className = _ui_filetype2className(file.type)
         span.appendChild(document.createTextNode(file.name));
     td.appendChild(span)
 
@@ -180,7 +190,7 @@ function _ui_row_sharedpoints(file)
     tr.appendChild(td)
 
     var span = document.createElement('SPAN');
-        span.className = "file"
+        span.className = _ui_filetype2className(file.type)
         span.appendChild(document.createTextNode(file.name));
     td.appendChild(span)
 
