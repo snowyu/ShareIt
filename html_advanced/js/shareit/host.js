@@ -63,19 +63,19 @@ function Host_onconnect(connection, host, db, onsuccess)
 	if(typeof FileReader == "undefined")
 	{
 		console.warn("'Filereader' is not available, can't be able to host files");
-		host.transfer_query_chunk = function(socketId, filename, chunk){}
+		host.transfer_query = function(socketId, filename, chunk){}
 	}
 	else
-		host.transfer_query_chunk = function(socketId, filename, chunk)
+		host.transfer_query = function(socketId, filename, chunk)
 		{
 			var reader = new FileReader();
 				reader.onerror = function(evt)
 				{
-					console.error("host.transfer_query_chunk("+socketId+", "+filename+", "+chunk+") = '"+evt.target.result+"'")
+					console.error("host.transfer_query("+socketId+", "+filename+", "+chunk+") = '"+evt.target.result+"'")
 				}
 				reader.onload = function(evt)
 				{
-					connection.transfer_send_chunk(socketId, filename, chunk, evt.target.result);
+					connection.transfer_send(socketId, filename, chunk, evt.target.result);
 				}
 
 			var start = chunk * chunksize;
@@ -109,7 +109,7 @@ function Host_onconnect(connection, host, db, onsuccess)
 		window.URL.revokeObjectURL(save.href)
 	}
 
-	host.transfer_send_chunk = function(socketId, filename, chunk, data)
+	host.transfer_send = function(socketId, filename, chunk, data)
 	{
 		db.sharepoints_get(filename, function(file)
 		{
@@ -144,7 +144,7 @@ function Host_onconnect(connection, host, db, onsuccess)
 			    // Demand more data from one of the pending chunks
 		        db.sharepoints_put(file, function()
 		        {
-				    connection.transfer_query_chunk(socketId, file.name, random_chunk(file.bitmap));
+				    connection.transfer_query(socketId, file.name, random_chunk(file.bitmap));
 				})
 			}
 			else
@@ -184,7 +184,7 @@ function Host_onconnect(connection, host, db, onsuccess)
             console.log("Transfer begin: '"+file.name+"' = "+JSON.stringify(file))
 
             // Demand data from the begining of the file
-            connection.transfer_query_chunk(socketId, file.name, random_chunk(file.bitmap))
+            connection.transfer_query(socketId, file.name, random_chunk(file.bitmap))
         },
         function(errorCode)
         {

@@ -33,17 +33,17 @@ io.sockets.on('connection', function(socket)
             soc.emit('fileslist.update', socket.id, data);
     });
 
-	socket.on('transfer.query_chunk', function(socketId, filename, chunk)
+	socket.on('transfer.query', function(socketId, filename, chunk)
 	{
         var soc = io.sockets[socketId]
 		if(soc != undefined)
-			soc.emit('transfer.query_chunk', socket.id, filename, chunk);
+			soc.emit('transfer.query', socket.id, filename, chunk);
 	});
 
-	socket.on('transfer.send_chunk', function(socketId, filename, chunk, data)
+	socket.on('transfer.send', function(socketId, filename, chunk, data)
 	{
         var soc = io.sockets[socketId]
 		if(soc != undefined)
-			soc.emit('transfer.send_chunk', socket.id, filename, chunk, data);
+			soc.emit('transfer.send', socket.id, filename, chunk, data);
 	});
 })

@@ -41,8 +41,8 @@ window.addEventListener("load", function()
 //                    // Restard downloads
 //                    for(var i = 0, file; file = filelist[i]; i++)
 //                        if(file.bitmap)
-//                            connection.transfer_query_chunk(file.name,
-//                                                            random_chunk(file.bitmap))
+//                            connection.transfer_query(file.name,
+//                                                      random_chunk(file.bitmap))
                 })
 
                 ui_ready_fileschange(function(sharedpoints)

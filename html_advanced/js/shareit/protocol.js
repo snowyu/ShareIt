@@ -26,21 +26,21 @@ function Conn_init(ws_url, host, onconnect, onsuccess, onerror)
 
 			// Transfer
 
-            // Transfer query_chunk
-            connection.on('transfer.query_chunk', host.transfer_query_chunk)
-            connection.transfer_query_chunk = function(socketId, filename, chunk)
+            // Transfer query
+            connection.on('transfer.query', host.transfer_query)
+            connection.transfer_query = function(socketId, filename, chunk)
             {
-                connection.emit('transfer.query_chunk', socketId, filename, chunk);
+                connection.emit('transfer.query', socketId, filename, chunk);
             }
 
-            // Transfer send_chunk
-			connection.on('transfer.send_chunk', function(socketId, filename, chunk, data)
+            // Transfer send
+			connection.on('transfer.send', function(socketId, filename, chunk, data)
 			{
-				host.transfer_send_chunk(socketId, filename, parseInt(chunk), data)
+				host.transfer_send(socketId, filename, parseInt(chunk), data)
 			})
-            connection.transfer_send_chunk = function(socketId, filename, chunk, data)
+            connection.transfer_send = function(socketId, filename, chunk, data)
             {
-                connection.emit('transfer.send_chunk', socketId, filename, chunk, data);
+                connection.emit('transfer.send', socketId, filename, chunk, data);
             }
 
 			if(onsuccess)
