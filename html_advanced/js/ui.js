@@ -328,3 +328,8 @@ function UI_init()
             submenu.slideUp();
     });
 }
+
+function ui_set_uid(sessionid)
+{
+    document.getElementById("UID").appendChild(document.createTextNode("UID: "+sessionid))
+}

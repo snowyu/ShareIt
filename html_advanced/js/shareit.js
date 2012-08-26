@@ -68,6 +68,8 @@ window.addEventListener("load", function()
     	                ui_filedownloading(file.name, 0, chunks)
 	                })
                 })
+
+                ui_set_uid(connection.socket.sessionid)
 	        },
 	        function(type)
 	        {
