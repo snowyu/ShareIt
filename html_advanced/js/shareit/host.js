@@ -31,7 +31,7 @@ function Host_init(db, onsuccess)
 
 	// Peer
 
-	host.files_list = function(files)
+	host.files_list = function(socketId, files)
 	{
 		// Check if we have already any of the files
 		// It's stupid to try to download it... and also give errors
@@ -57,41 +57,25 @@ function Host_init(db, onsuccess)
 
 function Host_onconnect(connection, host, db, onsuccess)
 {
-	// Common
-
-	host.peer_connected = function(socket_id)
-	{
-		console.log("Peer connected!");
-
-		db.sharepoints_getAll(null, host._send_files_list)
-
-		console.log(socket_id + " joined!");
-	}
-	
-	host.peer_disconnected = function(data)
-	{
-		console.log("Peer disconnected.");
-	}
-
 	// Host
 
 	// Filereader support (be able to host files from the filesystem)
 	if(typeof FileReader == "undefined")
 	{
 		console.warn("'Filereader' is not available, can't be able to host files");
-		host.transfer_query_chunk = function(filename, chunk){}
+		host.transfer_query_chunk = function(socketId, filename, chunk){}
 	}
 	else
-		host.transfer_query_chunk = function(filename, chunk)
+		host.transfer_query_chunk = function(socketId, filename, chunk)
 		{
 			var reader = new FileReader();
 				reader.onerror = function(evt)
 				{
-					console.error("host.transfer_query_chunk("+filename+", "+chunk+") = '"+evt.target.result+"'")
+					console.error("host.transfer_query_chunk("+socketId+", "+filename+", "+chunk+") = '"+evt.target.result+"'")
 				}
 				reader.onload = function(evt)
 				{
-					connection.transfer_send_chunk(filename, chunk, evt.target.result);
+					connection.transfer_send_chunk(socketId, filename, chunk, evt.target.result);
 				}
 
 			var start = chunk * chunksize;
@@ -125,7 +109,7 @@ function Host_onconnect(connection, host, db, onsuccess)
 		window.URL.revokeObjectURL(save.href)
 	}
 
-	host.transfer_send_chunk = function(filename, chunk, data)
+	host.transfer_send_chunk = function(socketId, filename, chunk, data)
 	{
 		db.sharepoints_get(filename, function(file)
 		{
@@ -160,7 +144,7 @@ function Host_onconnect(connection, host, db, onsuccess)
 			    // Demand more data from one of the pending chunks
 		        db.sharepoints_put(file, function()
 		        {
-				    connection.transfer_query_chunk(file.name, random_chunk(file.bitmap));
+				    connection.transfer_query_chunk(socketId, file.name, random_chunk(file.bitmap));
 				})
 			}
 			else
@@ -179,16 +163,6 @@ function Host_onconnect(connection, host, db, onsuccess)
 		})
 	}
 
-	host._send_files_list = function(filelist)
-	{
-		var files_send = []
-
-		for(var i = 0, file; file = filelist[i]; i++)
-			files_send.push({"name": file.name, "size": file.size, "type": file.type});
-
-		connection.files_list(files_send);
-	}
-
     host._transferbegin = function(file, onsuccess)
     {
         // Calc number of necesary chunks to download
@@ -202,15 +176,15 @@ function Host_onconnect(connection, host, db, onsuccess)
 
         // Insert new "file" inside IndexedDB
         db.sharepoints_add(file,
-        function(key)
+        function()
         {
             if(onsuccess)
                 onsuccess(chunks);
 
-            console.log("Transfer begin: '"+key+"' = "+JSON.stringify(file))
+            console.log("Transfer begin: '"+file.name+"' = "+JSON.stringify(file))
 
             // Demand data from the begining of the file
-            connection.transfer_query_chunk(key, random_chunk(file.bitmap))
+            connection.transfer_query_chunk(socketId, file.name, random_chunk(file.bitmap))
         },
         function(errorCode)
         {

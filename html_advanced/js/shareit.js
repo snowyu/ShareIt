@@ -1,18 +1,3 @@
-function randomString()
-{
-	var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghijklmnopqrstuvwxyz";
-	var string_length = 8;
-
-	var randomstring = '';
-	for(var i=0; i<string_length; i++)
-	{
-		var rnum = Math.floor(Math.random() * chars.length);
-		randomstring += chars.substring(rnum,rnum+1);
-	}
-
-	return randomstring;
-}
-
 window.addEventListener("load", function()
 {
     // Init user interface
@@ -32,14 +17,8 @@ window.addEventListener("load", function()
         // Init host
 	    Host_init(db, function(host)
 	    {
-            // Get websocket room
-	        if(!window.location.hash)
-		        window.location.hash = '#'+randomString()
-
-	        var room = window.location.hash.substring(1)
-
 	        // Load websocket connection after IndexedDB is ready
-	        Conn_init('wss://localhost:8001', room, host,
+	        Conn_init('wss://localhost:8001', host,
 	        function(connection)
 	        {
                 // Add connection methods to host
@@ -49,8 +28,14 @@ window.addEventListener("load", function()
 	        {
 				function _updatefiles(filelist)
 				{
-					host._send_files_list(filelist)
-			
+//			        var files_send = []
+//
+//			        for(var i = 0, file; file = filelist[i]; i++)
+//			            files_send.push({"name": file.name, "size": file.size,
+//			                             "type": file.type});
+//
+//			        connection.files_list(socketId, files_send);
+
 					ui_updatefiles_host(filelist)
 				}
 
@@ -58,11 +43,11 @@ window.addEventListener("load", function()
                 {
                     _updatefiles(filelist)
 
-                    // Restard downloads
-	                for(var i = 0, file; file = filelist[i]; i++)
-                        if(file.bitmap)
-                            connection.transfer_query_chunk(file.name,
-                                                            random_chunk(file.bitmap))
+//                    // Restard downloads
+//                    for(var i = 0, file; file = filelist[i]; i++)
+//                        if(file.bitmap)
+//                            connection.transfer_query_chunk(file.name,
+//                                                            random_chunk(file.bitmap))
                 })
 
                 ui_onopen()
