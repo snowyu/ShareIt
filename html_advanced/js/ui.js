@@ -3,13 +3,6 @@ function oldBrowser()
 	$('#Sharedpoints').html('Your browser is not modern enough to serve as a host. :(<br /><br />(Try Chrome or Firefox!)');
 }
 
-function ui_onopen()
-{
-//	$('#Downloading').html('Awaiting file list...');
-
-    console.log("Awaiting peer...");
-}
-
 function ui_ready_fileschange(func)
 {
 	document.getElementById('files').addEventListener('change', function(event)

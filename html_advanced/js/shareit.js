@@ -50,8 +50,6 @@ window.addEventListener("load", function()
 //                                                            random_chunk(file.bitmap))
                 })
 
-                ui_onopen()
-
                 ui_ready_fileschange(function(sharedpoints)
                 {
 	                // Loop through the FileList and add sharedpoints to list.
