@@ -155,19 +155,23 @@ function _ui_row_sharing(file, button_factory)
     var td = document.createElement('TD');
     tr.appendChild(td)
 
+    // Name & icon
     var span = document.createElement('SPAN');
         span.className = _ui_filetype2className(file.type)
         span.appendChild(document.createTextNode(file.name));
     td.appendChild(span)
 
+    // Type
     var td = document.createElement('TD');
         td.appendChild(document.createTextNode(file.type));
     tr.appendChild(td)
 
+    // Size
     var td = document.createElement('TD');
-        td.appendChild(document.createTextNode(file.size));
+        td.appendChild(document.createTextNode(humanize.filesize(file.size)));
     tr.appendChild(td)
 
+    // Action
     var td = document.createElement('TD');
         td.class = "end"
         td.appendChild(button_factory(file));
@@ -183,43 +187,53 @@ function _ui_row_downloading(file)
     var td = document.createElement('TD');
     tr.appendChild(td)
 
+    // Name & icon
     var span = document.createElement('SPAN');
         span.className = _ui_filetype2className(file.type)
         span.appendChild(document.createTextNode(file.name));
     td.appendChild(span)
 
+    // Type
     var td = document.createElement('TD');
         td.appendChild(document.createTextNode(file.type));
     tr.appendChild(td)
 
+    // Downloaded
     var td = document.createElement('TD');
-        td.appendChild(document.createTextNode("0MB"));
+        td.appendChild(document.createTextNode(humanize.filesize(0)));
     tr.appendChild(td)
 
+    // Size
     var td = document.createElement('TD');
-        td.appendChild(document.createTextNode(file.size));
+        td.appendChild(document.createTextNode(humanize.filesize(file.size)));
     tr.appendChild(td)
 
+    // Percentage
     var td = document.createElement('TD');
         td.appendChild(document.createTextNode("0%"));
     tr.appendChild(td)
 
+    // Status
     var td = document.createElement('TD');
         td.appendChild(document.createTextNode("Paused"));
     tr.appendChild(td)
 
+    // Time remaining
     var td = document.createElement('TD');
         td.appendChild(document.createTextNode("Unknown"));
     tr.appendChild(td)
 
+    // Speed
     var td = document.createElement('TD');
-        td.appendChild(document.createTextNode("0Kb/s"));
+        td.appendChild(document.createTextNode(humanize.filesize(0)+"/s"));
     tr.appendChild(td)
 
+    // Peers
     var td = document.createElement('TD');
         td.appendChild(document.createTextNode("0"));
     tr.appendChild(td)
 
+    // Inclusion date
     var td = document.createElement('TD');
         td.class = "end"
         td.appendChild(document.createTextNode("0-0-0000"));
@@ -235,13 +249,15 @@ function _ui_row_sharedpoints(file)
     var td = document.createElement('TD');
     tr.appendChild(td)
 
+    // Name & icon
     var span = document.createElement('SPAN');
         span.className = _ui_filetype2className(file.type)
         span.appendChild(document.createTextNode(file.name));
     td.appendChild(span)
 
+    // Shared size
     var td = document.createElement('TD');
-        td.appendChild(document.createTextNode("0 GB"));
+        td.appendChild(document.createTextNode(humanize.filesize(0)));
     tr.appendChild(td)
 
     var td = document.createElement('TD');
