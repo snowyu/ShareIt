@@ -348,7 +348,7 @@ function UI_init()
         width: 800,
         height: 600,
         modal: true,
-        show: "fold",
+//        show: "fold",
 //        hide: "fold"
     });
 
