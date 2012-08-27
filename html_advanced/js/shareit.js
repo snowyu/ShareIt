@@ -28,14 +28,6 @@ window.addEventListener("load", function()
 	        {
                 db.sharepoints_getAll(null, function(filelist)
                 {
-//                  var files_send = []
-//
-//                  for(var i = 0, file; file = filelist[i]; i++)
-//                      files_send.push({"name": file.name, "size": file.size,
-//                                       "type": file.type});
-//
-//                  connection.fileslist_send(socketId, files_send);
-
                     ui_update_fileslist_sharing(filelist)
 
 //                    // Restard downloads

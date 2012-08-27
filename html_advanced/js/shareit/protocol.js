@@ -23,7 +23,6 @@ function Conn_init(ws_url, host, onconnect, onsuccess, onerror)
             }
             connection.on('fileslist.send', function(socketId, fileslist)
             {
-                console.debug(fileslist)
                 host.fileslist_send(socketId, JSON.parse(fileslist))
             })
 //            connection.on('fileslist.send.error', host.fileslist_send_error)

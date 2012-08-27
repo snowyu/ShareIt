@@ -64,7 +64,19 @@ function Host_onconnect(connection, host, db, onsuccess)
     {
         db.sharepoints_getAll(null, function(fileslist)
         {
-            connection.emit('fileslist.send', socketId, fileslist)
+            // Stupid conversion because JSON.stringify() doesn't parse File
+            // objects (use them as plain objects in the best case). Maybe add
+            // a File.toString() method would do the trick, but later would not
+            // be able to store them on IndexedDB...
+            //
+            // I miss you Python :-(
+			var files_send = []
+
+			for(var i = 0, file; file = fileslist[i]; i++)
+			    files_send.push({"name": file.name, "size": file.size,
+			                     "type": file.type});
+
+			connection.fileslist_send(socketId, files_send);
         })
     }
 
