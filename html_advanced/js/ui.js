@@ -232,25 +232,25 @@ function _ui_updatefiles(area, files, row_factory)
         }
 }
 
-function ui_updatefiles_host(files)
+function ui_update_fileslist_sharing(files)
 {
     var area = document.getElementById('Sharing').getElementsByTagName("tbody")[0]
     _ui_updatefiles(area, files, _ui_row_sharing)
 }
 
-function ui_updatefiles_peer(files)
+function ui_update_fileslist_downloading(files)
 {
     var area = document.getElementById('Downloading').getElementsByTagName("tbody")[0]
     _ui_updatefiles(area, files, _ui_row_downloading)
 }
 
-function ui_update_sharedpoints(sharedpoints)
+function ui_update_fileslist_sharedpoints(sharedpoints)
 {
     var area = document.getElementById('Sharedpoints').getElementsByTagName("tbody")[0]
     _ui_updatefiles(area, sharedpoints, _ui_row_sharedpoints)
 }
 
-function ui_fileslist_update(uid, fileslist)
+function ui_update_fileslist_peer(uid, fileslist)
 {
     var table = document.getElementById("tabs-"+uid).getElementsByTagName("TABLE")[0]
     _ui_updatefiles(table, fileslist, _ui_row_sharing)

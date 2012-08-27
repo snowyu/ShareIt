@@ -9,7 +9,7 @@ window.addEventListener("load", function()
         // Get shared points and init them
         db.sharepoints_getAll(null, function(sharedpoints)
         {
-            ui_update_sharedpoints(sharedpoints)
+            ui_update_fileslist_sharedpoints(sharedpoints)
 
             // [To-Do] Start hashing new files on the shared points
         })
@@ -17,11 +17,6 @@ window.addEventListener("load", function()
         // Init host
 	    Host_init(db, function(host)
 	    {
-	        host.fileslist_update = function(socketId, fileslist)
-	        {
-	            ui_fileslist_update(socketId, fileslist)
-	        }
-
 	        // Load websocket connection after IndexedDB is ready
 	        Conn_init('wss://localhost:8001', host,
 	        function(connection)
@@ -41,7 +36,7 @@ window.addEventListener("load", function()
 //
 //                  connection.fileslist_send(socketId, files_send);
 
-                    ui_updatefiles_host(filelist)
+                    ui_update_fileslist_sharing(filelist)
 
 //                    // Restard downloads
 //                    for(var i = 0, file; file = filelist[i]; i++)
@@ -58,7 +53,7 @@ window.addEventListener("load", function()
 
 	                // [To-Do] Start hashing of files in a new worker
 
-	                db.sharepoints_getAll(null, ui_update_sharedpoints)
+	                db.sharepoints_getAll(null, ui_update_fileslist_sharedpoints)
                 })
 
                 ui_ready_transferbegin(function(file)
