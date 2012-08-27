@@ -17,27 +17,11 @@ function ui_ready_transferbegin(func)
 	transfer_begin = func
 }
 
-function _button(file, hosting)
+function _button_sharing(file)
 {
     var div = document.createElement("DIV");
     	div.id = file.name
 
-	div.transfer = function()
-	{
-	    var transfer = document.createElement("A");
-	    	transfer.onclick = function()
-	    	{
-	    		if(transfer_begin)
-			    	transfer_begin(file);
-		    	return false;
-	    	}
-			transfer.appendChild(document.createTextNode("Transfer"));
-
-		while(div.firstChild)
-			div.removeChild(div.firstChild);
-		div.appendChild(transfer);
-	}
-	
 	div.progressbar = function()
 	{
 		var progress = document.createTextNode("0%")
@@ -46,7 +30,7 @@ function _button(file, hosting)
 			div.removeChild(div.firstChild);
 		div.appendChild(progress);
 	}
-	
+
 	div.open = function(blob)
 	{
 	    var open = document.createElement("A");
@@ -77,10 +61,75 @@ function _button(file, hosting)
     }
     else if(file.blob)
         div.open(file.blob)
-    else if(hosting)
-        div.open(file)
     else
-    	div.transfer()
+        div.open(file)
+
+    return div
+}
+
+function _button_peer(file)
+{
+    var div = document.createElement("DIV");
+        div.id = file.name
+
+    div.transfer = function()
+    {
+        var transfer = document.createElement("A");
+            transfer.onclick = function()
+            {
+                if(transfer_begin)
+                    transfer_begin(file);
+                return false;
+            }
+            transfer.appendChild(document.createTextNode("Transfer"));
+
+        while(div.firstChild)
+            div.removeChild(div.firstChild);
+        div.appendChild(transfer);
+    }
+
+    div.progressbar = function()
+    {
+        var progress = document.createTextNode("0%")
+
+        while(div.firstChild)
+            div.removeChild(div.firstChild);
+        div.appendChild(progress);
+    }
+
+    div.open = function(blob)
+    {
+        console.debug(JSON.stringify(file))
+        var open = document.createElement("A");
+            open.href = window.URL.createObjectURL(blob)
+            open.target = "_blank"
+            open.appendChild(document.createTextNode("Open"));
+
+        while(div.firstChild)
+        {
+            window.URL.revokeObjectURL(div.firstChild.href);
+            div.removeChild(div.firstChild);
+        }
+        div.appendChild(open);
+    }
+
+    // Show if file have been downloaded previously or if we can transfer it
+    if(file.bitmap)
+    {
+        div.progressbar()
+
+        var chunks = file.size/chunksize;
+        if(chunks % 1 != 0)
+            chunks = Math.floor(chunks) + 1;
+
+        var value = chunks - Object.keys(file.bitmap).length
+
+        ui_filedownloading(file.name, value, chunks)
+    }
+    else if(file.blob)
+        div.open(file.blob)
+    else
+        div.transfer()
 
     return div
 }
@@ -99,7 +148,7 @@ function _ui_filetype2className(filetype)
     return "file"
 }
 
-function _ui_row_sharing(file)
+function _ui_row_sharing(file, button_factory)
 {
     var tr = document.createElement('TR');
 
@@ -121,7 +170,7 @@ function _ui_row_sharing(file)
 
     var td = document.createElement('TD');
         td.class = "end"
-        td.appendChild(_button(file, true));
+        td.appendChild(button_factory(file));
     tr.appendChild(td)
 
     return tr
@@ -209,7 +258,7 @@ function _ui_row_sharedpoints(file)
     return tr
 }
 
-function _ui_updatefiles(area, files, row_factory)
+function _ui_updatefiles(area, files, row_factory, button_factory)
 {
     // Remove old table and add new empty one
     while(area.firstChild)
@@ -223,7 +272,7 @@ function _ui_updatefiles(area, files, row_factory)
             if(file.path)
                 path = file.path + '/';
 
-            var tr = row_factory(file)
+            var tr = row_factory(file, button_factory)
 		        tr.id = path + file.name
 		        if(path)
 		            tr.class = "child-of-" + path
@@ -235,7 +284,7 @@ function _ui_updatefiles(area, files, row_factory)
 function ui_update_fileslist_sharing(files)
 {
     var area = document.getElementById('Sharing').getElementsByTagName("tbody")[0]
-    _ui_updatefiles(area, files, _ui_row_sharing)
+    _ui_updatefiles(area, files, _ui_row_sharing, _button_sharing)
 }
 
 function ui_update_fileslist_downloading(files)
@@ -253,7 +302,7 @@ function ui_update_fileslist_sharedpoints(sharedpoints)
 function ui_update_fileslist_peer(uid, fileslist)
 {
     var table = document.getElementById("tabs-"+uid).getElementsByTagName("tbody")[0]
-    _ui_updatefiles(table, fileslist, _ui_row_sharing)
+    _ui_updatefiles(table, fileslist, _ui_row_sharing, _button_peer)
 }
 
 function ui_filedownloading(filename, value, total)
@@ -373,16 +422,23 @@ function ui_ready_connectuser(filler)
 
             var th = document.createElement("TH");
                 th.scope='col'
-                th.abbr='Filename'
+                th.abbr='Type'
                 th.class='nobg'
                 th.appendChild(document.createTextNode("Type"))
             tr.appendChild(th);
 
             var th = document.createElement("TH");
                 th.scope='col'
-                th.abbr='Filename'
+                th.abbr='Size'
                 th.class='nobg'
                 th.appendChild(document.createTextNode("Size"))
+            tr.appendChild(th);
+
+            var th = document.createElement("TH");
+                th.scope='col'
+                th.abbr='Action'
+                th.class='nobg'
+                th.appendChild(document.createTextNode("Action"))
             tr.appendChild(th);
 
             var tbody = document.createElement("TBODY");
@@ -392,7 +448,7 @@ function ui_ready_connectuser(filler)
             tbody.appendChild(tr);
 
             var td = document.createElement("TD");
-                td.colspan='3'
+                td.colspan='4'
                 td.align='center'
                 td.appendChild(document.createTextNode("Waiting for the peer data"))
             tr.appendChild(td);
