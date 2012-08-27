@@ -250,6 +250,12 @@ function ui_update_sharedpoints(sharedpoints)
     _ui_updatefiles(area, sharedpoints, _ui_row_sharedpoints)
 }
 
+function ui_fileslist_update(uid, fileslist)
+{
+    var table = document.getElementById("tabs-"+uid).getElementsByTagName("TABLE")[0]
+    _ui_updatefiles(table, fileslist, _ui_row_sharing)
+}
+
 function ui_filedownloading(filename, value, total)
 {
     var div = $("#" + filename)
@@ -334,13 +340,16 @@ function UI_init()
         else
             submenu.slideUp();
     });
+}
 
+function ui_ready_connectuser(filler)
+{
     $("#ConnectUser").click(function()
-	{
-	    var uid = prompt("UID to connect")
-	    if(uid != null && uid != '')
-	    {
-	        uid = parseInt(uid)
+    {
+        var uid = prompt("UID to connect")
+        if(uid != null && uid != '')
+        {
+            uid = parseInt(uid)
 
             $("#tabs").tabs("add", "#tabs-"+uid, "UID: "+uid);
 
@@ -389,8 +398,10 @@ function UI_init()
                 td.align='center'
                 td.appendChild(document.createTextNode("Waiting for the peer data"))
             tr.appendChild(td);
-	    }
-	})
+
+            filler(uid)
+        }
+    })
 }
 
 function ui_set_uid(sessionid)

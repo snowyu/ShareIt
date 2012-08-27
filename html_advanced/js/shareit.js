@@ -17,6 +17,11 @@ window.addEventListener("load", function()
         // Init host
 	    Host_init(db, function(host)
 	    {
+	        host.fileslist_update = function(socketId, fileslist)
+	        {
+	            ui_fileslist_update(socketId, fileslist)
+	        }
+
 	        // Load websocket connection after IndexedDB is ready
 	        Conn_init('wss://localhost:8001', host,
 	        function(connection)
@@ -34,7 +39,7 @@ window.addEventListener("load", function()
 //                      files_send.push({"name": file.name, "size": file.size,
 //                                       "type": file.type});
 //
-//                  connection.fileslist_update(socketId, files_send);
+//                  connection.fileslist_send(socketId, files_send);
 
                     ui_updatefiles_host(filelist)
 
@@ -64,7 +69,7 @@ window.addEventListener("load", function()
 	                })
                 })
 
-                ui_ready_connectuser(function(uid, table)
+                ui_ready_connectuser(function(uid)
                 {
                     connection.fileslist_request(uid)
                 })
