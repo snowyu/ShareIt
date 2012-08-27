@@ -349,8 +349,6 @@ function ui_ready_connectuser(filler)
         var uid = prompt("UID to connect")
         if(uid != null && uid != '')
         {
-            uid = parseInt(uid)
-
             $("#tabs").tabs("add", "#tabs-"+uid, "UID: "+uid);
 
             var tab = document.getElementById("tabs-"+uid)
