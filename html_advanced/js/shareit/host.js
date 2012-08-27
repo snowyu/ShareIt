@@ -38,6 +38,12 @@ function Host_init(db, onsuccess)
 		db.sharepoints_getAll(null, function(filelist)
 		{
 			for(var i=0, file; file = files[i]; i++)
+			{
+			    // We add here ad-hoc the socketId of the peer where we got the
+			    // file since we currently don't have support for hashes nor
+			    // tracker systems
+                file.socketId = socketId
+
 				for(var j=0, file_hosted; file_hosted = filelist[j]; j++)
 					if(file.name == file_hosted.name)
 					{
@@ -46,7 +52,8 @@ function Host_init(db, onsuccess)
 
 						break;
 					}
-	
+			}
+
 //			ui_update_fileslist_downloading(files)
             ui_update_fileslist_peer(socketId, files)
 		})
@@ -184,6 +191,15 @@ function Host_onconnect(connection, host, db, onsuccess)
 		})
 	}
 
+    // Get the socketId of one of the peers that have the file from its hash.
+    // Since the hash and the tracker system are currently not implemented we'll
+    // get just the socketId of the peer where we got the file that we added
+    // ad-hoc before
+    function getSocketId(file)
+    {
+        return file.socketId
+    }
+
     host._transferbegin = function(file, onsuccess)
     {
         // Calc number of necesary chunks to download
@@ -205,7 +221,8 @@ function Host_onconnect(connection, host, db, onsuccess)
             console.log("Transfer begin: '"+file.name+"' = "+JSON.stringify(file))
 
             // Demand data from the begining of the file
-            connection.transfer_query(socketId, file.name, random_chunk(file.bitmap))
+            connection.transfer_query(getSocketId(file), file.name,
+                                      random_chunk(file.bitmap))
         },
         function(errorCode)
         {
