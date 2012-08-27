@@ -252,7 +252,7 @@ function ui_update_fileslist_sharedpoints(sharedpoints)
 
 function ui_update_fileslist_peer(uid, fileslist)
 {
-    var table = document.getElementById("tabs-"+uid).getElementsByTagName("TABLE")[0]
+    var table = document.getElementById("tabs-"+uid).getElementsByTagName("tbody")[0]
     _ui_updatefiles(table, fileslist, _ui_row_sharing)
 }
 
