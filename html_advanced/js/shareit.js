@@ -71,7 +71,7 @@ window.addEventListener("load", function()
 
                 ui_ready_connectuser(function(uid)
                 {
-                    connection.fileslist_request(uid)
+                    connection.fileslist_query(uid)
                 })
 
                 ui_set_uid(connection.socket.sessionid)

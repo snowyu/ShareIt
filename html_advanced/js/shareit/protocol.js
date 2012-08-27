@@ -8,40 +8,45 @@ function Conn_init(ws_url, host, onconnect, onsuccess, onerror)
 
 			// Files list
 
-            // Files list request
-            connection.fileslist_request = function(socketId)
+            // Files list query
+            connection.fileslist_query = function(socketId)
             {
-                connection.emit('fileslist.request', socketId);
+                connection.emit('fileslist.query', socketId);
             }
+            connection.on('fileslist.query', host.fileslist_query)
+            connection.on('fileslist.query.error', host.fileslist_query_error)
 
             // Files list update
-            connection.on('fileslist.update', function(socketId, data)
+            connection.fileslist_send = function(socketId, fileslist)
             {
-                host.fileslist_update(socketId, JSON.parse(data))
-            })
-            connection.fileslist_update = function(socketId, files_send)
-            {
-                connection.emit('fileslist.update', socketId, JSON.stringify(files_send));
+                connection.emit('fileslist.send', socketId, JSON.stringify(fileslist));
             }
+            connection.on('fileslist.send', function(socketId, fileslist)
+            {
+                host.fileslist_send(socketId, JSON.parse(fileslist))
+            })
+//            connection.on('fileslist.send.error', host.fileslist_send_error)
 
 			// Transfer
 
             // Transfer query
-            connection.on('transfer.query', host.transfer_query)
             connection.transfer_query = function(socketId, filename, chunk)
             {
                 connection.emit('transfer.query', socketId, filename, chunk);
             }
+            connection.on('transfer.query', host.transfer_query)
+//            connection.on('transfer.query.error', host.transfer_query_error)
 
             // Transfer send
-			connection.on('transfer.send', function(socketId, filename, chunk, data)
-			{
-				host.transfer_send(socketId, filename, parseInt(chunk), data)
-			})
             connection.transfer_send = function(socketId, filename, chunk, data)
             {
                 connection.emit('transfer.send', socketId, filename, chunk, data);
             }
+            connection.on('transfer.send', function(socketId, filename, chunk, data)
+            {
+                host.transfer_send(socketId, filename, parseInt(chunk), data)
+            })
+//            connection.on('transfer.send.error', host.transfer_send_error)
 
 			if(onsuccess)
 				onsuccess(connection);

@@ -17,33 +17,39 @@ io.sockets.on('connection', function(socket)
 {
     console.log("Connected socket.id: "+socket.id)
 
-    socket.on('fileslist.request', function(socketId)
+    socket.on('fileslist.query', function(socketId)
     {
         var soc = io.sockets[socketId]
         if(soc)
-            soc.emit('fileslist.request', socket.id);
+            soc.emit('fileslist.query', socket.id);
         else
-            soc.emit('fileslist.request.error', socket.id);
+            socket.emit('fileslist.query.error', socketId);
     });
 
-    socket.on('fileslist.update', function(socketId, data)
+    socket.on('fileslist.send', function(socketId, fileslist)
     {
         var soc = io.sockets[socketId]
-        if(soc != undefined)
-            soc.emit('fileslist.update', socket.id, data);
+        if(soc)
+            soc.emit('fileslist.send', socket.id, fileslist);
+        else
+            socket.emit('fileslist.send.error', socketId);
     });
 
 	socket.on('transfer.query', function(socketId, filename, chunk)
 	{
         var soc = io.sockets[socketId]
-		if(soc != undefined)
+		if(soc)
 			soc.emit('transfer.query', socket.id, filename, chunk);
+        else
+            socket.emit('transfer.query.error', socketId);
 	});
 
 	socket.on('transfer.send', function(socketId, filename, chunk, data)
 	{
         var soc = io.sockets[socketId]
-		if(soc != undefined)
+		if(soc)
 			soc.emit('transfer.send', socket.id, filename, chunk, data);
+        else
+            socket.emit('transfer.send.error', socketId);
 	});
 })
