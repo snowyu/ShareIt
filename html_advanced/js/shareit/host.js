@@ -31,7 +31,7 @@ function Host_init(db, onsuccess)
 
 	// Peer
 
-	host.fileslist_send = function(socketId, files)
+    host.fileslist_send = function(socketId, files)
 	{
 		// Check if we have already any of the files
 		// It's stupid to try to download it... and also give errors
@@ -59,6 +59,14 @@ function Host_init(db, onsuccess)
 function Host_onconnect(connection, host, db, onsuccess)
 {
 	// Host
+
+    host.fileslist_query = function(socketId)
+    {
+        db.sharepoints_getAll(null, function(fileslist)
+        {
+            connection.emit('fileslist.send', socketId, fileslist)
+        })
+    }
 
 	// Filereader support (be able to host files from the filesystem)
 	if(typeof FileReader == "undefined")
