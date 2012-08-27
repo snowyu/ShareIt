@@ -168,6 +168,7 @@ function _ui_row_sharing(file, button_factory)
 
     // Size
     var td = document.createElement('TD');
+        td.className="filesize"
         td.appendChild(document.createTextNode(humanize.filesize(file.size)));
     tr.appendChild(td)
 
@@ -200,11 +201,13 @@ function _ui_row_downloading(file)
 
     // Downloaded
     var td = document.createElement('TD');
+        td.className="filesize"
         td.appendChild(document.createTextNode(humanize.filesize(0)));
     tr.appendChild(td)
 
     // Size
     var td = document.createElement('TD');
+        td.className="filesize"
         td.appendChild(document.createTextNode(humanize.filesize(file.size)));
     tr.appendChild(td)
 
@@ -225,6 +228,7 @@ function _ui_row_downloading(file)
 
     // Speed
     var td = document.createElement('TD');
+        td.className="filesize"
         td.appendChild(document.createTextNode(humanize.filesize(0)+"/s"));
     tr.appendChild(td)
 
@@ -257,6 +261,7 @@ function _ui_row_sharedpoints(file)
 
     // Shared size
     var td = document.createElement('TD');
+        td.className="filesize"
         td.appendChild(document.createTextNode(humanize.filesize(0)));
     tr.appendChild(td)
 
@@ -323,12 +328,7 @@ function ui_update_fileslist_peer(uid, fileslist)
 
 function ui_filedownloading(filename, value, total)
 {
-    var div = $("#" + filename)
-
-    if(total != undefined)
-        div.total = total;
-
-	div.html(Math.floor(value/div.total * 100) + '%');
+    $("#"+filename).html(Math.floor(value/total * 100) + '%');
 }
 
 function ui_filedownloaded(file)

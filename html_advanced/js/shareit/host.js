@@ -167,7 +167,7 @@ function Host_onconnect(connection, host, db, onsuccess)
 				if(chunks % 1 != 0)
 					chunks = Math.floor(chunks) + 1;
 
-			    ui_filedownloading(file.name, chunks - pending_chunks);
+			    ui_filedownloading(file.name, chunks - pending_chunks, chunks);
 
 			    // Demand more data from one of the pending chunks
 		        db.sharepoints_put(file, function()
