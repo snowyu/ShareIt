@@ -22,9 +22,12 @@ function _button_sharing(file)
     var div = document.createElement("DIV");
     	div.id = file.name
 
-	div.progressbar = function()
+	div.progressbar = function(value)
 	{
-		var progress = document.createTextNode("0%")
+	    if(value == undefined)
+	       value = 0;
+
+		var progress = document.createTextNode(Math.floor(value*100)+"%")
 
 		while(div.firstChild)
 			div.removeChild(div.firstChild);
@@ -49,20 +52,34 @@ function _button_sharing(file)
     // Show if file have been downloaded previously or if we can transfer it
     if(file.bitmap)
     {
-        div.progressbar()
-
 		var chunks = file.size/chunksize;
 		if(chunks % 1 != 0)
 			chunks = Math.floor(chunks) + 1;
 
 		var value = chunks - Object.keys(file.bitmap).length
 
-		ui_filedownloading(file.name, value, chunks)
+        div.progressbar(value/chunks)
     }
     else if(file.blob)
         div.open(file.blob)
     else
         div.open(file)
+
+    host.addEventListener("transfer.begin", function(f)
+    {
+        if(file.name == f.name)
+            div.progressbar()
+    })
+    host.addEventListener("transfer.update", function(f, value)
+    {
+        if(file.name == f.name)
+            div.progressbar(value)
+    })
+    host.addEventListener("transfer.end", function(f)
+    {
+        if(file.name == f.name)
+            div.open(f.blob)
+    })
 
     return div
 }
@@ -116,20 +133,34 @@ function _button_peer(file)
     // Show if file have been downloaded previously or if we can transfer it
     if(file.bitmap)
     {
-        div.progressbar()
-
         var chunks = file.size/chunksize;
         if(chunks % 1 != 0)
             chunks = Math.floor(chunks) + 1;
 
         var value = chunks - Object.keys(file.bitmap).length
 
-        ui_filedownloading(file.name, value, chunks)
+        div.progressbar(value/chunks)
     }
     else if(file.blob)
         div.open(file.blob)
     else
         div.transfer()
+
+    host.addEventListener("transfer.begin", function(f)
+    {
+        if(file.name == f.name)
+            div.progressbar()
+    })
+    host.addEventListener("transfer.update", function(f, value)
+    {
+        if(file.name == f.name)
+            div.progressbar(value)
+    })
+    host.addEventListener("transfer.end", function(f)
+    {
+        if(file.name == f.name)
+            div.open(f.blob)
+    })
 
     return div
 }
@@ -324,18 +355,6 @@ function ui_update_fileslist_peer(uid, fileslist)
 {
     var table = document.getElementById("tabs-"+uid).getElementsByTagName("tbody")[0]
     _ui_updatefiles(table, fileslist, _ui_row_sharing, _button_peer)
-}
-
-function ui_filedownloading(filename, value, total)
-{
-    $("#"+filename).html(Math.floor(value/total * 100) + '%');
-}
-
-function ui_filedownloaded(file)
-{
-	document.getElementById(file.name).open(file.blob);
-
-	console.log("Transfer of "+file.name+" finished!");
 }
 
 function UI_init()

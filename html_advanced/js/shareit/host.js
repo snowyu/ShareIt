@@ -192,9 +192,9 @@ function Host_onconnect(connection, host, db, onsuccess)
 	        var padding = start-head.size
 	        if(padding < 0)
 	        	padding = 0;
-//	        console.debug("chunk: "+chunk+", head.size: "+head.size+", padding: "+padding)
-		    file.blob = new Blob([head, ArrayBuffer(padding), byteArray.buffer, blob.slice(stop)],
-		    					 {"type": blob.type})
+		    file.blob = new Blob([head, ArrayBuffer(padding),
+		                          byteArray.buffer, blob.slice(stop)],
+		                         {"type": blob.type})
 
 			var pending_chunks = Object.keys(file.bitmap).length
 			if(pending_chunks)
@@ -203,12 +203,14 @@ function Host_onconnect(connection, host, db, onsuccess)
 				if(chunks % 1 != 0)
 					chunks = Math.floor(chunks) + 1;
 
-			    ui_filedownloading(file.name, chunks - pending_chunks, chunks);
+                host.dispatchEvent("transfer.update", file,
+                                   1 - pending_chunks/chunks)
 
 			    // Demand more data from one of the pending chunks
 		        db.sharepoints_put(file, function()
 		        {
-				    connection.transfer_query(socketId, file.name, random_chunk(file.bitmap));
+				    connection.transfer_query(socketId, file.name,
+				                              random_chunk(file.bitmap));
 				})
 			}
 			else
@@ -221,7 +223,8 @@ function Host_onconnect(connection, host, db, onsuccess)
 				    // Auto-save downloaded file
 				    _savetodisk(file)
 
-				    ui_filedownloaded(file);
+                    host.dispatchEvent("transfer.end", file)
+                    console.log("Transfer of "+file.name+" finished!");
 		        })
 			}
 		})
@@ -236,7 +239,7 @@ function Host_onconnect(connection, host, db, onsuccess)
         return file.socketId
     }
 
-    host._transferbegin = function(file, onsuccess)
+    host._transferbegin = function(file)
     {
         // Calc number of necesary chunks to download
         var chunks = file.size/chunksize;
@@ -251,9 +254,7 @@ function Host_onconnect(connection, host, db, onsuccess)
         db.sharepoints_add(file,
         function()
         {
-            if(onsuccess)
-                onsuccess(chunks);
-
+            host.dispatchEvent("transfer.begin", file)
             console.log("Transfer begin: '"+file.name+"' = "+JSON.stringify(file))
 
             // Demand data from the begining of the file
