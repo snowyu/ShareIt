@@ -17,16 +17,21 @@ io.sockets.on('connection', function(socket)
 {
     console.log("Connected socket.id: "+socket.id)
 
-    socket.on('fileslist.query', function(socketId)
+    socket._on = function(event, socketId)
     {
         var soc = io.sockets.sockets[socketId]
         if(soc)
-            soc.emit('fileslist.query', socket.id);
+            soc.emit(event, socket.id);
         else
         {
-            socket.emit('fileslist.query.error', socketId);
-            console.warn('fileslist.query: '+socket.id+' -> '+socketId);
+            socket.emit(event+'.error', socketId);
+            console.warn(event+': '+socket.id+' -> '+socketId);
         }
+    });
+
+    socket.on('fileslist.query', function(socketId)
+    {
+        socket._on('fileslist.query', socketId);
     });
 
     socket.on('fileslist.send', function(socketId, fileslist)
