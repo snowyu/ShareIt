@@ -29,6 +29,42 @@ function Host_init(db, onsuccess)
 {
 	var host = {}
 
+    // EventTarget interface
+    host._events = {};
+
+    host.addEventListener = function(type, listener)
+    {
+      host._events[type] = host._events[type] || [];
+      host._events[type].push(listener);
+    };
+
+    host.dispatchEvent = function(event)
+    {
+      if(typeof event == "string")
+        event = document.createEvent('Event').initEvent(event, true, true)
+
+      var events = host._events[event.type];
+      if(!events)
+        return;
+
+      var args = Array.prototype.slice.call(arguments, 1);
+
+      for(var i = 0, len = events.length; i < len; i++)
+        events[i].apply(null, args);
+    };
+
+    host.removeEventListener = function(type, listener)
+    {
+      var events = host._events[type];
+      if(!events)
+        return;
+
+      events.splice(events.indexOf(listener), 1)
+
+      if(!events.length)
+        delete host._events[type]
+    };
+
 	// Peer
 
     host.fileslist_send = function(socketId, files)
