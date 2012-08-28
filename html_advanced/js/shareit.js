@@ -17,6 +17,8 @@ window.addEventListener("load", function()
         // Init host
 	    Host_init(db, function(host)
 	    {
+            var ui = UI_setHost(host)
+
 	        // Load websocket connection after IndexedDB is ready
 	        Conn_init('wss://localhost:8001', host,
 	        function(connection)
@@ -28,7 +30,7 @@ window.addEventListener("load", function()
 	        {
                 db.sharepoints_getAll(null, function(filelist)
                 {
-                    ui_update_fileslist_sharing(filelist)
+                    ui.update_fileslist_sharing(filelist)
 
 //                    // Restard downloads
 //                    for(var i = 0, file; file = filelist[i]; i++)

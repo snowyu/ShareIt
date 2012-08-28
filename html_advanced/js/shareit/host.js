@@ -90,8 +90,7 @@ function Host_init(db, onsuccess)
 					}
 			}
 
-//			ui_update_fileslist_downloading(files)
-            ui_update_fileslist_peer(socketId, files)
+            host.dispatchEvent("fileslist_peer.update", socketId, files)
 		})
 	}
 
