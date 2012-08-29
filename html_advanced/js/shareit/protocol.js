@@ -1,8 +1,8 @@
 function Conn_init(ws_url, host, onconnect, onsuccess, onerror)
 {
-    var socket = io.connect(ws_url)
-//    var socket = new WebSocket(ws_url)
+    var socket = io.connect(ws_url, {secure: true})
         socket.on('connect', function()
+//    var socket = new WebSocket(ws_url)
 //        socket.onopen = function()
         {
 	        socket.emit = function()
