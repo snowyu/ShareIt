@@ -38,12 +38,9 @@ function Host_init(db, onsuccess)
       host._events[type].push(listener);
     };
 
-    host.dispatchEvent = function(event)
+    host.dispatchEvent = function(type)
     {
-      if(typeof event == "string")
-        event = document.createEvent('Event').initEvent(event, true, true)
-
-      var events = host._events[event.type];
+      var events = host._events[type];
       if(!events)
         return;
 

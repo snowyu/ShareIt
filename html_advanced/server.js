@@ -27,7 +27,7 @@ io.sockets.on('connection', function(socket)
             socket.emit(event+'.error', socketId);
             console.warn(event+': '+socket.id+' -> '+socketId);
         }
-    });
+    }
 
     socket.on('fileslist.query', function(socketId)
     {
