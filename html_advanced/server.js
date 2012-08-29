@@ -22,10 +22,10 @@ io.sockets.on('connection', function(socket)
         var soc = io.sockets.sockets[socketId]
         if(soc)
         {
-            var args = Array.prototype.slice.call(arguments, 1);
+            var args = Array.prototype.slice.call(arguments, 0);
             args[1] = socket.id
 
-            soc.emit.apply(null, args);
+            soc.emit.apply(soc, args);
         }
         else
         {
@@ -41,37 +41,16 @@ io.sockets.on('connection', function(socket)
 
     socket.on('fileslist.send', function(socketId, fileslist)
     {
-        var soc = io.sockets.sockets[socketId]
-        if(soc)
-            soc.emit('fileslist.send', socket.id, fileslist);
-        else
-        {
-            socket.emit('fileslist.send.error', socketId);
-            console.warn('fileslist.send: '+socket.id+' -> '+socketId);
-        }
+        socket._fire('fileslist.send', socketId, fileslist);
     });
 
 	socket.on('transfer.query', function(socketId, filename, chunk)
 	{
-        var soc = io.sockets.sockets[socketId]
-		if(soc)
-			soc.emit('transfer.query', socket.id, filename, chunk);
-        else
-        {
-            socket.emit('transfer.query.error', socketId);
-            console.warn('transfer.query: '+socket.id+' -> '+socketId);
-        }
+        socket._fire('transfer.query', socketId, filename, chunk);
 	});
 
 	socket.on('transfer.send', function(socketId, filename, chunk, data)
 	{
-        var soc = io.sockets.sockets[socketId]
-		if(soc)
-			soc.emit('transfer.send', socket.id, filename, chunk, data);
-        else
-        {
-            socket.emit('transfer.send.error', socketId);
-            console.warn('transfer.send: '+socket.id+' -> '+socketId);
-        }
+        socket._fire('transfer.send', socketId, filename, chunk, data);
 	});
 })
