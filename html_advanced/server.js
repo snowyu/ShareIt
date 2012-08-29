@@ -39,7 +39,7 @@ io.sockets.on('connection', function(socket)
     socket.on('message', function(message)
 //    socket.onmessage = function(message)
     {
-        console.log("socket.onmessage = "+message)
+        console.log("socket.onmessage = '"+message+"'")
         var args = JSON.parse(message)
 
         var eventName = args[0]
@@ -60,8 +60,8 @@ io.sockets.on('connection', function(socket)
         }
     })
 
-    socket.emit('sessionId', socket.id)
-    console.log("Connected socket.id: "+socket.id)
+//    socket.emit('sessionId', socket.id)
+//    console.log("Connected socket.id: "+socket.id)
 })
 
 // generate a 4 digit hex code randomly

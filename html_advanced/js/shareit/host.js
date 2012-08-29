@@ -175,7 +175,7 @@ function Host_onconnect(connection, host, db, onsuccess)
 
 	host.transfer_send = function(socketId, filename, chunk, data)
 	{
-	   chunk = parseInt(chunk)
+	    chunk = parseInt(chunk)
 
 		db.sharepoints_get(filename, function(file)
 		{
