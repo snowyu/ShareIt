@@ -14,6 +14,17 @@ window.addEventListener("load", function()
             // [To-Do] Start hashing new files on the shared points
         })
 
+        ui_ready_fileschange(function(sharedpoints)
+        {
+            // Loop through the FileList and add sharedpoints to list.
+            for(var i = 0, sp; sp = sharedpoints[i]; i++)
+                db.sharepoints_add(sp)
+
+            // [To-Do] Start hashing of files in a new worker
+
+            db.sharepoints_getAll(null, ui_update_fileslist_sharedpoints)
+        })
+
         // Init host
 	    Host_init(db, function(host)
 	    {
@@ -37,17 +48,6 @@ window.addEventListener("load", function()
 //                        if(file.bitmap)
 //                            connection.transfer_query(file.name,
 //                                                      random_chunk(file.bitmap))
-                })
-
-                ui_ready_fileschange(function(sharedpoints)
-                {
-	                // Loop through the FileList and add sharedpoints to list.
-	                for(var i = 0, sp; sp = sharedpoints[i]; i++)
-		                db.sharepoints_add(sp)
-
-	                // [To-Do] Start hashing of files in a new worker
-
-	                db.sharepoints_getAll(null, ui_update_fileslist_sharedpoints)
                 })
 
                 ui_ready_connectuser(function(uid)
