@@ -3,6 +3,17 @@ function Conn_init(ws_url, host, onconnect, onsuccess, onerror)
 	var socket = io.connect(ws_url, {secure: true})
 		socket.on('connect', function()
 		{
+            socket.emit = function()
+            {
+                var args = Array.prototype.slice.call(arguments, 0);
+
+                socket.send(JSON.stringify(args), function(error)
+                {
+                    if(error)
+                        console.warning(error);
+                });
+            }
+
 			if(onconnect)
 				onconnect(socket);
 

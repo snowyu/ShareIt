@@ -17,12 +17,20 @@ io.sockets.on('connection', function(socket)
 {
     console.log("Connected socket.id: "+socket.id)
 
-    socket._fire = function(eventName, socketId)
+    // Message received
+    socket.on('message', function(message)
+//    socket.onmessage = function(message)
     {
+        console.log("socket.onmessage = '"+message+"'")
+        var args = JSON.parse(message)
+
+        var eventName = args[0]
+        var socketId  = args[1]
+
         var soc = io.sockets.sockets[socketId]
+//        var soc = wss.sockets[socketId]
         if(soc)
         {
-            var args = Array.prototype.slice.call(arguments, 0);
             args[1] = socket.id
 
             soc.emit.apply(soc, args);
@@ -32,25 +40,5 @@ io.sockets.on('connection', function(socket)
             socket.emit(eventName+'.error', socketId);
             console.warn(eventName+': '+socket.id+' -> '+socketId);
         }
-    }
-
-    socket.on('fileslist.query', function(socketId)
-    {
-        socket._fire('fileslist.query', socketId);
-    });
-
-    socket.on('fileslist.send', function(socketId, fileslist)
-    {
-        socket._fire('fileslist.send', socketId, fileslist);
-    });
-
-	socket.on('transfer.query', function(socketId, filename, chunk)
-	{
-        socket._fire('transfer.query', socketId, filename, chunk);
-	});
-
-	socket.on('transfer.send', function(socketId, filename, chunk, data)
-	{
-        socket._fire('transfer.send', socketId, filename, chunk, data);
-	});
+    })
 })
