@@ -13,6 +13,11 @@ function ui_ready_fileschange(func)
 
 function UI_setHost(host)
 {
+	host.set_uid = function(uid)
+	{
+	    document.getElementById("UID").appendChild(document.createTextNode("UID: "+uid))
+	}
+
 	function _button_sharing(file)
 	{
 	    var div = document.createElement("DIV");
@@ -491,9 +496,4 @@ function ui_ready_connectuser(filler)
             filler(uid)
         }
     })
-}
-
-function ui_set_uid(sessionid)
-{
-    document.getElementById("UID").appendChild(document.createTextNode("UID: "+sessionid))
 }

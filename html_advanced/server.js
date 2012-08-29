@@ -10,19 +10,45 @@ var server = require('https').createServer(options)
 	server.listen(8001);
 
 // P2P Stuff
-var io = require('socket.io').listen(server, options)
+//var WebSocketServer = require('ws').Server
+//var wss = new WebSocketServer({server: server})
+var io = require('socket.io').listen(server);
+//var wss = {}
 
-io.set('log level', 1);
+////Array to store connections
+//wss.sockets = {}
+
 io.sockets.on('connection', function(socket)
+//wss.on('connection', function(socket)
 {
-    console.log("Connected socket.id: "+socket.id)
+//    socket.id = id()
+//    wss.sockets[socket.id] = socket
 
-    socket._fire = function(eventName, socketId)
+    socket.emit = function()
     {
+        var args = Array.prototype.slice.call(arguments, 0);
+
+        socket.send(JSON.stringify(args), function(error)
+        {
+            if(error)
+                console.log(error);
+        });
+    }
+
+    // Message received
+    socket.on('message', function(event)
+//    socket.onmessage = function(event)
+    {
+        console.log("socket.onmessage = "+event.data)
+        var args = JSON.parse(event.data)
+
+        var eventName = args[0]
+        var socketId  = args[1]
+
         var soc = io.sockets.sockets[socketId]
+//        var soc = wss.sockets[socketId]
         if(soc)
         {
-            var args = Array.prototype.slice.call(arguments, 0);
             args[1] = socket.id
 
             soc.emit.apply(soc, args);
@@ -32,25 +58,18 @@ io.sockets.on('connection', function(socket)
             socket.emit(eventName+'.error', socketId);
             console.warn(eventName+': '+socket.id+' -> '+socketId);
         }
-    }
+    })
 
-    socket.on('fileslist.query', function(socketId)
-    {
-        socket._fire('fileslist.query', socketId);
-    });
-
-    socket.on('fileslist.send', function(socketId, fileslist)
-    {
-        socket._fire('fileslist.send', socketId, fileslist);
-    });
-
-	socket.on('transfer.query', function(socketId, filename, chunk)
-	{
-        socket._fire('transfer.query', socketId, filename, chunk);
-	});
-
-	socket.on('transfer.send', function(socketId, filename, chunk, data)
-	{
-        socket._fire('transfer.send', socketId, filename, chunk, data);
-	});
+    socket.emit('sessionId', socket.id)
+    console.log("Connected socket.id: "+socket.id)
 })
+
+// generate a 4 digit hex code randomly
+function S4() {
+  return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+}
+
+// make a REALLY COMPLICATED AND RANDOM id, kudos to dennis
+function id() {
+  return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
+}
