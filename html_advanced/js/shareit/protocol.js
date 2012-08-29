@@ -30,12 +30,9 @@ function Conn_init(ws_url, host, onconnect, onsuccess, onerror)
             // Files list update
             socket.fileslist_send = function(socketId, fileslist)
             {
-                socket.emit('fileslist.send', socketId, JSON.stringify(fileslist));
+                socket.emit('fileslist.send', socketId, fileslist);
             }
-            socket.on('fileslist.send', function(socketId, fileslist)
-            {
-                host.fileslist_send(socketId, JSON.parse(fileslist))
-            })
+            socket.on('fileslist.send', host.fileslist_send)
 //            socket.on('fileslist.send.error', host.fileslist_send_error)
 
 			// Transfer
@@ -53,10 +50,7 @@ function Conn_init(ws_url, host, onconnect, onsuccess, onerror)
             {
                 socket.emit('transfer.send', socketId, filename, chunk, data);
             }
-            socket.on('transfer.send', function(socketId, filename, chunk, data)
-            {
-                host.transfer_send(socketId, filename, parseInt(chunk), data)
-            })
+            socket.on('transfer.send', host.transfer_send)
 //            socket.on('transfer.send.error', host.transfer_send_error)
 
 			if(onsuccess)
