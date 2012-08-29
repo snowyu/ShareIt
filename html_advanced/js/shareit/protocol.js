@@ -56,7 +56,7 @@ function Conn_init(ws_url, host, onconnect, onsuccess, onerror)
 	                case 'fileslist.query.error':
 	                    host.fileslist_query_error.apply(host, args)
                         break
-	    
+
 	                // Files list update
 	                case 'fileslist.send':
 	                    host.fileslist_send.apply(host, args)
@@ -65,7 +65,7 @@ function Conn_init(ws_url, host, onconnect, onsuccess, onerror)
 	    //            case 'fileslist.send.error':
 	    //                host.fileslist_send_error.apply(host, args)
         //                break
-	    
+
 	                // Transfer query
 	                case 'transfer.query':
 	                    host.transfer_query.apply(host, args)
@@ -74,7 +74,7 @@ function Conn_init(ws_url, host, onconnect, onsuccess, onerror)
 	    //            case 'transfer.query.error':
 	    //                host.transfer_query_error.apply(host, args)
         //                break
-	    
+
 	                // Transfer send
 	                case 'transfer.send':
 	                    host.transfer_send.apply(host, args)
