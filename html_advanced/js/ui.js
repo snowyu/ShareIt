@@ -11,12 +11,6 @@ function ui_ready_fileschange(func)
     }, false);
 }
 
-var transfer_begin
-function ui_ready_transferbegin(func)
-{
-	transfer_begin = func
-}
-
 function UI_setHost(host)
 {
 	function _button_sharing(file)
@@ -96,8 +90,7 @@ function UI_setHost(host)
 	        var transfer = document.createElement("A");
 	            transfer.onclick = function()
 	            {
-	                if(transfer_begin)
-	                    transfer_begin(file);
+	                host._transferbegin(file);
 	                return false;
 	            }
 	            transfer.appendChild(document.createTextNode("Transfer"));

@@ -50,8 +50,6 @@ window.addEventListener("load", function()
 	                db.sharepoints_getAll(null, ui_update_fileslist_sharedpoints)
                 })
 
-                ui_ready_transferbegin(host._transferbegin)
-
                 ui_ready_connectuser(function(uid)
                 {
                     connection.fileslist_query(uid)
