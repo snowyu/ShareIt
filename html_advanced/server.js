@@ -36,11 +36,11 @@ io.sockets.on('connection', function(socket)
     }
 
     // Message received
-    socket.on('message', function(event)
-//    socket.onmessage = function(event)
+    socket.on('message', function(message)
+//    socket.onmessage = function(message)
     {
-        console.log("socket.onmessage = "+event.data)
-        var args = JSON.parse(event.data)
+        console.log("socket.onmessage = "+message)
+        var args = JSON.parse(message)
 
         var eventName = args[0]
         var socketId  = args[1]
