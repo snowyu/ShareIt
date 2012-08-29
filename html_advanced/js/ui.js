@@ -13,10 +13,10 @@ function ui_ready_fileschange(func)
 
 function UI_setHost(host)
 {
-	host.set_uid = function(uid)
-	{
-	    document.getElementById("UID").appendChild(document.createTextNode("UID: "+uid))
-	}
+//	host.set_uid = function(uid)
+//	{
+//	    document.getElementById("UID").appendChild(document.createTextNode("UID: "+uid))
+//	}
 
 	function _button_sharing(file)
 	{

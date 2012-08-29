@@ -39,19 +39,6 @@ function Conn_init(ws_url, host, onconnect, onsuccess, onerror)
             if(onconnect)
                 onconnect(socket);
 
-            // Transfer
-            socket.transfer_query = function(socketId, filename, chunk)
-            {
-                socket.emit('transfer.query', socketId, filename, chunk);
-            }
-            socket.transfer_send = function(socketId, filename, chunk, data)
-            {
-                socket.emit('transfer.send', socketId, filename, chunk, data);
-            }
-
-            if(onconnect)
-                onconnect(socket);
-
 		    // Message received
 		    socket.on('message', function(message)
 		    {
