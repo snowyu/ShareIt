@@ -32,12 +32,12 @@ window.addEventListener("load", function()
 
 	        // Load websocket connection after IndexedDB is ready
 	        Conn_init('wss://localhost:8001', host,
-	        function(connection)
+	        function(socket)
 	        {
                 // Add connection methods to host
-	            Host_onconnect(connection, host, db)
+	            Host_onconnect(socket, host, db)
 	        },
-	        function(connection)
+	        function(socket)
 	        {
                 db.sharepoints_getAll(null, function(filelist)
                 {
@@ -46,16 +46,16 @@ window.addEventListener("load", function()
 //                    // Restard downloads
 //                    for(var i = 0, file; file = filelist[i]; i++)
 //                        if(file.bitmap)
-//                            connection.transfer_query(file.name,
-//                                                      getRandom(file.bitmap))
+//                            socket.transfer_query(file.name,
+//                                                  getRandom(file.bitmap))
                 })
 
                 ui_ready_connectuser(function(uid)
                 {
-                    connection.fileslist_query(uid)
+                    socket.fileslist_query(uid)
                 })
 
-                ui_set_uid(connection.socket.sessionid)
+                ui_set_uid(socket.socket.sessionid)
 	        },
 	        function(type)
 	        {

@@ -1,54 +1,54 @@
 function Conn_init(ws_url, host, onconnect, onsuccess, onerror)
 {
-	var connection = io.connect(ws_url, {secure: true})
-		connection.on('connect', function()
+	var socket = io.connect(ws_url, {secure: true})
+		socket.on('connect', function()
 		{
 			if(onconnect)
-				onconnect(connection);
+				onconnect(socket);
 
 			// Files list
 
             // Files list query
-            connection.fileslist_query = function(socketId)
+            socket.fileslist_query = function(socketId)
             {
-                connection.emit('fileslist.query', socketId);
+                socket.emit('fileslist.query', socketId);
             }
-            connection.on('fileslist.query', host.fileslist_query)
-            connection.on('fileslist.query.error', host.fileslist_query_error)
+            socket.on('fileslist.query', host.fileslist_query)
+            socket.on('fileslist.query.error', host.fileslist_query_error)
 
             // Files list update
-            connection.fileslist_send = function(socketId, fileslist)
+            socket.fileslist_send = function(socketId, fileslist)
             {
-                connection.emit('fileslist.send', socketId, JSON.stringify(fileslist));
+                socket.emit('fileslist.send', socketId, JSON.stringify(fileslist));
             }
-            connection.on('fileslist.send', function(socketId, fileslist)
+            socket.on('fileslist.send', function(socketId, fileslist)
             {
                 host.fileslist_send(socketId, JSON.parse(fileslist))
             })
-//            connection.on('fileslist.send.error', host.fileslist_send_error)
+//            socket.on('fileslist.send.error', host.fileslist_send_error)
 
 			// Transfer
 
             // Transfer query
-            connection.transfer_query = function(socketId, filename, chunk)
+            socket.transfer_query = function(socketId, filename, chunk)
             {
-                connection.emit('transfer.query', socketId, filename, chunk);
+                socket.emit('transfer.query', socketId, filename, chunk);
             }
-            connection.on('transfer.query', host.transfer_query)
-//            connection.on('transfer.query.error', host.transfer_query_error)
+            socket.on('transfer.query', host.transfer_query)
+//            socket.on('transfer.query.error', host.transfer_query_error)
 
             // Transfer send
-            connection.transfer_send = function(socketId, filename, chunk, data)
+            socket.transfer_send = function(socketId, filename, chunk, data)
             {
-                connection.emit('transfer.send', socketId, filename, chunk, data);
+                socket.emit('transfer.send', socketId, filename, chunk, data);
             }
-            connection.on('transfer.send', function(socketId, filename, chunk, data)
+            socket.on('transfer.send', function(socketId, filename, chunk, data)
             {
                 host.transfer_send(socketId, filename, parseInt(chunk), data)
             })
-//            connection.on('transfer.send.error', host.transfer_send_error)
+//            socket.on('transfer.send.error', host.transfer_send_error)
 
 			if(onsuccess)
-				onsuccess(connection);
+				onsuccess(socket);
 		})
 }
