@@ -47,7 +47,7 @@ window.addEventListener("load", function()
 //                    for(var i = 0, file; file = filelist[i]; i++)
 //                        if(file.bitmap)
 //                            connection.transfer_query(file.name,
-//                                                      random_chunk(file.bitmap))
+//                                                      getRandom(file.bitmap))
                 })
 
                 ui_ready_connectuser(function(uid)

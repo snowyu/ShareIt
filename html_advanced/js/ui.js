@@ -52,7 +52,7 @@ function UI_setHost(host)
 			if(chunks % 1 != 0)
 				chunks = Math.floor(chunks) + 1;
 
-			var value = chunks - Object.keys(file.bitmap).length
+			var value = chunks - file.bitmap.length
 
 	        div.progressbar(value/chunks)
 	    }
@@ -132,7 +132,7 @@ function UI_setHost(host)
 	        if(chunks % 1 != 0)
 	            chunks = Math.floor(chunks) + 1;
 
-	        var value = chunks - Object.keys(file.bitmap).length
+	        var value = chunks - file.bitmap.length
 
 	        div.progressbar(value/chunks)
 	    }
