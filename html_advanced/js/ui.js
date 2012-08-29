@@ -493,7 +493,11 @@ function ui_ready_connectuser(filler)
     })
 }
 
-function ui_set_uid(sessionid)
+function ui_set_uid(uid)
 {
-    document.getElementById("UID").appendChild(document.createTextNode("UID: "+sessionid))
+    var span = document.getElementById("UID")
+
+    while(span.firstChild)
+        span.removeChild(span.firstChild);
+    span.appendChild(document.createTextNode("UID: "+uid))
 }
