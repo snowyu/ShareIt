@@ -50,12 +50,7 @@ window.addEventListener("load", function()
 //                                                  getRandom(file.bitmap))
                 })
 
-                ui_ready_connectuser(function(uid)
-                {
-                    socket.fileslist_query(uid)
-                })
-
-                ui_set_uid(socket.socket.sessionid)
+                UI_setSocket(socket)
 	        },
 	        function(type)
 	        {

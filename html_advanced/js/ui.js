@@ -426,7 +426,7 @@ function UI_init()
     });
 }
 
-function ui_ready_connectuser(filler)
+function UI_setSocket(socket)
 {
     $("#ConnectUser").click(function()
     {
@@ -488,16 +488,14 @@ function ui_ready_connectuser(filler)
                 td.appendChild(document.createTextNode("Waiting for the peer data"))
             tr.appendChild(td);
 
-            filler(uid)
+            socket.fileslist_query(uid)
         }
     })
-}
 
-function ui_set_uid(uid)
-{
+    // Set UID
     var span = document.getElementById("UID")
 
     while(span.firstChild)
         span.removeChild(span.firstChild);
-    span.appendChild(document.createTextNode("UID: "+uid))
+    span.appendChild(document.createTextNode("UID: "+socket.socket.sessionid))
 }

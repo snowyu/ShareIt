@@ -14,9 +14,6 @@ function Conn_init(ws_url, host, onconnect, onsuccess, onerror)
                 });
             }
 
-			if(onconnect)
-				onconnect(socket);
-
 			// Files list
             socket.fileslist_query = function(socketId)
             {
@@ -37,21 +34,56 @@ function Conn_init(ws_url, host, onconnect, onsuccess, onerror)
                 socket.emit('transfer.send', socketId, filename, chunk, data);
             }
 
-            // Files list query
-            socket.on('fileslist.query', host.fileslist_query)
-            socket.on('fileslist.query.error', host.fileslist_query_error)
+            if(onconnect)
+                onconnect(socket);
 
-            // Files list update
-            socket.on('fileslist.send', host.fileslist_send)
-//            socket.on('fileslist.send.error', host.fileslist_send_error)
+		    // Message received
+		    socket.on('message', function(message)
+		    {
+		        console.log("socket.onmessage = '"+message+"'")
+		        var args = JSON.parse(message)
 
-            // Transfer query
-            socket.on('transfer.query', host.transfer_query)
-//            socket.on('transfer.query.error', host.transfer_query_error)
+		        var eventName = args[0]
+		        var args = args.slice(1)
 
-            // Transfer send
-            socket.on('transfer.send', host.transfer_send)
-//            socket.on('transfer.send.error', host.transfer_send_error)
+                switch(eventName)
+                {
+	                // Files list query
+	                case 'fileslist.query':
+	                    host.fileslist_query.apply(host, args)
+	                    break
+
+	                case 'fileslist.query.error':
+	                    host.fileslist_query_error.apply(host, args)
+                        break
+	    
+	                // Files list update
+	                case 'fileslist.send':
+	                    host.fileslist_send.apply(host, args)
+                        break
+
+	    //            case 'fileslist.send.error':
+	    //                host.fileslist_send_error.apply(host, args)
+        //                break
+	    
+	                // Transfer query
+	                case 'transfer.query':
+	                    host.transfer_query.apply(host, args)
+                        break
+
+	    //            case 'transfer.query.error':
+	    //                host.transfer_query_error.apply(host, args)
+        //                break
+	    
+	                // Transfer send
+	                case 'transfer.send':
+	                    host.transfer_send.apply(host, args)
+                        break
+	    //            case 'transfer.send.error':
+	    //                host.transfer_send_error.apply(host, args)
+        //                break
+                }
+		    })
 
 			if(onsuccess)
 				onsuccess(socket);
