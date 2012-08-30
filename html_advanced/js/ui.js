@@ -13,10 +13,10 @@ function ui_ready_fileschange(func)
 
 function UI_setHost(host)
 {
-//	host.set_uid = function(uid)
-//	{
-//	    document.getElementById("UID").appendChild(document.createTextNode("UID: "+uid))
-//	}
+	host.set_uid = function(uid)
+	{
+	    document.getElementById("UID").appendChild(document.createTextNode("UID: "+uid))
+	}
 
 	function _button_sharing(file)
 	{
@@ -496,11 +496,4 @@ function UI_setSocket(socket)
             socket.fileslist_query(uid)
         }
     })
-
-    // Set UID
-    var span = document.getElementById("UID")
-
-    while(span.firstChild)
-        span.removeChild(span.firstChild);
-    span.appendChild(document.createTextNode("UID: "+socket.socket.sessionid))
 }

@@ -1,9 +1,9 @@
 function Conn_init(ws_url, host, onconnect, onsuccess, onerror)
 {
-    var socket = io.connect(ws_url, {secure: true})
-        socket.on('connect', function()
-//    var socket = new WebSocket(ws_url)
-//        socket.onopen = function()
+//    var socket = io.connect(ws_url, {secure: true})
+//        socket.on('connect', function()
+    var socket = new WebSocket(ws_url)
+        socket.onopen = function()
         {
             socket.emit = function()
             {
@@ -40,19 +40,19 @@ function Conn_init(ws_url, host, onconnect, onsuccess, onerror)
                 onconnect(socket);
 
 		    // Message received
-		    socket.on('message', function(message)
+		    socket.onmessage = function(event)
 		    {
-		        console.log("socket.onmessage = '"+message+"'")
-		        var args = JSON.parse(message)
+		        console.log("socket.onmessage = '"+event.data+"'")
+		        var args = JSON.parse(event.data)
 
 		        var eventName = args[0]
 
-//                if(eventName == 'sessionId')
-//                {
-//                    socket.id = args[1]
-//                    host.set_uid(args[1])
-//                    return
-//                }
+                if(eventName == 'sessionId')
+                {
+                    socket.id = args[1]
+                    host.set_uid(args[1])
+                    return
+                }
 
 		        var args = args.slice(1)
 
@@ -93,9 +93,9 @@ function Conn_init(ws_url, host, onconnect, onsuccess, onerror)
 	    //                host.transfer_send_error.apply(host, args)
         //                break
                 }
-		    })
+		    }
 
 			if(onsuccess)
 				onsuccess(socket);
-		})
+		}
 }
