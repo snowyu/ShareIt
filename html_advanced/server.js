@@ -5,14 +5,10 @@ var options = {key:  fs.readFileSync('../certs/privatekey.pem').toString(),
 			   cert: fs.readFileSync('../certs/certificate.pem').toString(),
 			   ca:   [fs.readFileSync('../certs/certrequest.csr').toString()]}
 
-// HTTP server
-var server = require('https').createServer(options)
-	server.listen(8001);
-
 // P2P Stuff
 //var WebSocketServer = require('ws').Server
 //var wss = new WebSocketServer({server: server})
-var io = require('socket.io').listen(server);
+var io = require('socket.io').listen(8001, options);
 //var wss = {}
 
 ////Array to store connections
