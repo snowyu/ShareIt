@@ -31,7 +31,8 @@ window.addEventListener("load", function()
             var ui = UI_setHost(host)
 
 	        // Load websocket connection after IndexedDB is ready
-            Conn_init('wss://localhost:8001', host,
+            Protocol_init(io.connect('wss://localhost:8001', {secure: true}),
+                          host,
 	        function(socket)
 	        {
                 // Add connection methods to host
@@ -51,14 +52,6 @@ window.addEventListener("load", function()
                 })
 
                 UI_setSocket(socket)
-	        },
-	        function(type)
-	        {
-		        switch(type)
-		        {
-			        case 'room full':
-				        console.warn("This connection is full. Please try later.");
-		        }
 	        })
 	    })
 	})

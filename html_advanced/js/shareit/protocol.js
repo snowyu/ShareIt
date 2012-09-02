@@ -1,101 +1,114 @@
-function Conn_init(ws_url, host, onconnect, onsuccess, onerror)
+function Protocol_init(transport, host, onconnect, onsuccess)
 {
-    var socket = io.connect(ws_url, {secure: true})
-        socket.on('connect', function()
-//    var socket = new WebSocket(ws_url)
-//        socket.onopen = function()
-        {
-            socket.emit = function()
-            {
-                var args = Array.prototype.slice.call(arguments, 0);
+    function onopen()
+    {
+	    var protocol = {}
 
-                socket.send(JSON.stringify(args), function(error)
-                {
-                    if(error)
-                        console.warning(error);
-                });
-            }
+	    protocol.emit = function()
+	    {
+	        var args = Array.prototype.slice.call(arguments, 0);
 
-            // Files list
-            socket.fileslist_query = function(socketId)
-            {
-                socket.emit('fileslist.query', socketId);
-            }
-            socket.fileslist_send = function(socketId, fileslist)
-            {
-                socket.emit('fileslist.send', socketId, fileslist);
-            }
+	        transport.send(JSON.stringify(args), function(error)
+	        {
+	            if(error)
+	                console.warning(error);
+	        });
+	    }
 
-            // Transfer
-            socket.transfer_query = function(socketId, filename, chunk)
-            {
-                socket.emit('transfer.query', socketId, filename, chunk);
-            }
-            socket.transfer_send = function(socketId, filename, chunk, data)
-            {
-                socket.emit('transfer.send', socketId, filename, chunk, data);
-            }
+	    // Files list
+	    protocol.fileslist_query = function(socketId)
+	    {
+	        protocol.emit('fileslist.query', socketId);
+	    }
+	    protocol.fileslist_send = function(socketId, fileslist)
+	    {
+	        protocol.emit('fileslist.send', socketId, fileslist);
+	    }
 
-            if(onconnect)
-                onconnect(socket);
+	    // Transfer
+	    protocol.transfer_query = function(socketId, filename, chunk)
+	    {
+	        protocol.emit('transfer.query', socketId, filename, chunk);
+	    }
+	    protocol.transfer_send = function(socketId, filename, chunk, data)
+	    {
+	        protocol.emit('transfer.send', socketId, filename, chunk, data);
+	    }
 
-		    // Message received
-		    socket.on('message', function(message)
-		    {
-		        console.log("socket.onmessage = '"+message+"'")
-		        var args = JSON.parse(message)
+	    if(onconnect)
+	        onconnect(protocol);
 
-		        var eventName = args[0]
+	    // Message received
+	    function onmessage(message)
+	    {
+	        console.log("socket.onmessage = '"+message+"'")
+	        var args = JSON.parse(message)
 
-//                if(eventName == 'sessionId')
-//                {
-//                    socket.id = args[1]
-//                    host.set_uid(args[1])
-//                    return
-//                }
+	        var eventName = args[0]
 
-		        var args = args.slice(1)
+	//        if(eventName == 'sessionId')
+	//        {
+	//            socket.id = args[1]
+	//            host.set_uid(args[1])
+	//            return
+	//        }
 
-                switch(eventName)
-                {
-	                // Files list query
-	                case 'fileslist.query':
-	                    host.fileslist_query.apply(host, args)
-	                    break
+	        var args = args.slice(1)
 
-	                case 'fileslist.query.error':
-	                    host.fileslist_query_error.apply(host, args)
-                        break
+	        switch(eventName)
+	        {
+	            // Files list query
+	            case 'fileslist.query':
+	                host.fileslist_query.apply(host, args)
+	                break
 
-	                // Files list update
-	                case 'fileslist.send':
-	                    host.fileslist_send.apply(host, args)
-                        break
+	            case 'fileslist.query.error':
+	                host.fileslist_query_error.apply(host, args)
+	                break
 
-	    //            case 'fileslist.send.error':
-	    //                host.fileslist_send_error.apply(host, args)
-        //                break
+	            // Files list update
+	            case 'fileslist.send':
+	                host.fileslist_send.apply(host, args)
+	                break
 
-	                // Transfer query
-	                case 'transfer.query':
-	                    host.transfer_query.apply(host, args)
-                        break
+	//            case 'fileslist.send.error':
+	//                host.fileslist_send_error.apply(host, args)
+	//                break
 
-	    //            case 'transfer.query.error':
-	    //                host.transfer_query_error.apply(host, args)
-        //                break
+	            // Transfer query
+	            case 'transfer.query':
+	                host.transfer_query.apply(host, args)
+	                break
 
-	                // Transfer send
-	                case 'transfer.send':
-	                    host.transfer_send.apply(host, args)
-                        break
-	    //            case 'transfer.send.error':
-	    //                host.transfer_send_error.apply(host, args)
-        //                break
-                }
-		    })
+	//            case 'transfer.query.error':
+	//                host.transfer_query_error.apply(host, args)
+	//                break
 
-			if(onsuccess)
-				onsuccess(socket);
-		})
+	            // Transfer send
+	            case 'transfer.send':
+	                host.transfer_send.apply(host, args)
+	                break
+	//            case 'transfer.send.error':
+	//                host.transfer_send_error.apply(host, args)
+	//                break
+	        }
+	    }
+
+	    // Detect how to add the EventListener (mainly for Socket.io since don't
+	    // follow the W3C WebSocket/DataChannel API)
+	    if(transport.on)
+	        transport.on('message', onmessage);
+	    else
+	        transport.onmessage = onmessage;
+
+	    if(onsuccess)
+	        onsuccess(protocol);
+    })
+
+    // Detect how to add the EventListener (mainly for Socket.io since don't
+    // follow the W3C WebSocket/DataChannel API)
+    if(transport.on)
+        transport.on('connect', onopen);
+    else
+        transport.onopen = onopen;
 }
