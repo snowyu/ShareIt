@@ -99,7 +99,7 @@ function Host_init(db, onsuccess)
 		onsuccess(host);
 }
 
-function Host_onconnect(connection, host, db, onsuccess)
+function Host_onconnect(protocol, host, db, onsuccess)
 {
 	// Host
 
@@ -119,7 +119,7 @@ function Host_onconnect(connection, host, db, onsuccess)
 			    files_send.push({"name": file.name, "size": file.size,
 			                     "type": file.type});
 
-			connection.fileslist_send(socketId, files_send);
+			protocol.fileslist_send(socketId, files_send);
         })
     }
 
@@ -139,7 +139,7 @@ function Host_onconnect(connection, host, db, onsuccess)
 				}
 				reader.onload = function(evt)
 				{
-					connection.transfer_send(socketId, filename, chunk, evt.target.result);
+					protocol.transfer_send(socketId, filename, chunk, evt.target.result);
 				}
 
 			var start = chunk * chunksize;
@@ -211,7 +211,7 @@ function Host_onconnect(connection, host, db, onsuccess)
 			    // Demand more data from one of the pending chunks
 		        db.sharepoints_put(file, function()
 		        {
-				    connection.transfer_query(socketId, file.name,
+				    protocol.transfer_query(socketId, file.name,
 				                              getRandom(file.bitmap));
 				})
 			}
@@ -260,7 +260,7 @@ function Host_onconnect(connection, host, db, onsuccess)
             console.log("Transfer begin: '"+file.name+"' = "+JSON.stringify(file))
 
             // Demand data from the begining of the file
-            connection.transfer_query(getSocketId(file), file.name,
+            protocol.transfer_query(getSocketId(file), file.name,
                                       getRandom(file.bitmap))
         },
         function(errorCode)
