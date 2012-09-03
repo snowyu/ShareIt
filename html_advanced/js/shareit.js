@@ -25,15 +25,15 @@ window.addEventListener("load", function()
             db.sharepoints_getAll(null, ui_update_fileslist_sharedpoints)
         })
 
-        // Init host
-	    Host_init(function(host)
-	    {
-            var ui = UI_setHost(host)
+        // Load websocket connection after IndexedDB is ready
+        Protocol_init(io.connect('wss://localhost:8001', {secure: true}),
+        function(protocol)
+        {
+	        // Init host
+		    Host_init(function(host)
+		    {
+                var ui = UI_setHost(host)
 
-	        // Load websocket connection after IndexedDB is ready
-            Protocol_init(io.connect('wss://localhost:8001', {secure: true}),
-	        function(protocol)
-	        {
                 // Add connection methods to host
                 Host_onconnect(protocol, host, db)
 
