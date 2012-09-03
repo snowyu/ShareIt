@@ -29,7 +29,7 @@ function remove(bitmap, item)
 }
 
 
-function Host_init(onsuccess)
+function Host_init(db, protocol, onsuccess)
 {
 	var host = {}
 
@@ -68,10 +68,7 @@ function Host_init(onsuccess)
 
 	if(onsuccess)
 		onsuccess(host);
-}
 
-function Host_onconnect(db, protocol, host)
-{
 	// Host
 
     protocol.addEventListener('fileslist.query', function(socketId)

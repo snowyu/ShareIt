@@ -30,11 +30,8 @@ window.addEventListener("load", function()
         function(protocol)
         {
 	        // Init host
-		    Host_init(function(host)
+		    Host_init(db, protocol, function(host)
 		    {
-                // Add connection methods to host
-                Host_onconnect(db, protocol, host)
-
                 var ui = UI_setHost(host)
 
                 db.sharepoints_getAll(null, function(filelist)
