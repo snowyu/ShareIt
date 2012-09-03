@@ -25,17 +25,22 @@ function Protocol_init(transport, onsuccess)
 	        events[i].apply(null, args);
 	    };
 
-	    protocol.removeEventListener = function(type, listener)
-	    {
-	      var events = protocol._events[type];
-	      if(!events)
-	        return;
+        protocol.removeEventListener = function(type, listener)
+        {
+          var events = protocol._events[type];
+          if(!events)
+            return;
 
-	      events.splice(events.indexOf(listener), 1)
+          if(listener)
+          {
+            events.splice(events.indexOf(listener), 1)
 
-	      if(!events.length)
-	        delete protocol._events[type]
-	    };
+            if(!events.length)
+              delete protocol._events[type]
+          }
+          else
+            delete protocol._events[type]
+        };
 
         // Compose and send message
 	    protocol.emit = function()

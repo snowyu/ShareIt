@@ -433,6 +433,7 @@ function UI_init()
 
 function UI_setProtocol(protocol)
 {
+    $("#ConnectUser").unbind('click')
     $("#ConnectUser").click(function()
     {
         var uid = prompt("UID to connect")
@@ -498,6 +499,7 @@ function UI_setProtocol(protocol)
     })
 
     // Set UID
+    protocol.removeEventListener('sessionId')
     protocol.addEventListener('sessionId', function(uid)
     {
 	    var span = document.getElementById("UID")
