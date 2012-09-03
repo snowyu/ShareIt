@@ -502,5 +502,5 @@ function UI_setProtocol(protocol)
 
     while(span.firstChild)
         span.removeChild(span.firstChild);
-    span.appendChild(document.createTextNode("UID: "+socket.socket.sessionid))
+    span.appendChild(document.createTextNode("UID: "+protocol.socket.sessionid))
 }

@@ -14,6 +14,7 @@ var io = require('socket.io').listen(8001, options);
 ////Array to store connections
 //wss.sockets = {}
 
+io.set('log level', 2);
 io.sockets.on('connection', function(socket)
 //wss.on('connection', function(socket)
 {

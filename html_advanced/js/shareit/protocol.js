@@ -54,7 +54,7 @@ function Protocol_init(transport, onsuccess)
 	    {
 	        console.log("protocol.onmessage = '"+message+"'")
 
-            protocol.dispatchEvent(protocol, JSON.parse(message))
+            protocol.dispatchEvent.apply(protocol, JSON.parse(message))
 	    }
 
 	    // Detect how to add the EventListener (mainly for Socket.io since don't
@@ -66,7 +66,7 @@ function Protocol_init(transport, onsuccess)
 
 	    if(onsuccess)
 	        onsuccess(protocol);
-    })
+    }
 
     // Detect how to add the EventListener (mainly for Socket.io since don't
     // follow the W3C WebSocket/DataChannel API)

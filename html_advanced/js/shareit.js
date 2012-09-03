@@ -32,10 +32,10 @@ window.addEventListener("load", function()
 	        // Init host
 		    Host_init(function(host)
 		    {
-                var ui = UI_setHost(host)
-
                 // Add connection methods to host
-                Host_onconnect(protocol, host, db)
+                Host_onconnect(db, protocol, host)
+
+                var ui = UI_setHost(host)
 
                 db.sharepoints_getAll(null, function(filelist)
                 {
@@ -47,9 +47,9 @@ window.addEventListener("load", function()
 //                            protocol.emit('transfer.query', file.name,
 //                                                            getRandom(file.bitmap))
                 })
-
-                UI_setProtocol(protocol)
 	        })
+
+            UI_setProtocol(protocol)
 	    })
 	})
 })

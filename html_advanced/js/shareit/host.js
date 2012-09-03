@@ -70,11 +70,11 @@ function Host_init(onsuccess)
 		onsuccess(host);
 }
 
-function Host_onconnect(protocol, host, db, onsuccess)
+function Host_onconnect(db, protocol, host)
 {
 	// Host
 
-    protocol.addEventListener('fileslist.query, function(socketId)
+    protocol.addEventListener('fileslist.query', function(socketId)
     {
         db.sharepoints_getAll(null, function(fileslist)
         {
@@ -264,7 +264,4 @@ function Host_onconnect(protocol, host, db, onsuccess)
             console.error("Transfer begin: '"+file.name+"' is already in database.")
         })
     }
-
-	if(onsuccess)
-		onsuccess();
 }
