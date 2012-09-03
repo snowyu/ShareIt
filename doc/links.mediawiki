@@ -35,3 +35,7 @@ http://nodester.com/
 
 == NodeSocket ==
 http://www.nodesocket.com/
+
+== AppFog ==
+http://www.appfog.com/
+Free plan up to 2GB RAM, 1GB of database and 50GB data transfer
