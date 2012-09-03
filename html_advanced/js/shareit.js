@@ -47,11 +47,11 @@ window.addEventListener("load", function()
 //                    // Restard downloads
 //                    for(var i = 0, file; file = filelist[i]; i++)
 //                        if(file.bitmap)
-//                            protocol.transfer_query(file.name,
-//                                                    getRandom(file.bitmap))
+//                            protocol.emit('transfer.query', file.name,
+//                                                            getRandom(file.bitmap))
                 })
 
-                UI_setSocket(protocol)
+                UI_setProtocol(protocol)
 	        })
 	    })
 	})

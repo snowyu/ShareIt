@@ -15,26 +15,6 @@ function Protocol_init(transport, host, onconnect, onsuccess)
 	        });
 	    }
 
-	    // Files list
-	    protocol.fileslist_query = function(socketId)
-	    {
-	        protocol.emit('fileslist.query', socketId);
-	    }
-	    protocol.fileslist_send = function(socketId, fileslist)
-	    {
-	        protocol.emit('fileslist.send', socketId, fileslist);
-	    }
-
-	    // Transfer
-	    protocol.transfer_query = function(socketId, filename, chunk)
-	    {
-	        protocol.emit('transfer.query', socketId, filename, chunk);
-	    }
-	    protocol.transfer_send = function(socketId, filename, chunk, data)
-	    {
-	        protocol.emit('transfer.send', socketId, filename, chunk, data);
-	    }
-
 	    if(onconnect)
 	        onconnect(protocol);
 

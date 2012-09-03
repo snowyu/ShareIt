@@ -431,7 +431,7 @@ function UI_init()
     });
 }
 
-function UI_setSocket(socket)
+function UI_setProtocol(protocol)
 {
     $("#ConnectUser").click(function()
     {
@@ -493,7 +493,7 @@ function UI_setSocket(socket)
                 td.appendChild(document.createTextNode("Waiting for the peer data"))
             tr.appendChild(td);
 
-            socket.fileslist_query(uid)
+            protocol.emit('fileslist.query', uid);
         }
     })
 
