@@ -31,14 +31,9 @@ function Protocol_init(transport, onsuccess)
           if(!events)
             return;
 
-          if(listener)
-          {
-            events.splice(events.indexOf(listener), 1)
+          events.splice(events.indexOf(listener), 1)
 
-            if(!events.length)
-              delete protocol._events[type]
-          }
-          else
+          if(!events.length || !listener)
             delete protocol._events[type]
         };
 
