@@ -32,14 +32,11 @@ window.addEventListener("load", function()
 
 	        // Load websocket connection after IndexedDB is ready
             Protocol_init(io.connect('wss://localhost:8001', {secure: true}),
-                          host,
 	        function(protocol)
 	        {
                 // Add connection methods to host
-	            Host_onconnect(protocol, host, db)
-	        },
-	        function(protocol)
-	        {
+                Host_onconnect(protocol, host, db)
+
                 db.sharepoints_getAll(null, function(filelist)
                 {
                     ui.update_fileslist_sharing(filelist)

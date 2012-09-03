@@ -1,4 +1,4 @@
-function Protocol_init(transport, host, onconnect, onsuccess)
+function Protocol_init(transport, onsuccess)
 {
     function onopen()
     {
@@ -9,7 +9,7 @@ function Protocol_init(transport, host, onconnect, onsuccess)
 
 	    protocol.addEventListener = function(type, listener)
 	    {
-	      protocol._events[type] = host._events[type] || [];
+	      protocol._events[type] = protocol._events[type] || [];
 	      protocol._events[type].push(listener);
 	    };
 
@@ -34,9 +34,10 @@ function Protocol_init(transport, host, onconnect, onsuccess)
 	      events.splice(events.indexOf(listener), 1)
 
 	      if(!events.length)
-	        delete host._events[type]
+	        delete protocol._events[type]
 	    };
 
+        // Compose and send message
 	    protocol.emit = function()
 	    {
 	        var args = Array.prototype.slice.call(arguments, 0);
@@ -47,9 +48,6 @@ function Protocol_init(transport, host, onconnect, onsuccess)
 	                console.warning(error);
 	        });
 	    }
-
-	    if(onconnect)
-	        onconnect(protocol);
 
 	    // Message received
 	    function onmessage(message)
