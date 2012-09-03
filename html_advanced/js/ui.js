@@ -498,9 +498,12 @@ function UI_setProtocol(protocol)
     })
 
     // Set UID
-    var span = document.getElementById("UID")
-
-    while(span.firstChild)
-        span.removeChild(span.firstChild);
-    span.appendChild(document.createTextNode("UID: "+protocol.socket.sessionid))
+    protocol.addEventListener('sessionId', function(uid)
+    {
+	    var span = document.getElementById("UID")
+	
+	    while(span.firstChild)
+	        span.removeChild(span.firstChild);
+	    span.appendChild(document.createTextNode("UID: "+uid))
+    })
 }
