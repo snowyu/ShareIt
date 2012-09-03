@@ -66,35 +66,6 @@ function Host_init(db, onsuccess)
         delete host._events[type]
     };
 
-	// Peer
-
-    host.fileslist_send = function(socketId, files)
-	{
-		// Check if we have already any of the files
-		// It's stupid to try to download it... and also give errors
-		db.sharepoints_getAll(null, function(filelist)
-		{
-			for(var i=0, file; file = files[i]; i++)
-			{
-			    // We add here ad-hoc the socketId of the peer where we got the
-			    // file since we currently don't have support for hashes nor
-			    // tracker systems
-                file.socketId = socketId
-
-				for(var j=0, file_hosted; file_hosted = filelist[j]; j++)
-					if(file.name == file_hosted.name)
-					{
-						file.bitmap = file_hosted.bitmap
-						file.blob   = file_hosted.blob || file_hosted
-
-						break;
-					}
-			}
-
-            host.dispatchEvent("fileslist_peer.update", socketId, files)
-		})
-	}
-
 	if(onsuccess)
 		onsuccess(host);
 }
@@ -103,7 +74,7 @@ function Host_onconnect(protocol, host, db, onsuccess)
 {
 	// Host
 
-    host.fileslist_query = function(socketId)
+    protocol.addEventListener('fileslist.query, function(socketId)
     {
         db.sharepoints_getAll(null, function(fileslist)
         {
@@ -121,16 +92,41 @@ function Host_onconnect(protocol, host, db, onsuccess)
 
             protocol.emit('fileslist.send', socketId, files_send);
         })
-    }
+    })
+
+    protocol.addEventListener('fileslist.send', function(socketId, files)
+    {
+        // Check if we have already any of the files
+        // It's stupid to try to download it... and also give errors
+        db.sharepoints_getAll(null, function(filelist)
+        {
+            for(var i=0, file; file = files[i]; i++)
+            {
+                // We add here ad-hoc the socketId of the peer where we got the
+                // file since we currently don't have support for hashes nor
+                // tracker systems
+                file.socketId = socketId
+
+                for(var j=0, file_hosted; file_hosted = filelist[j]; j++)
+                    if(file.name == file_hosted.name)
+                    {
+                        file.bitmap = file_hosted.bitmap
+                        file.blob   = file_hosted.blob || file_hosted
+
+                        break;
+                    }
+            }
+
+            host.dispatchEvent("fileslist_peer.update", socketId, files)
+        })
+    })
 
 	// Filereader support (be able to host files from the filesystem)
 	if(typeof FileReader == "undefined")
-	{
 		console.warn("'Filereader' is not available, can't be able to host files");
-		host.transfer_query = function(socketId, filename, chunk){}
-	}
+
 	else
-		host.transfer_query = function(socketId, filename, chunk)
+		protocol.addEventListener('transfer.query', function(socketId, filename, chunk)
 		{
 			var reader = new FileReader();
 				reader.onerror = function(evt)
@@ -153,7 +149,7 @@ function Host_onconnect(protocol, host, db, onsuccess)
 
 				reader.readAsBinaryString(file.slice(start, stop));
 			})
-		}
+		})
 
 	// Peer
 
@@ -173,7 +169,7 @@ function Host_onconnect(protocol, host, db, onsuccess)
 		window.URL.revokeObjectURL(save.href)
 	}
 
-	host.transfer_send = function(socketId, filename, chunk, data)
+	protocol.addEventListener('transfer.send', function(socketId, filename, chunk, data)
 	{
 	    chunk = parseInt(chunk)
 
@@ -230,7 +226,7 @@ function Host_onconnect(protocol, host, db, onsuccess)
 		        })
 			}
 		})
-	}
+	})
 
     // Get the socketId of one of the peers that have the file from its hash.
     // Since the hash and the tracker system are currently not implemented we'll

@@ -55,56 +55,8 @@ function Protocol_init(transport, host, onconnect, onsuccess)
 	    function onmessage(message)
 	    {
 	        console.log("protocol.onmessage = '"+message+"'")
-	        var args = JSON.parse(message)
 
-	        var eventName = args[0]
-
-	//        if(eventName == 'sessionId')
-	//        {
-	//            socket.id = args[1]
-	//            host.set_uid(args[1])
-	//            return
-	//        }
-
-	        var args = args.slice(1)
-
-	        switch(eventName)
-	        {
-	            // Files list query
-	            case 'fileslist.query':
-	                host.fileslist_query.apply(host, args)
-	                break
-
-	            case 'fileslist.query.error':
-	                host.fileslist_query_error.apply(host, args)
-	                break
-
-	            // Files list update
-	            case 'fileslist.send':
-	                host.fileslist_send.apply(host, args)
-	                break
-
-	//            case 'fileslist.send.error':
-	//                host.fileslist_send_error.apply(host, args)
-	//                break
-
-	            // Transfer query
-	            case 'transfer.query':
-	                host.transfer_query.apply(host, args)
-	                break
-
-	//            case 'transfer.query.error':
-	//                host.transfer_query_error.apply(host, args)
-	//                break
-
-	            // Transfer send
-	            case 'transfer.send':
-	                host.transfer_send.apply(host, args)
-	                break
-	//            case 'transfer.send.error':
-	//                host.transfer_send_error.apply(host, args)
-	//                break
-	        }
+            protocol.dispatchEvent(protocol, JSON.parse(message))
 	    }
 
 	    // Detect how to add the EventListener (mainly for Socket.io since don't
