@@ -26,7 +26,7 @@ window.addEventListener("load", function()
         })
 
         // Init host
-	    Host_init(db, function(host)
+	    Host_init(function(host)
 	    {
             var ui = UI_setHost(host)
 
