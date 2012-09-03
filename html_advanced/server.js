@@ -18,9 +18,6 @@ io.set('log level', 2);
 io.sockets.on('connection', function(socket)
 //wss.on('connection', function(socket)
 {
-//    socket.id = id()
-//    wss.sockets[socket.id] = socket
-
     socket.emit = function()
     {
         var args = Array.prototype.slice.call(arguments, 0);
@@ -33,8 +30,7 @@ io.sockets.on('connection', function(socket)
     }
 
     // Message received
-    socket.on('message', function(message)
-//    socket.onmessage = function(message)
+    function onmessage(message)
     {
         console.log("socket.onmessage = '"+message+"'")
         var args = JSON.parse(message)
@@ -55,10 +51,20 @@ io.sockets.on('connection', function(socket)
             socket.emit(eventName+'.error', socketId);
             console.warn(eventName+': '+socket.id+' -> '+socketId);
         }
-    })
+    }
 
-//    socket.emit('sessionId', socket.id)
-//    console.log("Connected socket.id: "+socket.id)
+    // Detect how to add the EventListener (mainly for Socket.io since don't
+    // follow the W3C WebSocket/DataChannel API)
+    if(transport.on)
+        transport.on('message', onmessage);
+    else
+        transport.onmessage = onmessage;
+
+//    socket.id = id()
+//    wss.sockets[socket.id] = socket
+
+    socket.emit('sessionId', socket.id)
+    console.log("Connected socket.id: "+socket.id)
 })
 
 // generate a 4 digit hex code randomly
