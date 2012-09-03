@@ -6,15 +6,16 @@ var options = {key:  fs.readFileSync('../certs/privatekey.pem').toString(),
 			   ca:   [fs.readFileSync('../certs/certrequest.csr').toString()]}
 
 // P2P Stuff
+var io = require('socket.io').listen(8001, options);
+    io.set('log level', 2);
+
 //var WebSocketServer = require('ws').Server
 //var wss = new WebSocketServer({server: server})
-var io = require('socket.io').listen(8001, options);
 //var wss = {}
 
 ////Array to store connections
 //wss.sockets = {}
 
-io.set('log level', 2);
 io.sockets.on('connection', function(socket)
 //wss.on('connection', function(socket)
 {
@@ -55,13 +56,18 @@ io.sockets.on('connection', function(socket)
 
     // Detect how to add the EventListener (mainly for Socket.io since don't
     // follow the W3C WebSocket/DataChannel API)
-    if(transport.on)
-        transport.on('message', onmessage);
+    if(socket.on)
+        socket.on('message', onmessage);
     else
-        transport.onmessage = onmessage;
+        socket.onmessage = onmessage;
 
-//    socket.id = id()
-//    wss.sockets[socket.id] = socket
+    // Set and register a sockedId if it was not set previously
+    // Mainly for WebSockets server
+    if(socket.id == undefined)
+    {
+        socket.id = id()
+        wss.sockets[socket.id] = socket
+    }
 
     socket.emit('sessionId', socket.id)
     console.log("Connected socket.id: "+socket.id)
