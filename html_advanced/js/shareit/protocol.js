@@ -4,6 +4,39 @@ function Protocol_init(transport, host, onconnect, onsuccess)
     {
 	    var protocol = {}
 
+	    // EventTarget interface
+	    protocol._events = {};
+
+	    protocol.addEventListener = function(type, listener)
+	    {
+	      protocol._events[type] = host._events[type] || [];
+	      protocol._events[type].push(listener);
+	    };
+
+	    protocol.dispatchEvent = function(type)
+	    {
+	      var events = protocol._events[type];
+	      if(!events)
+	        return;
+
+	      var args = Array.prototype.slice.call(arguments, 1);
+
+	      for(var i = 0, len = events.length; i < len; i++)
+	        events[i].apply(null, args);
+	    };
+
+	    protocol.removeEventListener = function(type, listener)
+	    {
+	      var events = protocol._events[type];
+	      if(!events)
+	        return;
+
+	      events.splice(events.indexOf(listener), 1)
+
+	      if(!events.length)
+	        delete host._events[type]
+	    };
+
 	    protocol.emit = function()
 	    {
 	        var args = Array.prototype.slice.call(arguments, 0);
@@ -21,7 +54,7 @@ function Protocol_init(transport, host, onconnect, onsuccess)
 	    // Message received
 	    function onmessage(message)
 	    {
-	        console.log("socket.onmessage = '"+message+"'")
+	        console.log("protocol.onmessage = '"+message+"'")
 	        var args = JSON.parse(message)
 
 	        var eventName = args[0]
