@@ -5,15 +5,19 @@ var options = {key:  fs.readFileSync('../certs/privatekey.pem').toString(),
 			   cert: fs.readFileSync('../certs/certificate.pem').toString(),
 			   ca:   [fs.readFileSync('../certs/certrequest.csr').toString()]}
 
-// HTTP server
-var server = require('https').createServer(options)
-	server.listen(8001);
-
 // P2P Stuff
-var io = require('socket.io').listen(server, options)
+var io = require('socket.io').listen(8001, options);
+    io.set('log level', 2);
 
-io.set('log level', 1);
+//var WebSocketServer = require('ws').Server
+//var wss = new WebSocketServer({server: server})
+//var wss = {}
+
+////Array to store connections
+//wss.sockets = {}
+
 io.sockets.on('connection', function(socket)
+//wss.on('connection', function(socket)
 {
 	socket.on('joiner', function(room)
 	{
@@ -57,21 +61,16 @@ io.sockets.on('connection', function(socket)
 
 	// Proxied events
 
-	socket.on('files.list', function(data)
-	{
+    function onmessage(message)
+    {
 		if(socket.peer != undefined)
-			socket.peer.emit('files.list', data);
-	});
+			socket.peer.send(message);
+    }
 
-	socket.on('transfer.query_chunk', function(filename, chunk)
-	{
-		if(socket.peer != undefined)
-			socket.peer.emit('transfer.query_chunk', filename, chunk);
-	});
-
-	socket.on('transfer.send_chunk', function(filename, chunk, data)
-	{
-		if(socket.peer != undefined)
-			socket.peer.emit('transfer.send_chunk', filename, chunk, data);
-	});
+    // Detect how to add the EventListener (mainly for Socket.io since don't
+    // follow the W3C WebSocket/DataChannel API)
+    if(socket.on)
+        socket.on('message', onmessage);
+    else
+        socket.onmessage = onmessage;
 });

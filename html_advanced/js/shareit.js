@@ -25,20 +25,15 @@ window.addEventListener("load", function()
             db.sharepoints_getAll(null, ui_update_fileslist_sharedpoints)
         })
 
-        // Init host
-	    Host_init(db, function(host)
-	    {
-            var ui = UI_setHost(host)
+        // Load websocket connection after IndexedDB is ready
+        Protocol_init(io.connect(new WebSocket('wss://localhost:8001'),
+        function(protocol)
+        {
+	        // Init host
+		    Host_init(db, protocol, function(host)
+		    {
+                var ui = UI_setHost(host)
 
-	        // Load websocket connection after IndexedDB is ready
-            Conn_init('wss://localhost:8001', host,
-	        function(socket)
-	        {
-                // Add connection methods to host
-	            Host_onconnect(socket, host, db)
-	        },
-	        function(socket)
-	        {
                 db.sharepoints_getAll(null, function(filelist)
                 {
                     ui.update_fileslist_sharing(filelist)
@@ -46,20 +41,12 @@ window.addEventListener("load", function()
 //                    // Restard downloads
 //                    for(var i = 0, file; file = filelist[i]; i++)
 //                        if(file.bitmap)
-//                            socket.transfer_query(file.name,
-//                                                  getRandom(file.bitmap))
+//                            protocol.emit('transfer.query', file.name,
+//                                                            getRandom(file.bitmap))
                 })
-
-                UI_setSocket(socket)
-	        },
-	        function(type)
-	        {
-		        switch(type)
-		        {
-			        case 'room full':
-				        console.warn("This connection is full. Please try later.");
-		        }
 	        })
+
+            UI_setProtocol(protocol)
 	    })
 	})
 })

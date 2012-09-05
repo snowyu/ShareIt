@@ -431,8 +431,9 @@ function UI_init()
     });
 }
 
-function UI_setSocket(socket)
+function UI_setProtocol(protocol)
 {
+    $("#ConnectUser").unbind('click')
     $("#ConnectUser").click(function()
     {
         var uid = prompt("UID to connect")
@@ -493,7 +494,18 @@ function UI_setSocket(socket)
                 td.appendChild(document.createTextNode("Waiting for the peer data"))
             tr.appendChild(td);
 
-            socket.fileslist_query(uid)
+            protocol.emit('fileslist.query', uid);
         }
+    })
+
+    // Set UID
+    protocol.removeEventListener('sessionId')
+    protocol.addEventListener('sessionId', function(uid)
+    {
+	    var span = document.getElementById("UID")
+	
+	    while(span.firstChild)
+	        span.removeChild(span.firstChild);
+	    span.appendChild(document.createTextNode("UID: "+uid))
     })
 }

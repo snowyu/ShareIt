@@ -139,58 +139,62 @@ a{
 	table-layout: fixed;
 }
 
-th {
-	border-bottom: 1px solid #dddddd;
-	letter-spacing: 2px;
-	padding: 6px 6px 6px 12px;
-	color: #BBBBBB;
+
+/* TreeTable
+ * ------------------------------------------------------------------------- */
+
+/* Header
+ * ------------------------------------------------------------------------- */
+table thead {
+  background: #aaa url(../images/bg-table-thead.png) repeat-x top left;
+  font-size: .9em;
 }
 
-th.nobg {
-	border-top: 0;
-	border-left: 0;
-	border-bottom: 1px solid #dddddd;
-	background: none;
-	text-align: left;
-	color: #BBBBBB;
-	overflow: hidden;              /* "overflow" value must be different from "visible" */   
-  	text-overflow:    ellipsis;  
+table thead tr th {
+  border: 1px solid #888;
+  font-weight: normal;
+  padding: .3em 1.67em .1em 1.67em;
+  text-align: left;
 }
 
-td {
-	border-bottom: 1px solid #dddddd;
-	background: #fff;
-	padding: 6px 6px 6px 12px;
-	color: #BBBBBB;
+/* Body
+ * ------------------------------------------------------------------------- */
+table tbody tr td {
+  cursor: default;
+  padding: .3em 1.5em;
+}
+
+table tbody tr td.filesize {
+  white-space: nowrap;
+}
+
+table tbody tr.even {
+  background: #f3f3f3;
+}
+
+table tbody tr.odd {
+  background: #fff;
+}
+
+table span {
+  background-position: center left;
+  background-repeat: no-repeat;
+  padding: .2em 0 .2em 1.5em;
 }
 
 
-td.alt {
-	background: #dddddd;
-	color: #dddddd;
+table span.file {
+  background-image: url(../images/page_white_text.png);
 }
 
-th.spec {
-	border-left: 1px solid #dddddd;
-	border-top: 0;
-	text-align: left;
-	color: #000000;
-  	overflow: hidden;              /* "overflow" value must be different from "visible" */   
-  	text-overflow:    ellipsis;  
-  	width: 60%;
+table span.folder {
+  background-image: url(../images/folder.png);
 }
 
-tr{
-	margin: 0 auto;
+table span.image {
+  background-image: url(../images/image.png);
 }
 
-td.end {
-	border-right: 1px solid #dddddd;
-}
-
-th.specalt {
-	border-left: 1px solid #dddddd;
-	border-top: 0;
-	color: #dddddd;
-	margin: 0 auto;
+table span.video {
+  background-image: url(../images/video.png);
 }

@@ -15,7 +15,6 @@ function Bitmap(size)
   var bitmap = new Array(size)
   for(var i=0; i<size; i++)
     bitmap[i] = i;
-
   return bitmap
 }
 
@@ -57,11 +56,8 @@ function Host_init(db, onsuccess)
 
 	if(onsuccess)
 		onsuccess(host);
-}
 
-function Host_onconnect(connection, host, db, onsuccess)
-{
-	// Common
+	// Host
 
 	host.peer_connected = function(socket_id)
 	{
@@ -76,8 +72,6 @@ function Host_onconnect(connection, host, db, onsuccess)
 	{
 		ui_peerstate("Peer disconnected.");
 	}
-
-	// Host
 
 	// Filereader support (be able to host files from the filesystem)
 	if(typeof FileReader == "undefined")
