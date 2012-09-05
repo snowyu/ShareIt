@@ -62,7 +62,7 @@ function Protocol_init(transport, onsuccess)
 	    if(transport.on)
 	        transport.on('message', onmessage);
 	    else
-	        transport.onmessage = onmessage;
+	        transport.onmessage = function(message){onmessage(message.data)};
 
 	    if(onsuccess)
 	        onsuccess(protocol);
