@@ -9,8 +9,6 @@ var options = {key:  fs.readFileSync('../certs/privatekey.pem').toString(),
 var server = require('https').createServer(options).listen(8001);
 var WebSocketServer = require('ws').Server
 var wss = new WebSocketServer({server: server})
-//var io = require('socket.io').listen({port: 8001});
-//    io.set('log level', 2);
 
 //Array to store connections
 wss.sockets = {}
@@ -32,7 +30,6 @@ wss.on('connection', function(socket)
     // Message received
     function onmessage(message)
     {
-        console.log("socket.onmessage = '"+message+"'")
         var args = JSON.parse(message)
 
         var eventName = args[0]
