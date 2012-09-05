@@ -10,20 +10,17 @@ var PORT_HANDSHAKE = 8001
 var PORT_PROXY     = 8002
 
 // Handshake server
-var io = socket_io.listen(PORT_HANDSHAKE, options);
-    io.set('log level', 2);
+var server = require('https').createServer(options).listen(PORT_HANDSHAKE);
+var WebSocketServer = require('ws').Server
+var wss = new WebSocketServer({server: server})
 
-//var WebSocketServer = require('ws').Server
-//var wss = new WebSocketServer({port: PORT_HANDSHAKE})
-//var wss = {}
+//Array to store connections
+wss.sockets = {}
 
-////Array to store connections
-//wss.sockets = {}
-
-io.sockets.on('connection', function(socket)
-//wss.on('connection', function(socket)
+//io.sockets.on('connection', function(socket)
+wss.on('connection', function(socket)
 {
-    socket.emit = function()
+    socket._emit = function()
     {
         var args = Array.prototype.slice.call(arguments, 0);
 
@@ -43,17 +40,17 @@ io.sockets.on('connection', function(socket)
         var eventName = args[0]
         var socketId  = args[1]
 
-        var soc = io.sockets.sockets[socketId]
-//        var soc = wss.sockets[socketId]
+//        var soc = io.sockets.sockets[socketId]
+        var soc = wss.sockets[socketId]
         if(soc)
         {
             args[1] = socket.id
 
-            soc.emit.apply(soc, args);
+            soc._emit.apply(soc, args);
         }
         else
         {
-            socket.emit(eventName+'.error', socketId);
+            socket._emit(eventName+'.error', socketId);
             console.warn(eventName+': '+socket.id+' -> '+socketId);
         }
     }
@@ -63,7 +60,7 @@ io.sockets.on('connection', function(socket)
     if(socket.on)
         socket.on('message', onmessage);
     else
-        socket.onmessage = onmessage;
+        socket.onmessage = function(message){onmessage(message.data)};
 
     // Set and register a sockedId if it was not set previously
     // Mainly for WebSockets server
@@ -73,7 +70,7 @@ io.sockets.on('connection', function(socket)
         wss.sockets[socket.id] = socket
     }
 
-    socket.emit('sessionId', socket.id)
+    socket._emit('sessionId', socket.id)
     console.log("Connected socket.id: "+socket.id)
 })
 

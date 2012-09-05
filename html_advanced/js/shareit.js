@@ -26,7 +26,7 @@ window.addEventListener("load", function()
         })
 
         // Load websocket connection after IndexedDB is ready
-        Protocol_init(io.connect('wss://localhost:8001', {secure: true}),
+        Protocol_init(new WebSocket('wss://localhost:8001'),
         function(protocol)
         {
 	        // Init host
