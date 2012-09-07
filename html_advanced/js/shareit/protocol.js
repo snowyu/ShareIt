@@ -2,7 +2,7 @@ function Protocol_init(transport, onsuccess)
 {
     function onopen()
     {
-	    var protocol = {}
+	    var protocol = {};
 
 	    // EventTarget interface
 	    protocol._events = {};
@@ -31,10 +31,10 @@ function Protocol_init(transport, onsuccess)
           if(!events)
             return;
 
-          events.splice(events.indexOf(listener), 1)
+          events.splice(events.indexOf(listener), 1);
 
           if(!events.length || !listener)
-            delete protocol._events[type]
+            delete protocol._events[type];
         };
 
         // Compose and send message
@@ -47,14 +47,14 @@ function Protocol_init(transport, onsuccess)
 	            if(error)
 	                console.warning(error);
 	        });
-	    }
+	    };
 
 	    // Message received
 	    function onmessage(message)
 	    {
-	        console.log("protocol.onmessage = '"+message+"'")
+	        console.log("protocol.onmessage = '"+message+"'");
 
-            protocol.dispatchEvent.apply(protocol, JSON.parse(message))
+            protocol.dispatchEvent.apply(protocol, JSON.parse(message));
 	    }
 
 	    // Detect how to add the EventListener (mainly for Socket.io since don't
@@ -62,7 +62,7 @@ function Protocol_init(transport, onsuccess)
 	    if(transport.on)
 	        transport.on('message', onmessage);
 	    else
-	        transport.onmessage = function(message){onmessage(message.data)};
+	        transport.onmessage = function(message){onmessage(message.data);};
 
 	    if(onsuccess)
 	        onsuccess(protocol);
@@ -74,4 +74,8 @@ function Protocol_init(transport, onsuccess)
         transport.on('connect', onopen);
     else
         transport.onopen = onopen;
+
+    transport.onerror = function(evt) {
+        console.log(evt);
+    };
 }
