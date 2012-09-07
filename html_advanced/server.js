@@ -6,7 +6,8 @@ var options = {key:  fs.readFileSync('../certs/privatekey.pem').toString(),
 			   ca:   [fs.readFileSync('../certs/certrequest.csr').toString()]}
 
 // P2P Stuff
-var server = require('https').createServer(options).listen(8001);
+//var server = require('https').createServer(options).listen(8001);
+var server = require('http').createServer().listen(8001);
 var WebSocketServer = require('ws').Server
 var wss = new WebSocketServer({server: server})
 
@@ -29,7 +30,13 @@ wss.on('connection', function(socket)
     // Message received
     socket.onmessage = function(message)
     {
-        var args = JSON.parse(message.data)
+        console.log("received:", message.data);
+        try{
+          var args = JSON.parse(message.data);
+        } catch(e) {
+          console.log(e);
+          return;
+        }
 
         var eventName = args[0]
         var socketId  = args[1]
