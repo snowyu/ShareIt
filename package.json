@@ -4,7 +4,8 @@
   "author": "Jesús Leganés Combarro <piranna@gmail.com>",
   "version": "0.1.0",
   "dependencies": {
-    "ws": "latest"
+    "ws": "latest",
+    "socket.io": "latest"
   },
   "engine": "node >= 0.4.1"
 }
