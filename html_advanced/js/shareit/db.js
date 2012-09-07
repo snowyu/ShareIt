@@ -2,13 +2,19 @@ window.indexedDB = window.indexedDB || window.webkitIndexedDB || window.mozIndex
 
 function DB_init(onsuccess)
 {
-	var version = 2
+	var version = 2;
 
 	function upgradedb(db)
 	{
-	    // Create an objectStore to hold information about the share points.
+        if(db.objectStoreNames.contains("sharepoints")) {
+            var storeReq = db.deleteObjectStore("sharepoints");
+        }
+        // Create an objectStore to hold information about the share points.
 	    db.createObjectStore("sharepoints", { keyPath: "name" });
 	
+        if(db.objectStoreNames.contains("files")) {
+            var storeReq = db.deleteObjectStore("files");
+        }
 	    // Create an objectStore to hold information about the shared files.
 	    // We're going to use "hash" as our key path because it's guaranteed to
 	    // be unique.
@@ -21,6 +27,7 @@ function DB_init(onsuccess)
 	    request.onerror = function(event)
 	    {
 	        alert("Why didn't you allow my web app to use IndexedDB?!");
+            console.log(event);
 	    };
 	    request.onsuccess = function(event)
 	    {
